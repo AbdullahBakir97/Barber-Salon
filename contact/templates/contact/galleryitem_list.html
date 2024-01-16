@@ -2,12 +2,10 @@
 {% load static %}
 
 
-{% block navbar %}
-	
-{% endblock navbar %}
-	
+{% block body %}
+
 {% block css %}
-	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
     <section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
@@ -25,18 +23,20 @@
     <section class="ftco-section ftco-no-pt ftco-no-pb">
 			<div class="container-fluid p-0">
     		<div class="row no-gutters">
+				{% for object in gallery_items %}
     			<div class="col-md-6 col-lg-3 ftco-animate">
     				<div class="project">
-	    				<img src="{% static 'images/work-1.jpg'%}" class="img-fluid" alt="Colorlib Template">
+	    				<img src="{{object.image.url}}" class="img-fluid" alt="Colorlib Template">
 	    				<div class="text">
 	    					<span>Stylist</span>
 	    					<h3><a href="project.html">Beard</a></h3>
 	    				</div>
-	    				<a href="{% static 'images/work-1.jpg' %}" class="icon image-popup d-flex justify-content-center align-items-center">
+	    				<a href="{{object.galleryitem_list.html }}" class="icon image-popup d-flex justify-content-center align-items-center">
 	    					<span class="icon-expand"></span>
 	    				</a>
     				</div>
     			</div>
+				{% endfor %}
     			<div class="col-md-6 col-lg-3 ftco-animate">
     				<div class="project">
 	    				<img src="{% static 'images/work-2.jpg' %}" class="img-fluid" alt="Colorlib Template">
@@ -124,3 +124,4 @@
     		</div>
     	</div>
 		</section>
+{% endblock body %}

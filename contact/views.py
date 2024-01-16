@@ -189,4 +189,5 @@ class OwnerProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView
     template_name = 'owner_form.html'
     success_message = 'Profile updated successfully.'
     
-
+    def get_object(self, queryset=None):
+        return self.request.user.owner

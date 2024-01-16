@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     # my app 
     'contact',
+    'easy_maps',
 ]
 
 MIDDLEWARE = [

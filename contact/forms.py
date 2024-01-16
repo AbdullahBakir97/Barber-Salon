@@ -1,5 +1,5 @@
 from django import forms
-from .models import Review , Appointment , Barber, GalleryItem
+from .models import Review, Appointment, Barber, GalleryItem
 
 class BarberForm(forms.ModelForm):
     class Meta:
@@ -15,7 +15,6 @@ class BarberForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(BarberForm, self).__init__(*args, **kwargs)
-        # Add any additional customization for your form if needed
 
 
 class GalleryItemForm(forms.ModelForm):
@@ -30,7 +29,7 @@ class GalleryItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(GalleryItemForm, self).__init__(*args, **kwargs)
-        # Add any additional customization for your form if needed
+
 
 class AppointmentForm(forms.ModelForm):
     class Meta:
@@ -44,7 +43,6 @@ class AppointmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
-        # Add any additional customization for your form if needed
 
 
 class ReviewCreateForm(forms.ModelForm):
@@ -60,7 +58,3 @@ class ReviewCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
-        # Add any additional customization for your form if needed
-
-    # Add any form-level validation if needed
-

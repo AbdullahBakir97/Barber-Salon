@@ -29,18 +29,21 @@ urlpatterns = [
 
 
     path('barbers/create/', BarberCreateView.as_view(), name='barber_create'),
+    path('barbers/list/', BarberListView.as_view(), name='barber_list'),
     path('barbers/<int:pk>/update/', BarberUpdateView.as_view(), name='barber_update'),
     path('barbers/<int:pk>/delete/', BarberDeleteView.as_view(), name='barber_delete'),
-    path('barbers/list/', BarberListView.as_view(), name='barber_list'),
+    
 
     path('reviews/add/<int:barber_id>/', add_review, name='add_review'),
-    path('reviews/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review_delete'),
     path('reviews/list/', ReviewListView.as_view(), name='review_list'),
+    path('reviews/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review_delete'),
+    
 
     path('gallery-items/create/', GalleryItemCreateView.as_view(), name='galleryitem_create'),
+    path('gallery-items/list/', GalleryItemListView.as_view(), name='galleryitem_list'),
     path('gallery-items/<int:pk>/update/', GalleryItemUpdateView.as_view(), name='galleryitem_update'),
     path('gallery-items/<int:pk>/delete/', GalleryItemDeleteView.as_view(), name='galleryitem_delete'),
-    path('gallery-items/list/', GalleryItemListView.as_view(), name='galleryitem_list'),
+    
 
     path('owner/<int:pk>/update/', OwnerProfileUpdateView.as_view(), name='owner_update'),
     path('owner/<int:pk>/', OwnerManagementView.as_view(), name='owner_management'),
