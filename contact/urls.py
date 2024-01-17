@@ -13,6 +13,7 @@ from .views import (
     OwnerProfileUpdateView,
     OwnerManagementView,
     add_review,
+    AppointmentListView,
     AppointmentCreateView,
     AppointmentUpdateView,
     AppointmentDeleteView,
@@ -23,6 +24,7 @@ from .views import (
 urlpatterns = [
     path('dashboard/', OwnerDashboardView.as_view(), name='owner_dashboard'),
     path('appointments/', AppointmentManagementView.as_view(), name='appointment_management'),
+    path('appointments/list/', AppointmentListView.as_view(), name='appointment_list'),
     path('appointments/create/', AppointmentCreateView.as_view(), name='appointment_create'),
     path('appointments/<int:pk>/update/', AppointmentUpdateView.as_view(), name='appointment_update'),
     path('appointments/<int:pk>/delete/', AppointmentDeleteView.as_view(), name='appointment_delete'),
@@ -33,8 +35,8 @@ urlpatterns = [
     path('barbers/<int:pk>/update/', BarberUpdateView.as_view(), name='barber_update'),
     path('barbers/<int:pk>/delete/', BarberDeleteView.as_view(), name='barber_delete'),
     
-
-    path('reviews/add/<int:barber_id>/', add_review, name='add_review'),
+    path('barbers/<int:barber_id>/reviews/add/', add_review, name='add_review'),
+    # path('reviews/add/<int:barber_id>/', add_review, name='add_review'),
     path('reviews/list/', ReviewListView.as_view(), name='review_list'),
     path('reviews/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review_delete'),
     

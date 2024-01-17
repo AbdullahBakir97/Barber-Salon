@@ -20,11 +20,13 @@ class BarberForm(forms.ModelForm):
 class GalleryItemForm(forms.ModelForm):
     class Meta:
         model = GalleryItem
-        fields = ['image', 'description']
+        fields = ['image', 'description', 'category', 'service']
 
         widgets = {
             'image': forms.FileInput(attrs={'class': 'form-control-file'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'service': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -34,11 +36,16 @@ class GalleryItemForm(forms.ModelForm):
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
-        fields = ['name', 'barber', 'date', 'time', 'service_type', 'phone', 'message']
+        fields = ['name', 'barber', 'email', 'date', 'time', 'service_type', 'phone', 'message']
 
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'time': forms.TimeInput(attrs={'type': 'time'}),
+            'barber': forms.Select(attrs={'class': 'form-control'}),
+            'service_type': forms.Select(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -49,6 +56,7 @@ class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['barber', 'customer_name', 'comment', 'rating']
+        
         widgets = {
             'barber': forms.HiddenInput(),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
