@@ -4,33 +4,33 @@ Welcome to the Hair Salon Management System – your comprehensive solution for 
 
 ## 🗂️ Appointment Management
 
-Streamline your schedule with our `AppointmentCreateUpdateDeleteView`.
+Streamline your schedule.
 - Effortlessly create, update, and delete appointments with a user-friendly interface.
 - Take control of your calendar, ensuring a smooth and organized workflow.
 
 ## ✂️ Barber Operations Simplified
 
-`BarberCreateUpdateDeleteView` is designed to enhance your barber management experience.
+designed to enhance your barber management experience.
 - Easily update barber details, add new entries, and remove outdated information.
 - A one-stop solution for effective barber portfolio management.
 
 ## 📷 GalleryItem Management
 
-Showcase your work seamlessly using `GalleryItemCreateUpdateDeleteView`.
+Showcase your work seamlessly.
 - Update your gallery with the latest items, ensuring your portfolio stays up-to-date.
 - Effortlessly manage and curate your visual content.
 
 ## 🌟 Revolutionize Reviews
 
-Elevate your brand with `ReviewCreateUpdateDeleteView`.
+Elevate your brand.
 - Respond promptly to user feedback, enhancing customer satisfaction.
 - Manage reviews efficiently, reflecting a commitment to customer engagement.
 
 ## 👤 Owner Management Suite
 
-Introducing `OwnerManagementView` – your centralized hub for business control.
+Introducing your centralized hub for business control.
 - Handle appointments, barbers, gallery items, and reviews from a single dashboard.
-- Empower your business with `OwnerProfileUpdateView` and `OwnerDashboardView` for comprehensive owner control.
+- Empower your business with comprehensive owner control.
 
 ## 💡 Benefits
 
