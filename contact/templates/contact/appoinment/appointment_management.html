@@ -3,28 +3,52 @@
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 {% block body %}
-  <h2>Appointment Management</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for appointment in appointments %}
-        <tr>
-          <td>{{ appointment.name }}</td>
-          <td>{{ appointment.date }}</td>
-          <td>{{ appointment.time }}</td>
-          <td>
-            <a href="{% url 'appointment_update' pk=appointment.pk %}">Edit</a>
-            <a href="{% url 'appointment_delete' pk=appointment.pk %}">Delete</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <section class="ftco-section ftco-booking bg-light">
+        <div class="container ftco-relative">
+            <div class="row justify-content-center pb-3">
+                <div class="col-md-10 heading-section text-center ftco-animate">
+                    <span class="subheading">Appointment Management</span>
+                    <h2 class="mb-4">Manage Appointments</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-10 ftco-animate">
+                    <form method="post" action="{% url 'manage_appointments' %}" class="appointment-form">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="form-group">
+                            <input type="submit" name="create" value="Add Appointment" class="btn btn-primary">
+                            <input type="submit" name="update" value="Update Appointment" class="btn btn-success">
+                            <input type="submit" name="delete" value="Delete Appointment" class="btn btn-danger">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <h2>Appointment List</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.name }}</td>
+                            <td>{{ appointment.date }}</td>
+                            <td>{{ appointment.time }}</td>
+                            <td>
+                                <a href="{% url 'appointment_update' pk=appointment.pk %}" class="btn btn-warning">Edit</a>
+                                <a href="{% url 'appointment_delete' pk=appointment.pk %}" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 {% endblock body %}
+

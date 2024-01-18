@@ -20,7 +20,7 @@ class Barber(models.Model):
     image = models.ImageField(_('Foto'),upload_to='barber_images/')
 
 class Review(models.Model):
-    barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.CASCADE, verbose_name=_('Friseur'))
+    barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
     rating = models.IntegerField(_('Bewertung'),)
@@ -49,7 +49,7 @@ class GalleryItem(models.Model):
 
 class Appointment(models.Model):
     name = models.CharField(_('Name'),max_length=255)
-    barber = models.ForeignKey(Barber,on_delete=models.CASCADE, verbose_name=_('Friseur'))
+    barber = models.ForeignKey(Barber,on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
     service_type = models.CharField(_('Service'),max_length=20, choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])

@@ -1,25 +1,30 @@
-# accounts/views.py
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render, redirect
+from django.views.generic import CreateView, UpdateView, TemplateView
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
-from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm
+from django.db import IntegrityError
+from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm, CustomAuthenticationForm
 from .models import CustomUser, UserProfile, OwnerProfile
+
 
 class CustomUserLoginView(LoginView):
     template_name = 'accounts/login.html'
+    authentication_form = CustomAuthenticationForm
 
 class CustomUserLogoutView(LogoutView):
     template_name = 'accounts/logout.html'
     next_page = reverse_lazy('home')
 
-class CustomUserSignUpView(UpdateView):
+class CustomUserSignUpView(SuccessMessageMixin, CreateView):
     model = CustomUser
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
+    success_message = 'Account created successfully.'
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -29,10 +34,48 @@ class CustomUserSignUpView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('home')
 
+
+class UserProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = 'accounts/user_profile_update.html'
+    success_message = 'User profile updated successfully.'
+
+    def get_object(self, queryset=None):
+        user_profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        return user_profile
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+class OwnerProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = OwnerProfile
+    form_class = OwnerProfileForm
+    template_name = 'accounts/owner_profile_update.html'
+    success_message = 'Owner profile updated successfully.'
+
+    def get_object(self, queryset=None):
+        return self.request.user.owner.owner_profile
+
+    def test_func(self):
+        return self.request.user.is_owner
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+class ProfileDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/profile_dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_profile'] = UserProfile.objects.get_or_create(user=self.request.user)[0]
+        context['owner_profile'] = OwnerProfile.objects.get_or_create(owner=self.request.user.owner)[0]
+        return context
+
 @login_required
-def profile(request):
-    user_profile = UserProfile.objects.get_or_create(user=request.user)[0]
-    owner_profile = OwnerProfile.objects.get_or_create(user=request.user)[0]
+def profile_update(request):
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    owner_profile, _ = OwnerProfile.objects.get_or_create(owner=request.user.owner)
 
     if request.method == 'POST':
         user_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
@@ -42,10 +85,10 @@ def profile(request):
             user_form.save()
             owner_form.save()
             messages.success(request, 'Profile updated successfully.')
-            return redirect('profile')
+            return redirect('profile_dashboard')
 
     else:
         user_form = UserProfileForm(instance=user_profile)
         owner_form = OwnerProfileForm(instance=owner_profile)
 
-    return render(request, 'accounts/profile.html', {'user_form': user_form, 'owner_form': owner_form})
+    return render(request, 'accounts/profile_update.html', {'user_form': user_form, 'owner_form': owner_form})

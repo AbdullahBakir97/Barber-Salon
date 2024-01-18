@@ -1,4 +1,8 @@
-<!-- appointment.html -->
+{% extends 'base.html' %}
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block body %}
 
 <section class="ftco-section ftco-booking bg-light">
     <div class="container ftco-relative">
@@ -11,42 +15,49 @@
         </div>
         <h3 class="vr">Call Us: 012-3456-7890</h3>
         <div class="row justify-content-center">
-            <div class="col-md-10 ftco-animate">
+            <div class="col-md-8 ftco-animate">
                 <form method="post" class="appointment-form">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_name">Your Name</label>
                                 {{ form.name }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_email">Your Email</label>
                                 {{ form.email }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_date">Preferred Date</label>
                                 {{ form.date }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_time">Preferred Time</label>
                                 {{ form.time }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_service_type">Service Type</label>
                                 {{ form.service_type }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="id_phone">Your Phone</label>
                                 {{ form.phone }}
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label for="id_message">Additional Message</label>
                                 {{ form.message }}
                             </div>
                         </div>
@@ -59,3 +70,4 @@
         </div>
     </div>
 </section>
+{% endblock body %}

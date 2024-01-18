@@ -1,45 +1,117 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.db import IntegrityError
-from django.db.models import Q
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect , get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
-    TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+    TemplateView, ListView, CreateView, UpdateView, DeleteView, DetailView
 )
 from .models import Owner, Barber, Review, GalleryItem, Appointment
 from .forms import ReviewCreateForm, AppointmentForm, BarberForm, GalleryItemForm
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib import messages
 
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-from django.urls import reverse
+class CreateReviewView(SuccessMessageMixin, CreateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_create.html'
+    success_message = _('Bewertung erfolgreich hinzugefügt.')
+
+    def form_valid(self, form):
+        barber_id = self.kwargs['barber_id']
+        barber = get_object_or_404(Barber, id=barber_id)
+        form.instance.barber = barber
+
+        try:
+            form.save()
+            messages.success(self.request, self.success_message)
+        except IntegrityError:
+            messages.error(self.request, _('Sie haben bereits eine Bewertung für diesen Friseur abgegeben.'))
+
+        return redirect('barber_list')
 
 
+class CreateAppointmentView(SuccessMessageMixin, CreateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'appointment.html'
+    success_message = _('Termin erfolgreich erstellt.')
 
-class OwnerDashboardView(LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard.html'
+    def form_valid(self, form):
+        form.instance.user = None  # Set user to None for guests
+        try:
+            form.save()
+            messages.success(self.request, self.success_message)
+        except IntegrityError:
+            messages.error(self.request, _('Termin mit denselben Details existiert bereits.'))
+
+        return redirect('about')  # Adjust the redirect URL as needed
+class OwnerAccessMixin(UserPassesTestMixin):
+    raise_exception = True  # Raise PermissionDenied if the test fails
+
+    def test_func(self):
+        # Check if the user is the owner of the related object
+        user = self.request.user
+        obj = self.get_object()
+        return user == obj.owner.user
+
+class CreateUpdateDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, TemplateView):
+    model = None
+    form_class = None
+    template_name = None
+    success_message = None
+
+    def test_func(self):
+        return True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(user=self.request.user)
-        context['reviews'] = Review.objects.filter(user=self.request.user)
-        context['barbers'] = Barber.objects.filter(owner__user=self.request.user)
-        context['gallery_items'] = GalleryItem.objects.filter(user=self.request.user)
+        context['object_list'] = self.model.objects.filter(user=self.request.user)
+        context['form'] = self.form_class()
         return context
 
-class AppointmentManagementView(LoginRequiredMixin, ListView):
-    model = Appointment
-    context_object_name = 'appointments'
-    template_name = 'appointment_management.html'
-    paginate_by = 10
+    def post(self, request, *args, **kwargs):
+        if 'create' in request.POST:
+            return self.create(request, *args, **kwargs)
+        elif 'update' in request.POST:
+            return self.update(request, *args, **kwargs)
+        elif 'delete' in request.POST:
+            return self.delete(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
-    def get_queryset(self):
-        return Appointment.objects.filter(user=self.request.user)
-    
-    
+    def create(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.instance.user = request.user
+            form.save()
+            messages.success(request, _(f'{self.model.__name__} erfolgreich erstellt.'))
+        else:
+            messages.error(request, _(f'Fehler beim Erstellen von {self.model.__name__}. Bitte überprüfen Sie das Formular.'))
+        return redirect(self.get_success_url())
+
+    def update(self, request, *args, **kwargs):
+        instance = get_object_or_404(self.model, id=request.POST.get('update_id'))
+        form = self.form_class(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _(f'{self.model.__name__} erfolgreich aktualisiert.'))
+        else:
+            messages.error(request, _(f'Fehler beim Aktualisieren von {self.model.__name__}. Bitte überprüfen Sie das Formular.'))
+        return redirect(self.get_success_url())
+
+    def delete(self, request, *args, **kwargs):
+        instance = get_object_or_404(self.model, id=request.POST.get('delete_id'))
+        instance.delete()
+        messages.success(request, _(f'{self.model.__name__} erfolgreich gelöscht.'))
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard')
+
+
+
 class AppointmentListView(ListView):
     model = Appointment
     template_name = 'appointment_list.html'
@@ -66,143 +138,65 @@ class BarberListView(ListView):
     template_name = 'barber_list.html'
     context_object_name = 'barbers'
     paginate_by = 10
-    
 
-class BarberCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Barber
-    form_class = BarberForm
-    template_name = 'barber_create.html'
-    success_message = 'Barber created successfully.'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class GalleryItemCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = GalleryItem
-    form_class = GalleryItemForm
-    template_name = 'gallery/item_create.html'
-    success_message = 'Gallery item created successfully.'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class OwnerManagementView(LoginRequiredMixin, DetailView):
-    model = Owner
-    template_name = 'owner_management.html'
-
-
-
-@login_required(login_url='/accounts/login/')
-def add_review(request, barber_id):
-    barber = get_object_or_404(Barber, id=barber_id)
-
-    if request.method == 'POST':
-        form = ReviewCreateForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.barber = barber
-
-            # Check if the user is authenticated (owner) or a guest
-            if request.user == barber.owner.user or not request.user.is_authenticated:
-                try:
-                    review.save()
-                    messages.success(request, 'Review added successfully.')
-                except IntegrityError:
-                    messages.error(request, 'You have already submitted a review for this barber.')
-
-                return redirect('barber_list')
-
-    else:
-        form = ReviewCreateForm()
-
-    return render(request, 'review_create.html', {'form': form, 'barber': barber})
-
-class AppointmentCreateView(SuccessMessageMixin, CreateView):
-    model = Appointment
-    form_class = AppointmentForm
-    template_name = 'appointment.html'
-    success_message = 'Appointment created successfully.'
-
-    def form_valid(self, form):
-        # If user is authenticated or a guest, set the user field in the appointment
-        if self.request.user.is_authenticated or not self.request.user.is_authenticated:
-            form.instance.user = self.request.user
-
-            # Check for duplicate appointment
-            if Appointment.objects.filter(
-                name=form.cleaned_data['name'],
-                date=form.cleaned_data['date'],
-                time=form.cleaned_data['time'],
-                barber=form.cleaned_data['barber']
-            ).exists():
-                messages.error(self.request, 'Appointment with the same name, date, time, and barber already exists.')
-                return redirect('appointment_create')
-
-            return super().form_valid(form)
-
-    def get_success_url(self):
-        # Redirect to about.html after successful creation
-        return reverse('about')
-
-    
-class OwnerAccessMixin(UserPassesTestMixin):
-    raise_exception = True  # Raise PermissionDenied if the test fails
-
-    def test_func(self):
-        # Check if the user is the owner of the related object
-        user = self.request.user
-        obj = self.get_object()
-        return user == obj.owner.user
-
-class AppointmentDeleteView(OwnerAccessMixin, DeleteView):
-    model = Appointment
-    template_name = 'appointment_delete.html'
-    success_url = reverse_lazy('appointment_management')  # Redirect after successful deletion
-
-class BarberDeleteView(OwnerAccessMixin, DeleteView):
-    model = Barber
-    template_name = 'barber_delete.html'
-    success_url = reverse_lazy('barber_list')  # Redirect after successful deletion
-
-class GalleryItemDeleteView(OwnerAccessMixin, DeleteView):
-    model = GalleryItem
-    template_name = 'gallery/item_delete.html'
-    success_url = reverse_lazy('gallery_list')  # Redirect after successful deletion
-
-class ReviewDeleteView(OwnerAccessMixin, DeleteView):
-    model = Review
-    template_name = 'review_delete.html'
-    success_url = reverse_lazy('review_list')  # Redirect after successful deletion
-
-class AppointmentUpdateView(OwnerAccessMixin, LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class AppointmentCreateUpdateDeleteView(CreateUpdateDeleteView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'appointment_management.html'
-    success_message = 'Appointment updated successfully.'
 
-
-class BarberUpdateView(OwnerAccessMixin, LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class BarberCreateUpdateDeleteView(CreateUpdateDeleteView):
     model = Barber
     form_class = BarberForm
     template_name = 'barber_update.html'
-    success_message = 'Barber updated successfully.'
 
-class GalleryItemUpdateView(OwnerAccessMixin, LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class GalleryItemCreateUpdateDeleteView(CreateUpdateDeleteView):
     model = GalleryItem
     form_class = GalleryItemForm
     template_name = 'gallery/item_update.html'
-    success_message = 'Gallery item updated successfully.'
 
+class ReviewCreateUpdateDeleteView(CreateUpdateDeleteView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_update.html'
 
 class OwnerProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Owner
     fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
     template_name = 'owner_form.html'
-    success_message = 'Profile updated successfully.'
+    success_message = _('Profil erfolgreich aktualisiert.')
     
     def get_object(self, queryset=None):
         return self.request.user.owner
+
+class OwnerDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment.objects.filter(user=self.request.user)
+        context['reviews'] = Review.objects.filter(user=self.request.user)
+        context['barbers'] = Barber.objects.filter(owner__user=self.request.user)
+        context['gallery_items'] = GalleryItem.objects.filter(user=self.request.user)
+        return context
+    
+    
+class AppointmentManagementView(LoginRequiredMixin, ListView):
+    model = Appointment
+    context_object_name = 'appointments'
+    template_name = 'appointment_management.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Appointment.objects.filter(user=self.request.user)
+
+class OwnerManagementView(
+    AppointmentCreateUpdateDeleteView,
+    BarberCreateUpdateDeleteView,
+    GalleryItemCreateUpdateDeleteView,
+    ReviewCreateUpdateDeleteView,
+    OwnerProfileUpdateView,
+    AppointmentManagementView,
+    OwnerDashboardView,
+    TemplateView
+):
+    template_name = 'owner_management.html'
