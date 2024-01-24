@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <style>
+      /* Add your custom styling here */
+      .card {
+         margin-top: 50px;
+      }
+      .form-group {
+         margin-bottom: 20px;
+      }
+      .text-danger {
+         font-size: 80%;
+      }
+   </style>
+{% endblock css %}
+
+{% block body %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="mb-0">{{ _('Signup') }}</h4>
+          </div>
+          <div class="card-body">
+            <form method="post" class="form">
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ _('Name') }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                  <span class="text-danger">{{ form.name.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ _('Email') }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                  <span class="text-danger">{{ form.email.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">{{ _('Telefon') }}</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                  <span class="text-danger">{{ form.phone.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.date_of_birth.id_for_label }}">{{ _('Geburtsdatum') }}</label>
+                {{ form.date_of_birth }}
+                {% if form.date_of_birth.errors %}
+                  <span class="text-danger">{{ form.date_of_birth.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.gender.id_for_label }}">{{ _('Geschlecht') }}</label>
+                {{ form.gender }}
+                {% if form.gender.errors %}
+                  <span class="text-danger">{{ form.gender.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.address.id_for_label }}">{{ _('Adresse') }}</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                  <span class="text-danger">{{ form.address.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">{{ _('Passwort') }}</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                  <span class="text-danger">{{ form.password1.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">{{ _('Passwort bestätigen') }}</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                  <span class="text-danger">{{ form.password2.errors.0 }}</span>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">{{ _('Signup') }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

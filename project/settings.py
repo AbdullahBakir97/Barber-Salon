@@ -44,11 +44,19 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     
+    
+    # 3rd party apps
+    'easy_maps',
+    "phonenumber_field",
+    
     # my app 
     'accounts',
     'contact',
-    'easy_maps',
+    
+    
 ]
+
+#AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -151,7 +159,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SITE_ID = 1  # Make sure to set the correct site ID
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'optional' if you want optional email verification
-LOGIN_URL = '/accounts/login/'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/dashboard/'  # Change to your desired URL

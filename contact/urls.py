@@ -16,13 +16,15 @@ from .views import (
     CreateAppointmentView
 )
 
+app_name = 'contact'
+
 urlpatterns = [
     path('dashboard/', OwnerDashboardView.as_view(), name='owner_dashboard'),
 
     path('appointments/', AppointmentManagementView.as_view(), name='appointment_management'),
     path('appointments/list/', AppointmentListView.as_view(), name='appointment_list'),
-    path('appointments/create/', AppointmentCreateUpdateDeleteView.as_view(), name='appointment_management'),
-    path('appointments/<int:pk>/update/', AppointmentCreateUpdateDeleteView.as_view(), name='appointment_management'),
+    path('appointments/create/', AppointmentCreateUpdateDeleteView.as_view(), name='appointment_create'),
+    path('appointments/<int:pk>/update/', AppointmentCreateUpdateDeleteView.as_view(), name='appointment_update'),
     path('appointments/<int:pk>/delete/', AppointmentCreateUpdateDeleteView.as_view(), name='appointment_delete'),
 
     path('appointments/geust/', CreateAppointmentView.as_view(), name='appointment_create'),

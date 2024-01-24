@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <style>
+      /* Add your custom styling here */
+      .card {
+         margin-top: 50px;
+      }
+      .text-success {
+         font-size: 80%;
+      }
+   </style>
+{% endblock css %}
+
+{% block body %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="mb-0">{{ _('Logout') }}</h4>
+          </div>
+          <div class="card-body">
+            <p class="text-success">{{ _('You have been successfully logged out.') }}</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">{{ _('Login') }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

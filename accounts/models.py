@@ -4,7 +4,11 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import validators
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.password_validation import CommonPasswordValidator, MinimumLengthValidator, NumericPasswordValidator, UserAttributeSimilarityValidator
-from contact.models import Owner
+from django.contrib.auth.models import User
+from contact.models import Barber , Owner
+#from phonenumber_field.modelfields import PhoneNumberField
+ 
+
 
 GENDER_CHOICES = [
     ('male', _('Männlich')),
@@ -12,10 +16,11 @@ GENDER_CHOICES = [
 ]
 
 class CustomUser(AbstractUser):
+    name = models.CharField(_('Name'), default='Dein Name', max_length=255)
     email = models.EmailField(_('Email'), unique=True)
     phone = models.CharField(_('Telefon'), max_length=15, blank=True, null=True)
-    date_of_birth = models.DateField(_('Geburtsdatum'), blank=True)
-    gender = models.CharField(_('Geschlecht'), max_length=10, choices=GENDER_CHOICES, blank=True)
+    date_of_birth = models.DateField(_('Geburtsdatum'), blank=True, null=True)
+    gender = models.CharField(_('Geschlecht'), max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
     address = models.TextField(_('Adresse'), blank=True, null=True)
     password = models.CharField(
         _('Passwort'),
@@ -49,14 +54,16 @@ class CustomUser(AbstractUser):
         return self.username
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name=_('Benutzer'), related_name='user_profile')
+    user = models.OneToOneField(CustomUser, related_name='user_profile', on_delete=models.CASCADE, verbose_name=_('Benutzer'))
     profile_image = models.ImageField(_('Profile Foto'), upload_to='profile_images/', blank=True, null=True)
+    barber = models.ForeignKey(Barber, related_name='barber_profile', on_delete=models.SET_NULL, verbose_name=_('Friseur'),  null=True, blank=True)
 
     def __str__(self):
         return f"Profil von {self.user.username}"
 
 class OwnerProfile(models.Model):
-    owner = models.OneToOneField(Owner, on_delete=models.CASCADE, verbose_name=_('Eigentümer'), related_name='owner_profile')
+    user = models.OneToOneField(CustomUser, related_name='owner_user_profile', on_delete=models.CASCADE, verbose_name=_('Benutzer'), default=1)
+    owner = models.OneToOneField(Owner, related_name='owner_profile', on_delete=models.CASCADE, verbose_name=_('Eigentümer'), default=None)
     image = models.ImageField(_('Foto'), upload_to='profile_images/')
 
     def __str__(self):

@@ -11,9 +11,8 @@ from django.db import IntegrityError
 from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm, CustomAuthenticationForm
 from .models import CustomUser, UserProfile, OwnerProfile
 
-
 class CustomUserLoginView(LoginView):
-    template_name = 'accounts/login.html'
+    template_name = 'login.html'
     authentication_form = CustomAuthenticationForm
 
 class CustomUserLogoutView(LogoutView):
@@ -34,7 +33,6 @@ class CustomUserSignUpView(SuccessMessageMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('home')
 
-
 class UserProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
@@ -42,7 +40,7 @@ class UserProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
     success_message = 'User profile updated successfully.'
 
     def get_object(self, queryset=None):
-        user_profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        user_profile, created = UserProfile.objects.get_or_create(user=self.request.user)
         return user_profile
 
     def get_success_url(self):
@@ -68,9 +66,12 @@ class ProfileDashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get_or_create(user=self.request.user)[0]
-        context['owner_profile'] = OwnerProfile.objects.get_or_create(owner=self.request.user.owner)[0]
+        user_profile, _ = UserProfile.objects.get_or_create(user=self.request.user)
+        owner_profile, _ = OwnerProfile.objects.get_or_create(owner=self.request.user.owner)
+        context['user_profile'] = user_profile
+        context['owner_profile'] = owner_profile
         return context
+
 
 @login_required
 def profile_update(request):

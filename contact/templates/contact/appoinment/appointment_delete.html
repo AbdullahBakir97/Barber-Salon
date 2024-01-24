@@ -2,7 +2,7 @@
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
-{% block content %}
+{% block body %}
   <h2>Confirm Delete</h2>
   <p>Are you sure you want to delete this appointment?</p>
   <form method="post">
@@ -10,4 +10,4 @@
     <button type="submit">Confirm Delete</button>
   </form>
   <a href="{% url 'appointment_management' %}">Cancel</a>
-{% endblock %}
+{% endblock body %}

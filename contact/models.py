@@ -2,8 +2,14 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+#from accounts.models import OwnerProfile 
+from django.conf import settings
+#from phonenumber_field.modelfields import PhoneNumberField
+
+
 
 class Owner(models.Model):
+    #user = models.OneToOneField('accounts.OwnerProfile', related_name='owner_user', on_delete=models.CASCADE, verbose_name=_('Eigentümer'))
     name = models.CharField(_('Name'),max_length=255)
     email = models.EmailField(_('Email'),)
     phone = models.CharField(_('Telefon'),max_length=15)
@@ -42,6 +48,7 @@ CATEGORY_TYPES = (
     ('Skin Care','Hautpflege'),
 )
 class GalleryItem(models.Model):
+    name = models.CharField(_('Element'),max_length=255, default='Galerie Element')
     image = models.ImageField(_('Foto'),upload_to='gallery_images/')
     description = models.TextField(_('Beschriebeung'),)
     category = models.CharField(_('Kategorie'),max_length=20,choices=CATEGORY_TYPES,default=CATEGORY_TYPES[0][0])
@@ -49,7 +56,7 @@ class GalleryItem(models.Model):
 
 class Appointment(models.Model):
     name = models.CharField(_('Name'),max_length=255)
-    barber = models.ForeignKey(Barber,on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
+    barber = models.ForeignKey(Barber,related_name='barber_appointment', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
     service_type = models.CharField(_('Service'),max_length=20, choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])

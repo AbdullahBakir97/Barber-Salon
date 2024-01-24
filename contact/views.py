@@ -57,7 +57,7 @@ class OwnerAccessMixin(UserPassesTestMixin):
         obj = self.get_object()
         return user == obj.owner.user
 
-class CreateUpdateDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, TemplateView):
+class CreateUpdateDeleteView(UserPassesTestMixin, SuccessMessageMixin, TemplateView):
     model = None
     form_class = None
     template_name = None
@@ -139,10 +139,32 @@ class BarberListView(ListView):
     context_object_name = 'barbers'
     paginate_by = 10
 
-class AppointmentCreateUpdateDeleteView(CreateUpdateDeleteView):
+class AppointmentCreateUpdateDeleteView(UserPassesTestMixin, SuccessMessageMixin, TemplateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'appointment_management.html'
+    success_message = _('Termin erfolgreich erstellt.')
+
+    def test_func(self):
+        return True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Assuming you have a related 'Barber' instance for the logged-in user
+        barber = getattr(self.request.user, 'barber', None)
+
+        if barber:
+            context['object_list'] = self.model.objects.filter(barber=barber)
+            context['form'] = self.form_class()
+        else:
+            context['object_list'] = []
+            context['form'] = None
+
+        return context
+
+    # Rest of your class implementation...
+
 
 class BarberCreateUpdateDeleteView(CreateUpdateDeleteView):
     model = Barber
@@ -173,11 +195,20 @@ class OwnerDashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['appointments'] = Appointment.objects.filter(user=self.request.user)
+
+        # Check if the user has a related Barber instance
+        barber = getattr(self.request.user, 'barber', None)
+
+        if barber:
+            context['appointments'] = Appointment.objects.filter(barber=barber)
+        else:
+            context['appointments'] = []
+
         context['reviews'] = Review.objects.filter(user=self.request.user)
         context['barbers'] = Barber.objects.filter(owner__user=self.request.user)
         context['gallery_items'] = GalleryItem.objects.filter(user=self.request.user)
         return context
+
     
     
 class AppointmentManagementView(LoginRequiredMixin, ListView):
@@ -187,7 +218,13 @@ class AppointmentManagementView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Appointment.objects.filter(user=self.request.user)
+        try:
+            # Assuming you have a reverse relation from Barber to Appointments named 'barber_appointments'
+            barber_appointments = self.request.user.barber.barber_appointments.all()
+            return barber_appointments
+        except AttributeError:
+            # Handle the case where the user is not a barber or does not have related appointments
+            return Appointment.objects.none()
 
 class OwnerManagementView(
     AppointmentCreateUpdateDeleteView,

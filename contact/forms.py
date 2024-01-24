@@ -77,6 +77,7 @@ class AppointmentForm(forms.ModelForm):
         fields = ['name', 'barber', 'email', 'date', 'time', 'service_type', 'phone', 'message']
 
         widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
             'date': forms.DateInput(attrs={'type': 'date'}),
             'time': forms.TimeInput(attrs={'type': 'time'}),
             'barber': forms.Select(attrs={'class': 'form-control'}),
