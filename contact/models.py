@@ -21,6 +21,7 @@ class Owner(models.Model):
 
 class Barber(models.Model):
     name = models.CharField(_('Name'),max_length=255)
+    appointment = models.ForeignKey('Appointment',related_name='barber_appointment', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Termine'))
     expertise = models.CharField(_('Erfahrung'),max_length=255)
     experience_years = models.IntegerField(_('Erfahrung Jahre'),)
     image = models.ImageField(_('Foto'),upload_to='barber_images/')
@@ -56,7 +57,7 @@ class GalleryItem(models.Model):
 
 class Appointment(models.Model):
     name = models.CharField(_('Name'),max_length=255)
-    barber = models.ForeignKey(Barber,related_name='barber_appointment', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
+    barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
     service_type = models.CharField(_('Service'),max_length=20, choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])

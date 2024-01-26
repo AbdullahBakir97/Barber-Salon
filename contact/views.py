@@ -163,7 +163,6 @@ class AppointmentCreateUpdateDeleteView(UserPassesTestMixin, SuccessMessageMixin
 
         return context
 
-    # Rest of your class implementation...
 
 
 class BarberCreateUpdateDeleteView(CreateUpdateDeleteView):
@@ -219,8 +218,8 @@ class AppointmentManagementView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         try:
-            # Assuming you have a reverse relation from Barber to Appointments named 'barber_appointments'
-            barber_appointments = self.request.user.barber.barber_appointments.all()
+            # reverse relation from Barber to Appointments named 'barber_appointments'
+            barber_appointments = self.request.user.barber.barber_appointment.all()
             return barber_appointments
         except AttributeError:
             # Handle the case where the user is not a barber or does not have related appointments
