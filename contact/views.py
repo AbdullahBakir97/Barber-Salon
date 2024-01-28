@@ -1,238 +1,399 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
-from django.db import IntegrityError
-from django.shortcuts import render, redirect , get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import (
-    TemplateView, ListView, CreateView, UpdateView, DeleteView, DetailView
-)
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Owner, Barber, Review, GalleryItem, Appointment
-from .forms import ReviewCreateForm, AppointmentForm, BarberForm, GalleryItemForm
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm
+from django.http import Http404
+import uuid
+from django.db import IntegrityError
+from django.contrib import messages
 
-
-class CreateReviewView(SuccessMessageMixin, CreateView):
-    model = Review
-    form_class = ReviewCreateForm
-    template_name = 'review_create.html'
-    success_message = _('Bewertung erfolgreich hinzugefügt.')
-
-    def form_valid(self, form):
-        barber_id = self.kwargs['barber_id']
-        barber = get_object_or_404(Barber, id=barber_id)
-        form.instance.barber = barber
-
-        try:
-            form.save()
-            messages.success(self.request, self.success_message)
-        except IntegrityError:
-            messages.error(self.request, _('Sie haben bereits eine Bewertung für diesen Friseur abgegeben.'))
-
-        return redirect('barber_list')
-
-
-class CreateAppointmentView(SuccessMessageMixin, CreateView):
-    model = Appointment
-    form_class = AppointmentForm
-    template_name = 'appointment.html'
-    success_message = _('Termin erfolgreich erstellt.')
+# Owner
+class OwnerCreateView(LoginRequiredMixin, CreateView):
+    model = Owner
+    form_class = OwnerForm
+    fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
+    template_name = 'owner_form.html'
+    success_url = '/owners/'  # Redirect to the list view of owners
 
     def form_valid(self, form):
-        form.instance.user = None  # Set user to None for guests
+        if not self.request.user.is_authenticated or not hasattr(self.request.user, 'owner_user_profile'):
+            raise Http404(_("Sie dürfen kein Eigentümerprofil erstellen."))
+
+        # Check if an owner profile already exists for the user
+        if Owner.objects.filter(user=self.request.user).exists():
+            messages.error(self.request, _('Ein Eigentümerprofil für diesen Benutzer existiert bereits. Sie können es stattdessen bearbeiten.'))
+            return self.form_invalid(form)
+
+        form.instance.user = self.request.user
         try:
-            form.save()
-            messages.success(self.request, self.success_message)
+            return super().form_valid(form)
         except IntegrityError:
-            messages.error(self.request, _('Termin mit denselben Details existiert bereits.'))
+            messages.error(self.request, _('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
+            return self.form_invalid(form)
 
-        return redirect('about')  # Adjust the redirect URL as needed
-class OwnerAccessMixin(UserPassesTestMixin):
-    raise_exception = True  # Raise PermissionDenied if the test fails
-
-    def test_func(self):
-        # Check if the user is the owner of the related object
-        user = self.request.user
-        obj = self.get_object()
-        return user == obj.owner.user
-
-class CreateUpdateDeleteView(UserPassesTestMixin, SuccessMessageMixin, TemplateView):
-    model = None
-    form_class = None
-    template_name = None
-    success_message = None
-
-    def test_func(self):
-        return True
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.filter(user=self.request.user)
-        context['form'] = self.form_class()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        if 'create' in request.POST:
-            return self.create(request, *args, **kwargs)
-        elif 'update' in request.POST:
-            return self.update(request, *args, **kwargs)
-        elif 'delete' in request.POST:
-            return self.delete(request, *args, **kwargs)
-        return super().post(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.instance.user = request.user
-            form.save()
-            messages.success(request, _(f'{self.model.__name__} erfolgreich erstellt.'))
-        else:
-            messages.error(request, _(f'Fehler beim Erstellen von {self.model.__name__}. Bitte überprüfen Sie das Formular.'))
-        return redirect(self.get_success_url())
-
-    def update(self, request, *args, **kwargs):
-        instance = get_object_or_404(self.model, id=request.POST.get('update_id'))
-        form = self.form_class(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            messages.success(request, _(f'{self.model.__name__} erfolgreich aktualisiert.'))
-        else:
-            messages.error(request, _(f'Fehler beim Aktualisieren von {self.model.__name__}. Bitte überprüfen Sie das Formular.'))
-        return redirect(self.get_success_url())
-
-    def delete(self, request, *args, **kwargs):
-        instance = get_object_or_404(self.model, id=request.POST.get('delete_id'))
-        instance.delete()
-        messages.success(request, _(f'{self.model.__name__} erfolgreich gelöscht.'))
-        return redirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse_lazy('dashboard')
-
-
-
-class AppointmentListView(ListView):
-    model = Appointment
-    template_name = 'appointment_list.html'
-    context_object_name = 'appointments'
-    paginate_by = 10
-    
-
-class ReviewListView(ListView):
-    model = Review
-    template_name = 'review_list.html'
-    context_object_name = 'reviews'
-    paginate_by = 10
-    
-    
-class GalleryItemListView(ListView):
-    model = GalleryItem
-    template_name = 'gallery/item_list.html'
-    context_object_name = 'gallery_items'
-    paginate_by = 10
-    
-    
-class BarberListView(ListView):
-    model = Barber
-    template_name = 'barber_list.html'
-    context_object_name = 'barbers'
-    paginate_by = 10
-
-class AppointmentCreateUpdateDeleteView(UserPassesTestMixin, SuccessMessageMixin, TemplateView):
-    model = Appointment
-    form_class = AppointmentForm
-    template_name = 'appointment_management.html'
-    success_message = _('Termin erfolgreich erstellt.')
-
-    def test_func(self):
-        return True
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Assuming you have a related 'Barber' instance for the logged-in user
-        barber = getattr(self.request.user, 'barber', None)
-
-        if barber:
-            context['object_list'] = self.model.objects.filter(barber=barber)
-            context['form'] = self.form_class()
-        else:
-            context['object_list'] = []
-            context['form'] = None
-
-        return context
-
-
-
-class BarberCreateUpdateDeleteView(CreateUpdateDeleteView):
-    model = Barber
-    form_class = BarberForm
-    template_name = 'barber_update.html'
-
-class GalleryItemCreateUpdateDeleteView(CreateUpdateDeleteView):
-    model = GalleryItem
-    form_class = GalleryItemForm
-    template_name = 'gallery/item_update.html'
-
-class ReviewCreateUpdateDeleteView(CreateUpdateDeleteView):
-    model = Review
-    form_class = ReviewCreateForm
-    template_name = 'review_update.html'
-
-class OwnerProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class OwnerUpdateView(LoginRequiredMixin, UpdateView):
     model = Owner
     fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
     template_name = 'owner_form.html'
-    success_message = _('Profil erfolgreich aktualisiert.')
-    
-    def get_object(self, queryset=None):
-        return self.request.user.owner
+    success_url = '/owners/'  # Redirect to the list view of owners
 
-class OwnerDashboardView(LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard.html'
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if request.user != obj.user:
+            raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+class OwnerDeleteView(LoginRequiredMixin, DeleteView):
+    model = Owner
+    template_name = 'owner_confirm_delete.html'
+    success_url = '/owners/'  # Redirect to the list view of owners
 
-        # Check if the user has a related Barber instance
-        barber = getattr(self.request.user, 'barber', None)
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if request.user != obj.user:
+            raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht löschen."))
+        return super().dispatch(request, *args, **kwargs)
 
-        if barber:
-            context['appointments'] = Appointment.objects.filter(barber=barber)
+class OwnerListView(LoginRequiredMixin, ListView):
+    model = Owner
+    template_name = 'owner_list.html'
+
+# Barber
+class BarberCreateView(LoginRequiredMixin, CreateView):
+    model = Barber
+    form_class = BarberForm
+    template_name = 'barber_form.html'
+    success_url = '/barbers/'  # Redirect to the list view of barbers
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        barber_id = self.kwargs.get('barber_id')
+        barber = get_object_or_404(Barber, id=barber_id)
+        form.instance.barber = barber
+        if owner_profile:
+            form.instance.owner = owner_profile
+            try:
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Ein Friseur mit diesem Namen existiert bereits.'))
+                return self.form_invalid(form)
         else:
-            context['appointments'] = []
+            raise Http404(_("Sie dürfen kein Friseurprofil erstellen."))
 
-        context['reviews'] = Review.objects.filter(user=self.request.user)
-        context['barbers'] = Barber.objects.filter(owner__user=self.request.user)
-        context['gallery_items'] = GalleryItem.objects.filter(user=self.request.user)
-        return context
+class BarberUpdateView(LoginRequiredMixin, UpdateView):
+    model = Barber
+    form_class = BarberForm
+    template_name = 'barber_form.html'
+    success_url = '/barbers/'  # Redirect to the list view of barbers
 
-    
-    
-class AppointmentManagementView(LoginRequiredMixin, ListView):
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.owner
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen dieses Friseurprofil nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
+
+class BarberDeleteView(LoginRequiredMixin, DeleteView):
+    model = Barber
+    template_name = 'barber_confirm_delete.html'
+    success_url = '/barbers/'  # Redirect to the list view of barbers
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.owner
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen dieses Friseurprofil nicht löschen."))
+        return super().dispatch(request, *args, **kwargs)
+
+class BarberListView(LoginRequiredMixin, ListView):
+    model = Barber
+    template_name = 'barber_list.html'
+
+
+# GalleryItem
+class GalleryItemCreateView(LoginRequiredMixin, CreateView):
+    model = GalleryItem
+    form_class = GalleryItemForm
+    template_name = 'galleryitem_form.html'
+    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            form.instance.user = self.request.user
+            try:
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Ein Element mit diesem Titel existiert bereits.'))
+                return self.form_invalid(form)
+        else:
+            raise Http404(_("Sie dürfen kein Galerieelement erstellen."))
+
+class GalleryItemUpdateView(LoginRequiredMixin, UpdateView):
+    model = GalleryItem
+    form_class = GalleryItemForm
+    template_name = 'galleryitem_form.html'
+    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen dieses Galerieelement nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
+
+class GalleryItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = GalleryItem
+    template_name = 'galleryitem_confirm_delete.html'
+    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen dieses Galerieelement nicht löschen."))
+        return super().dispatch(request, *args, **kwargs)
+
+class GalleryItemListView(LoginRequiredMixin, ListView):
+    model = GalleryItem
+    template_name = 'galleryitem_list.html'
+
+# Review
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_form.html'
+    success_url = '/reviews/'  # Redirect to the list view of reviews
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            form.instance.user = self.request.user
+            try:
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Eine Bewertung von diesem Benutzer für denselben Friseur existiert bereits.'))
+                return self.form_invalid(form)
+        else:
+            raise Http404(_("Sie dürfen keine Bewertung erstellen."))
+
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_form.html'
+    success_url = '/reviews/'  # Redirect to the list view of reviews
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen diese Bewertung nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
+
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    model = Review
+    template_name = 'review_confirm_delete.html'
+    success_url = '/reviews/'  # Redirect to the list view of reviews
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen diese Bewertung nicht löschen."))
+        return super().dispatch(request, *args, **kwargs)
+
+class ReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    template_name = 'review_list.html'
+
+# Appointment
+class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
-    context_object_name = 'appointments'
-    template_name = 'appointment_management.html'
-    paginate_by = 10
+    form_class = AppointmentForm
+    template_name = 'appointment_form.html'
+    success_url = '/appointments/'  # Redirect to the list view of appointments
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        barber_id = self.kwargs.get('barber_id')
+        barber = get_object_or_404(Barber, id=barber_id)
+        form.instance.barber = barber
+        if owner_profile:
+            form.instance.user = self.request.user
+            try:
+                self.object = form.save()
+                messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Ein Termin für diesen Benutzer für denselben Friseur und dasselbe Datum existiert bereits.'))
+                return self.form_invalid(form)
+        else:
+            raise Http404(_("Sie dürfen keinen Termin erstellen."))
+        
+        
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'appointment_form.html'
+    success_url = '/appointments/'  # Redirect to the list view of appointments
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen diesen Termin nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    template_name = 'appointment_confirm_delete.html'
+    success_url = '/appointments/'  # Redirect to the list view of appointments
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.user.owner_user_profile
+        if request.user != owner_profile.user:
+            raise Http404(_("Sie dürfen diesen Termin nicht löschen."))
+        return super().dispatch(request, *args, **kwargs)
+
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'appointment_list.html'
+
+
+
+# Visitor Views
+class VisitorAppointmentCreateView(CreateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'appointment_form.html'
+    success_url = reverse_lazy('appointment_list_visitor')
+
+    def form_valid(self, form):
+        
+        visitor_id = self.request.session.get('visitor_id', None)
+        if not visitor_id:
+            visitor_id = str(uuid.uuid4())
+            self.request.session['visitor_id'] = visitor_id
+
+        form.instance.visitor_id = visitor_id
+        
+        try:
+            self.object = form.save()
+            messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
+            return super().form_valid(form)
+        except IntegrityError:
+            messages.error(self.request, _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.'))
+            return self.form_invalid(form)
+
+class VisitorReviewCreateView(CreateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_form.html'
+    success_url = reverse_lazy('review_list_visitor')
+
+    def form_valid(self, form):
+        
+        visitor_id = self.request.session.get('visitor_id', None)
+        if not visitor_id:
+            visitor_id = str(uuid.uuid4())
+            self.request.session['visitor_id'] = visitor_id
+
+        
+        try:
+            self.object = form.save()
+            messages.success(self.request, _('Bewertung erfolgreich hinzugefügt.'))
+            return super().form_valid(form)
+        except IntegrityError:
+            messages.error(self.request, _('Sie haben diesen Friseur bereits bewertet.'))
+            return self.form_invalid(form)
+
+class VisitorAppointmentListView(ListView):
+    model = Appointment
+    template_name = 'appointment_list_visitor.html'
 
     def get_queryset(self):
-        try:
-            # reverse relation from Barber to Appointments named 'barber_appointments'
-            barber_appointments = self.request.user.barber.barber_appointment.all()
-            return barber_appointments
-        except AttributeError:
-            # Handle the case where the user is not a barber or does not have related appointments
-            return Appointment.objects.none()
+        # Zeige nur Termine, die vom aktuellen Besucher erstellt wurden
+        visitor_id = self.request.session.get('visitor_id', None)
+        if visitor_id:
+            return Appointment.objects.filter(visitor_id=visitor_id)
+        return Appointment.objects.none()
 
-class OwnerManagementView(
-    AppointmentCreateUpdateDeleteView,
-    BarberCreateUpdateDeleteView,
-    GalleryItemCreateUpdateDeleteView,
-    ReviewCreateUpdateDeleteView,
-    OwnerProfileUpdateView,
-    AppointmentManagementView,
-    OwnerDashboardView,
-    TemplateView
-):
-    template_name = 'owner_management.html'
+class VisitorReviewListView(ListView):
+    model = Review
+    template_name = 'review_list_visitor.html'
+
+    def get_queryset(self):
+        # Zeige alle Bewertungen für Besucher
+        return Review.objects.all()
+
+
+# Owner Views
+
+class OwnerAppointmentCreateView(LoginRequiredMixin, CreateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'appointment_form.html'
+    success_url = reverse_lazy('appointment_list_owner')
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            form.instance.user = self.request.user
+            try:
+                self.object = form.save()
+                messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Ein Termin für dieses Datum, diese Uhrzeit und diesen Friseur existiert bereits.'))
+        else:
+            raise Http404("Sie dürfen keinen Termin hinzufügen.")
+
+        return redirect('appointment_list_owner')
+
+class OwnerReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'review_form.html'
+    success_url = reverse_lazy('review_list_owner')
+
+    def form_valid(self, form):
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            form.instance.user = self.request.user
+            try:
+                self.object = form.save()
+                messages.success(self.request, _('Bewertung erfolgreich hinzugefügt.'))
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Sie haben diesen Friseur bereits bewertet.'))
+        else:
+            raise Http404("Sie dürfen keine Bewertung hinzufügen.")
+
+        return redirect('review_list_owner')
+
+class OwnerAppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'appointment_list_owner.html'
+
+    def get_queryset(self):
+        # Zeige alle Termine für den Besitzer
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            return Appointment.objects.all()
+        return Appointment.objects.none()
+
+class OwnerReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    template_name = 'review_list_owner.html'
+
+    def get_queryset(self):
+        # Zeige alle Bewertungen für den Besitzer
+        owner_profile = self.request.user.owner_user_profile
+        if owner_profile:
+            return Review.objects.all()
+        return Review.objects.none()

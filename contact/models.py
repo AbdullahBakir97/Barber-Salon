@@ -18,6 +18,9 @@ class Owner(models.Model):
     website = models.URLField(_('Webseite'),blank=True, null=True)
     about = models.TextField(_('Über'),blank=True, null=True)
     social_media_links = models.JSONField(_('Social Links'),blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
 
 class Barber(models.Model):
     name = models.CharField(_('Name'),max_length=255)
@@ -26,12 +29,18 @@ class Barber(models.Model):
     experience_years = models.IntegerField(_('Erfahrung Jahre'),)
     image = models.ImageField(_('Foto'),upload_to='barber_images/')
 
+    def __str__(self):
+        return self.name
+
 class Review(models.Model):
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
     rating = models.IntegerField(_('Bewertung'),)
 
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.barber.name}"
 
 SERVICE_TYPES = (
         ('HairCut','Haarschnitt'),
@@ -55,6 +64,9 @@ class GalleryItem(models.Model):
     category = models.CharField(_('Kategorie'),max_length=20,choices=CATEGORY_TYPES,default=CATEGORY_TYPES[0][0])
     service = models.CharField(_('Service'),max_length=20,choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])
 
+    def __str__(self):
+        return self.name
+
 class Appointment(models.Model):
     name = models.CharField(_('Name'),max_length=255)
     barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
@@ -65,5 +77,7 @@ class Appointment(models.Model):
     email = models.EmailField(_('Email'),default='no-reply@example.com')
     message = models.TextField(_('Nachricht'),)
 
-
+    def __str__(self):
+        return f"{self.name} - {self.barber.name}"
+    
 

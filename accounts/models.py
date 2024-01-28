@@ -54,8 +54,8 @@ class CustomUser(AbstractUser):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(CustomUser, related_name='user_profile', on_delete=models.CASCADE, verbose_name=_('Benutzer'))
-    profile_image = models.ImageField(_('Profile Foto'), upload_to='profile_images/', blank=True, null=True)
     barber = models.ForeignKey(Barber, related_name='barber_profile', on_delete=models.SET_NULL, verbose_name=_('Friseur'),  null=True, blank=True)
+    profile_image = models.ImageField(_('Profile Foto'), upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):
         return f"Profil von {self.user.username}"
