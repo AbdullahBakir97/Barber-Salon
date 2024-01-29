@@ -35,6 +35,7 @@ class OwnerCreateView(LoginRequiredMixin, CreateView):
             messages.error(self.request, _('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
             return self.form_invalid(form)
 
+
 class OwnerUpdateView(LoginRequiredMixin, UpdateView):
     model = Owner
     fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
@@ -43,10 +44,15 @@ class OwnerUpdateView(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
-        if request.user != obj.user:
+        owner_profile = obj.owner
+        if (
+            request.user != owner_profile.user
+            or Owner.objects.filter(user=request.user).exclude(pk=obj.pk).exists()
+        ):
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
         return super().dispatch(request, *args, **kwargs)
-
+        
+        
 class OwnerDeleteView(LoginRequiredMixin, DeleteView):
     model = Owner
     template_name = 'owner_confirm_delete.html'
