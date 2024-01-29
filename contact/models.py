@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 #from accounts.models import OwnerProfile 
 from django.conf import settings
+import uuid
 #from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -33,6 +34,8 @@ class Barber(models.Model):
         return self.name
 
 class Review(models.Model):
+    visitor_id = models.UUIDField(_('Besucher-ID'), default=uuid.uuid4, editable=False, unique=True)
+    image = models.ImageField(_('Foto'),upload_to='review_images/', null=True, blank=True)
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
@@ -68,6 +71,7 @@ class GalleryItem(models.Model):
         return self.name
 
 class Appointment(models.Model):
+    visitor_id = models.UUIDField(_('Besucher-ID'), default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(_('Name'),max_length=255)
     barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)

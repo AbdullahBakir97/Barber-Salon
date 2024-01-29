@@ -7,17 +7,27 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Owner, Barber, Review, GalleryItem, Appointment
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm
 from django.http import Http404
-import uuid
 from django.db import IntegrityError
 from django.contrib import messages
+import uuid
+
 
 # Owner
+
+class OwnerProfileRequiredMixin(LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        owner_profile = request.user.owner_user_profile
+        if not owner_profile:
+            raise Http404(_("Sie dürfen diese Seite nicht anzeigen."))
+        return super().dispatch(request, *args, **kwargs)
+    
+    
 class OwnerCreateView(LoginRequiredMixin, CreateView):
     model = Owner
     form_class = OwnerForm
     fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
     template_name = 'owner_form.html'
-    success_url = '/owners/'  # Redirect to the list view of owners
+    success_url = reverse_lazy('owner_list') 
 
     def form_valid(self, form):
         if not self.request.user.is_authenticated or not hasattr(self.request.user, 'owner_user_profile'):
@@ -36,11 +46,11 @@ class OwnerCreateView(LoginRequiredMixin, CreateView):
             return self.form_invalid(form)
 
 
-class OwnerUpdateView(LoginRequiredMixin, UpdateView):
+class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Owner
     fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
     template_name = 'owner_form.html'
-    success_url = '/owners/'  # Redirect to the list view of owners
+    success_url = reverse_lazy('owner_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -53,10 +63,10 @@ class OwnerUpdateView(LoginRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
         
         
-class OwnerDeleteView(LoginRequiredMixin, DeleteView):
+class OwnerDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Owner
     template_name = 'owner_confirm_delete.html'
-    success_url = '/owners/'  # Redirect to the list view of owners
+    success_url = reverse_lazy('owner_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -64,16 +74,16 @@ class OwnerDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class OwnerListView(LoginRequiredMixin, ListView):
+class OwnerListView(OwnerProfileRequiredMixin, ListView):
     model = Owner
     template_name = 'owner_list.html'
 
 # Barber
-class BarberCreateView(LoginRequiredMixin, CreateView):
+class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Barber
     form_class = BarberForm
     template_name = 'barber_form.html'
-    success_url = '/barbers/'  # Redirect to the list view of barbers
+    success_url = reverse_lazy('barber_list')
 
     def form_valid(self, form):
         owner_profile = self.request.user.owner_user_profile
@@ -90,11 +100,11 @@ class BarberCreateView(LoginRequiredMixin, CreateView):
         else:
             raise Http404(_("Sie dürfen kein Friseurprofil erstellen."))
 
-class BarberUpdateView(LoginRequiredMixin, UpdateView):
+class BarberUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Barber
     form_class = BarberForm
     template_name = 'barber_form.html'
-    success_url = '/barbers/'  # Redirect to the list view of barbers
+    success_url = reverse_lazy('barber_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -103,10 +113,10 @@ class BarberUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404(_("Sie dürfen dieses Friseurprofil nicht bearbeiten."))
         return super().dispatch(request, *args, **kwargs)
 
-class BarberDeleteView(LoginRequiredMixin, DeleteView):
+class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Barber
     template_name = 'barber_confirm_delete.html'
-    success_url = '/barbers/'  # Redirect to the list view of barbers
+    success_url = reverse_lazy('barber_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -115,17 +125,17 @@ class BarberDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen dieses Friseurprofil nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class BarberListView(LoginRequiredMixin, ListView):
+class BarberListView(OwnerProfileRequiredMixin, ListView):
     model = Barber
     template_name = 'barber_list.html'
 
 
 # GalleryItem
-class GalleryItemCreateView(LoginRequiredMixin, CreateView):
+class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
     model = GalleryItem
     form_class = GalleryItemForm
     template_name = 'galleryitem_form.html'
-    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+    success_url = reverse_lazy('galleryitem_list')
 
     def form_valid(self, form):
         owner_profile = self.request.user.owner_user_profile
@@ -139,11 +149,11 @@ class GalleryItemCreateView(LoginRequiredMixin, CreateView):
         else:
             raise Http404(_("Sie dürfen kein Galerieelement erstellen."))
 
-class GalleryItemUpdateView(LoginRequiredMixin, UpdateView):
+class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = GalleryItem
     form_class = GalleryItemForm
     template_name = 'galleryitem_form.html'
-    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+    success_url = reverse_lazy('galleryitem_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -152,10 +162,10 @@ class GalleryItemUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404(_("Sie dürfen dieses Galerieelement nicht bearbeiten."))
         return super().dispatch(request, *args, **kwargs)
 
-class GalleryItemDeleteView(LoginRequiredMixin, DeleteView):
+class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = GalleryItem
     template_name = 'galleryitem_confirm_delete.html'
-    success_url = '/galleryitems/'  # Redirect to the list view of gallery items
+    success_url = reverse_lazy('galleryitem_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -164,16 +174,16 @@ class GalleryItemDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen dieses Galerieelement nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class GalleryItemListView(LoginRequiredMixin, ListView):
+class GalleryItemListView(OwnerProfileRequiredMixin, ListView):
     model = GalleryItem
     template_name = 'galleryitem_list.html'
 
 # Review
-class ReviewCreateView(LoginRequiredMixin, CreateView):
+class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'review_form.html'
-    success_url = '/reviews/'  # Redirect to the list view of reviews
+    success_url = reverse_lazy('review_list')
 
     def form_valid(self, form):
         owner_profile = self.request.user.owner_user_profile
@@ -187,11 +197,11 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         else:
             raise Http404(_("Sie dürfen keine Bewertung erstellen."))
 
-class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+class ReviewUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'review_form.html'
-    success_url = '/reviews/'  # Redirect to the list view of reviews
+    success_url = reverse_lazy('review_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -200,10 +210,10 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404(_("Sie dürfen diese Bewertung nicht bearbeiten."))
         return super().dispatch(request, *args, **kwargs)
 
-class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Review
     template_name = 'review_confirm_delete.html'
-    success_url = '/reviews/'  # Redirect to the list view of reviews
+    success_url = reverse_lazy('review_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -212,16 +222,16 @@ class ReviewDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen diese Bewertung nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class ReviewListView(LoginRequiredMixin, ListView):
+class ReviewListView(OwnerProfileRequiredMixin, ListView):
     model = Review
     template_name = 'review_list.html'
 
 # Appointment
-class AppointmentCreateView(LoginRequiredMixin, CreateView):
+class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'appointment_form.html'
-    success_url = '/appointments/'  # Redirect to the list view of appointments
+    success_url = reverse_lazy('appointment_list')
 
     def form_valid(self, form):
         owner_profile = self.request.user.owner_user_profile
@@ -241,11 +251,11 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             raise Http404(_("Sie dürfen keinen Termin erstellen."))
         
         
-class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'appointment_form.html'
-    success_url = '/appointments/'  # Redirect to the list view of appointments
+    success_url = reverse_lazy('appointment_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -254,10 +264,10 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404(_("Sie dürfen diesen Termin nicht bearbeiten."))
         return super().dispatch(request, *args, **kwargs)
 
-class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Appointment
     template_name = 'appointment_confirm_delete.html'
-    success_url = '/appointments/'  # Redirect to the list view of appointments
+    success_url = reverse_lazy('appointment_list')
 
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -266,7 +276,7 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen diesen Termin nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class AppointmentListView(LoginRequiredMixin, ListView):
+class AppointmentListView(OwnerProfileRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointment_list.html'
 
@@ -304,11 +314,10 @@ class VisitorReviewCreateView(CreateView):
 
     def form_valid(self, form):
         
-        visitor_id = self.request.session.get('visitor_id', None)
-        if not visitor_id:
-            visitor_id = str(uuid.uuid4())
-            self.request.session['visitor_id'] = visitor_id
-
+        visitor_id = self.request.session.get('visitor_id', str(uuid.uuid4()))
+        self.request.session['visitor_id'] = visitor_id
+            
+        form.instance.visitor_id = visitor_id
         
         try:
             self.object = form.save()
@@ -323,7 +332,7 @@ class VisitorAppointmentListView(ListView):
     template_name = 'appointment_list_visitor.html'
 
     def get_queryset(self):
-        # Zeige nur Termine, die vom aktuellen Besucher erstellt wurden
+        
         visitor_id = self.request.session.get('visitor_id', None)
         if visitor_id:
             return Appointment.objects.filter(visitor_id=visitor_id)
@@ -337,13 +346,11 @@ class VisitorReviewListView(ListView):
     def get_queryset(self):
         visitor_id = self.request.session.get('visitor_id', None)
         if visitor_id:
-            # Fetch reviews for the current visitor
-            visitor_reviews = Review.objects.filter(user__visitor_id=visitor_id)
-            # Fetch all reviews and exclude those for the current visitor
-            other_reviews = Review.objects.exclude(user__visitor_id=visitor_id)
-            # Concatenate the two querysets, placing the visitor's reviews at the beginning
+            
+            visitor_reviews = Review.objects.filter(visitor_id=visitor_id)
+            other_reviews = Review.objects.exclude(visitor_id=visitor_id)
             return list(visitor_reviews) + list(other_reviews)
-        return Review.objects.none()
+        return Review.objects.all()
 
 
 # Owner Views
