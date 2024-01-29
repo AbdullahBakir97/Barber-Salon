@@ -328,14 +328,22 @@ class VisitorAppointmentListView(ListView):
         if visitor_id:
             return Appointment.objects.filter(visitor_id=visitor_id)
         return Appointment.objects.none()
+        
 
 class VisitorReviewListView(ListView):
     model = Review
     template_name = 'review_list_visitor.html'
 
     def get_queryset(self):
-        # Zeige alle Bewertungen für Besucher
-        return Review.objects.all()
+        visitor_id = self.request.session.get('visitor_id', None)
+        if visitor_id:
+            # Fetch reviews for the current visitor
+            visitor_reviews = Review.objects.filter(user__visitor_id=visitor_id)
+            # Fetch all reviews and exclude those for the current visitor
+            other_reviews = Review.objects.exclude(user__visitor_id=visitor_id)
+            # Concatenate the two querysets, placing the visitor's reviews at the beginning
+            return list(visitor_reviews) + list(other_reviews)
+        return Review.objects.none()
 
 
 # Owner Views
