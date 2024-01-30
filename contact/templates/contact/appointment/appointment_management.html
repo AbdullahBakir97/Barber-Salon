@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block body %}
+
+  <div class="container">
+    <h2>{{ verbose_name }}</h2>
+
+    <!-- List Appointments -->
+    <ul>
+      {% for appointment in object_list %}
+        <li>
+          {{ appointment.name }} - {{ appointment.barber.name }}
+          <a href="{% url 'contact:appointment_update' pk=appointment.pk %}">Edit</a>
+          <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}">Delete</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Create Appointment Form -->
+    <h3>Create {{ verbose_name }}</h3>
+    <form method="post" action="{% url 'contact:appointment_create' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Create</button>
+    </form>
+
+    <!-- Update Appointment Form (hidden by default) -->
+    {% if update_form %}
+      <h3>Edit {{ verbose_name }}</h3>
+      <form method="post" action="{% url 'contact:appointment_update' pk=update_form.instance.pk %}">
+        {% csrf_token %}
+        {{ update_form.as_p }}
+        <button type="submit">Update</button>
+      </form>
+    {% endif %}
+
+    <!-- Delete Appointment Form (hidden by default) -->
+    {% if delete_form %}
+      <h3>Delete {{ verbose_name }}</h3>
+      <form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
+        {% csrf_token %}
+        {{ delete_form.as_p }}
+        <button type="submit">Delete</button>
+      </form>
+    {% endif %}
+  </div>
+  
+{% endblock %}

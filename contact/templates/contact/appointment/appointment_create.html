@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %} 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
 {% endblock css %}
 {% block body %}
 
@@ -16,7 +18,7 @@
         <h3 class="vr">Call Us: 012-3456-7890</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="post" class="appointment-form" type="submit">
+                <form method="POST" class="appointment-form" action="{% url 'contact:appointment_create' %}">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-sm-6">
@@ -46,7 +48,12 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="id_service_type">Service Type</label>
-                                {{ form.service_type }}
+                                <div class="select-wrap">
+                                    <div class="icon">
+                                        <span class="fas fa-chevron-down"></span>
+                                    </div>
+                                    {{ form.service_type }}
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -63,7 +70,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Make an Appointment" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">Make an Appointment</button>
                     </div>
                 </form>
             </div>

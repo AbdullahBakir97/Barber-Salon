@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block body %}
+<h2>Delete Appointment</h2>
+<p>Are you sure you want to delete the appointment for {{ object.name }} with {{ object.barber.name }}?</p>
+<form method="post" action="{% url 'contact:appointment_delete' pk=object.pk %}">
+  {% csrf_token %}
+  <button type="submit">Delete</button>
+</form>
+  <a href="{% url 'contact:appointment_list' %}">Cancel</a>
+{% endblock body %}

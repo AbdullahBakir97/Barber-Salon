@@ -22,6 +22,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('username', 'email', 'name', 'password1', 'password2'),
         }),
     )
+    readonly_fields = ('password',)  
 
 class OwnerProfileAdmin(admin.ModelAdmin):
     model = OwnerProfile
