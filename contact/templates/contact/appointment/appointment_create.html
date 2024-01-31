@@ -20,6 +20,11 @@
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% url 'contact:appointment_create' %}">
                     {% csrf_token %}
+                     {% if form.errors %}
+                       <div class="alert alert-danger" role="alert">
+                           {{ form.errors }}
+                       </div>
+                     {% endif %}
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
