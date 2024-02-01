@@ -46,10 +46,10 @@ urlpatterns = [
     path('barbers/', BarberListView.as_view(), name='barber_list'),
 
     # GalleryItem Views
-    path('galleryitems/create/', GalleryItemCreateView.as_view(), name='galleryitem_create'),
-    path('galleryitems/<int:pk>/update/', GalleryItemUpdateView.as_view(), name='galleryitem_update'),
-    path('galleryitems/<int:pk>/delete/', GalleryItemDeleteView.as_view(), name='galleryitem_delete'),
-    path('galleryitems/', GalleryItemListView.as_view(), name='galleryitem_list'),
+    path('items/create/', GalleryItemCreateView.as_view(), name='item_create'),
+    path('items/<int:pk>/update/', GalleryItemUpdateView.as_view(), name='item_update'),
+    path('items/<int:pk>/delete/', GalleryItemDeleteView.as_view(), name='item_delete'),
+    path('items/', GalleryItemListView.as_view(), name='item_list'),
 
     # Review Views
     path('reviews/create/', ReviewCreateView.as_view(), name='review_create'),

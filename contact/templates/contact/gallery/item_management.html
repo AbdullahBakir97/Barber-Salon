@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .footer-buttons {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      background-color: #fff; /* Add your desired background color */
+      padding: 10px; /* Add your desired padding */
+      z-index: 1000; /* Ensure the buttons are above other elements */
+    }
+
+    .footer-buttons a {
+      width: 48%; /* Adjust the width as needed, leaving some space for margin or padding */
+      margin-bottom: 10px; /* Add margin between the buttons */
+    }
+
+    .gallery-container {
+      margin-bottom: 60px; /* Adjust the margin to make space for the buttons */
+    }
+  </style>
+{% endblock css %}
+
+{% block body %}
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+      <div class="col-md-9 ftco-animate pb-5 text-center">
+        <h2 class="mb-0 bread">Gallery</h2>
+        <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
+    <div class="container-fluid m-5 p-0">
+        <div class="row no-gutters">
+            {% for object in object_list %}
+                <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
+                    <div class="project position-relative">
+                        <img src="{{ object.image.url }}" class="img-fluid" alt="{{ object.title }}">
+
+                        <!-- Edit and Delete Gallery Item Links -->
+                        <div class="btn-group-vertical">
+                            <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary w-100">
+                                <span>Edit</span>
+                            </a>
+                            <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger w-100">
+                                <span>Delete</span>
+                            </a>
+                        </div>
+
+                        <div class="text">
+                            <span>{{ object.category }}</span>
+                            <h3><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h3>
+                        </div>
+
+                        <a href="{{ object.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="icon-expand"></span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Footer Buttons -->
+<div class="footer-buttons">
+    <!-- Update Gallery Item Form (hidden by default) -->
+    {% if update_form %}
+        <a href="{% url 'contact:item_update' pk=update_form.instance.pk %}" class="btn btn-primary">Update</a>
+    {% endif %}
+
+    <!-- Delete Gallery Item Form (hidden by default) -->
+    {% if delete_form %}
+        <a href="{% url 'contact:item_delete' pk=delete_form.instance.pk %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+</div>
+
+{% endblock body %}

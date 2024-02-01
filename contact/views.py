@@ -148,12 +148,11 @@ class BarberListView(OwnerProfileRequiredMixin, ListView):
 class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
     model = GalleryItem
     form_class = GalleryItemForm
-    template_name = 'galleryitem_form.html'
-    success_url = reverse_lazy('galleryitem_list')
+    template_name = 'contact/gallery/item_create.html'
+    success_url = reverse_lazy('contact:item_list')
 
     def form_valid(self, form):
-        owner_profile = self.request.user.owner_user_profile
-        if owner_profile:
+        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             try:
                 return super().form_valid(form)
@@ -166,22 +165,34 @@ class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
 class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = GalleryItem
     form_class = GalleryItemForm
-    template_name = 'galleryitem_form.html'
-    success_url = reverse_lazy('galleryitem_list')
+    template_name = 'contact/gallery/item_update.html'
+    success_url = reverse_lazy('contact:item_list')
 
 
 
 class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = GalleryItem
-    template_name = 'galleryitem_confirm_delete.html'
-    success_url = reverse_lazy('galleryitem_list')
+    template_name = 'contact/gallery/item_delete.html'
+    success_url = reverse_lazy('contact:item_list')
 
+    # def get_success_url(self):
+    #     return reverse('contact:item_list')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(GalleryItem, pk=self.kwargs['pk'])
+
+    def delete(self, request, *args, **kwargs):
+        item = self.get_object()
+        item.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class GalleryItemListView(OwnerProfileRequiredMixin, ListView):
     model = GalleryItem
-    template_name = 'galleryitem_list.html'
+    template_name = 'contact/gallery/item_management.html'
     
+    def get_queryset(self):
+        return GalleryItem.objects.all()
 
 # Review
 class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):

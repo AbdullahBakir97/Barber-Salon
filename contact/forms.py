@@ -86,9 +86,10 @@ class BarberForm(forms.ModelForm):
 class GalleryItemForm(forms.ModelForm):
     class Meta:
         model = GalleryItem
-        fields = ['image', 'description', 'category', 'service']
+        fields = ['name', 'image', 'description', 'category', 'service']
 
         widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control-file'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
@@ -96,6 +97,7 @@ class GalleryItemForm(forms.ModelForm):
         }
 
         labels = {
+            'name': _('Name'),
             'image': _('Bild'),
             'description': _('Beschreibung'),
             'category': _('Kategorie'),
