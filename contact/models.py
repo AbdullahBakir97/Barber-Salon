@@ -39,7 +39,7 @@ class Review(models.Model):
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
-    rating = models.IntegerField(_('Bewertung'),)
+    rating = models.DecimalField(_('Bewertung'), max_digits=3, decimal_places=2)
 
 
     def __str__(self):

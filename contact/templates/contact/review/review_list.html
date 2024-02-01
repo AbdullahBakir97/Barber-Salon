@@ -1,29 +1,56 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
+
 {% block css %}
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Add the following link for star rating -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .star-rating span { font-size: 20px; color: #ffca08; }
+  </style>
 {% endblock css %}
 
 {% block body %}
-    <div class="container my-5 py-5">
-        <h2>Review List</h2>
-        <div class="carousel-testimony owl-carousel ftco-animate">
-            {% for review in reviews %}
-                <div class="item">
-                    <div class="testimony-wrap pb-4">
-                        <div class="text">
-                            <p class="mb-4">{{ review.comment }}</p>
-                        </div>
-                        <div class="d-flex">
-                            <div class="user-img" style="background-image: url({{ review.image.url }})"></div>
-                            <div class="pos ml-3">
-                                <p class="name">{{ review.customer_name }}</p>
-                                <span class="position">{{ review.barber.name }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+
+<div class="container my-5 py-5">
+  <h2>Review List</h2>
+
+  <!-- List Reviews as Table -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Customer Name</th>
+        <th>Barber</th>
+        <th>Rating</th>
+        <th>Comment</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for review in object_list %}
+        <tr>
+          <td>{{ review.customer_name }}</td>
+          <td>{{ review.barber.name }}</td>
+          <td>
+            <div class="star-rating">
+                {% for i in range(1, 6) %}
+                    {% if i <= review.rating %}
+                        <span>&#9733;</span>
+                    {% else %}
+                        <span>&#9734;</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+          </td>
+          <td>{{ review.comment }}</td>
+          <td>
+            <a href="{% url 'contact:review_update' pk=review.pk %}">Edit</a>
+            <a href="{% url 'contact:review_delete' pk=review.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock body %}

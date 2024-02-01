@@ -1,17 +1,40 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
+
 {% block css %}
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Add the following link for star rating -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #ffca08; }
+  </style>
 {% endblock css %}
 
 {% block body %}
-    <div class="container my-5 py-5">
-        <h2>Update Review</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-        <a href="{% url 'review_list' %}" class="btn btn-secondary">Back to Review List</a>
+
+<div class="container my-5 py-5">
+  <h2>Edit Review</h2>
+
+  <form method="post" action="{% url 'contact:review_update' pk=review.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <!-- Star Rating -->
+    <div class="form-group">
+      <label for="id_rating">Rating</label>
+      <div class="star-rating">
+        {% for i in range(review.rating) %}
+          <span>&#9733;</span>
+        {% endfor %}
+      </div>
     </div>
+    
+    <button type="submit" class="btn btn-primary mt-5">Update</button>
+  </form>
+</div>
+
 {% endblock body %}

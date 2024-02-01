@@ -119,10 +119,8 @@ class BarberUpdateView(OwnerProfileRequiredMixin, UpdateView):
 class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Barber
     template_name = 'contact/barber/barber_delete.html'
-
+    success_url = reverse_lazy('contact:barber_list')
     
-    def get_success_url(self):
-        return reverse('contact:barber_list')
 
     def get_object(self, queryset=None):
         return get_object_or_404(Barber, pk=self.kwargs['pk'])
@@ -198,12 +196,11 @@ class GalleryItemListView(OwnerProfileRequiredMixin, ListView):
 class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Review
     form_class = ReviewCreateForm
-    template_name = 'review_form.html'
-    success_url = reverse_lazy('review_list')
+    template_name = 'contact/review/review_create.html'
+    success_url = reverse_lazy('contact:review_list')
 
     def form_valid(self, form):
-        owner_profile = self.request.user.owner_user_profile
-        if owner_profile:
+        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             try:
                 return super().form_valid(form)
@@ -216,20 +213,32 @@ class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
 class ReviewUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewCreateForm
-    template_name = 'review_form.html'
-    success_url = reverse_lazy('review_list')
+    template_name = 'contact/review/review_update.html'
+    success_url = reverse_lazy('contact:review_list')
 
 
 
 class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Review
-    template_name = 'review_confirm_delete.html'
+    template_name = 'contact/review/review_delete.html'
+    success_url = reverse_lazy('contact:review_list')
 
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Review, pk=self.kwargs['pk'])
+
+    def delete(self, request, *args, **kwargs):
+        review = self.get_object()
+        review.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ReviewListView(OwnerProfileRequiredMixin, ListView):
     model = Review
-    template_name = 'review_list.html'
+    template_name = 'contact/review/review_list.html'
+    
+    def get_queryset(self):
+        return GalleryItem.objects.all()
     
 
 # Appointment

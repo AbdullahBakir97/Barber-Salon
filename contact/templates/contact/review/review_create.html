@@ -1,17 +1,54 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
+
 {% block css %}
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Add the following link for star rating -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #ffca08; }
+  </style>
 {% endblock css %}
 
 {% block body %}
-    <div class="container my-5 py-5">
-        <h2>Create Review</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Create</button>
-        </form>
-        <a href="{% url 'review_list' %}" class="btn btn-secondary">Back to Review List</a>
+
+<div class="container my-5 py-5">
+  <h2>{{ page_title }}</h2>
+
+  <form method="POST" action="{% url 'contact:review_create' %}" enctype="multipart/form-data" id="reviewForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <!-- Star Rating -->
+    <div class="form-group">
+      <label for="id_rating">Rating</label>
+      <div class="star-rating" onclick="updateRating()">
+        <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
+        <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
+        <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
+        <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">&#9733;</label>
+        <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
+      </div>
+      <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
     </div>
+    
+    <button type="submit" class="btn btn-primary mt-5">{{ submit_btn_label }}Add Review</button>
+  </form>
+</div>
+
+<script>
+  function updateRating() {
+    const ratingInput = document.getElementById('ratingInput');
+    const stars = document.querySelectorAll('.star-rating input:checked');
+    
+    if (stars.length > 0) {
+      ratingInput.value = stars[0].value;
+    }
+  }
+</script>
+
 {% endblock body %}

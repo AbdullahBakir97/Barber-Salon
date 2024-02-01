@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
+
 {% block css %}
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
 {% block body %}
-    <div class="container my-5 py-5">
-        <h2>Delete Review</h2>
-        <p>Are you sure you want to delete this review?</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        <a href="{% url 'review_list' %}" class="btn btn-secondary">Cancel</a>
-    </div>
+
+<div class="container my-5 py-5">
+  <h2>Delete Review</h2>
+
+  <p>Are you sure you want to delete this review?</p>
+
+  <form method="post" action="{% url 'delete_review' pk=object.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'review_management' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
 {% endblock body %}
