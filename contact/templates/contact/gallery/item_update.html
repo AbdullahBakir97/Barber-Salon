@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h2 class="mb-0 bread">Gallery</h2>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section ftco-booking bg-light">
+    <div class="container ftco-relative">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Gallery</span>
+                <h2 class="mb-4">Update Gallery Item</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 ftco-animate">
+                <form method="POST" class="appointment-form" action="{% url 'contact:item_update' pk=object.pk %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                       <div class="alert alert-danger" role="alert">
+                           {{ form.errors }}
+                       </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_name">Name</label>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_image">Image</label>
+                                {{ form.image }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_category">Category</label>
+                                {{ form.category }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_service">Service</label>
+                                {{ form.service }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_description">Description</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Gallery Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

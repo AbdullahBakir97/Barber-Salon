@@ -1,127 +1,47 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
 
 {% block body %}
 
-{% block css %}
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-{% endblock css %}
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+	<div class="overlay"></div>
+	<div class="container">
+	  <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+		<div class="col-md-9 ftco-animate pb-5 text-center">
+		  <h2 class="mb-0 bread">Gallery</h2>
+		  <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span></p>
+		</div>
+	  </div>
+	</div>
+</section>
 
-    <section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
-          <div class="col-md-9 ftco-animate pb-5 text-center">
-            <h2 class="mb-0 bread">Gallery</h2>
-            <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:galleryitem_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span></p>
-          </div>
+<section class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
+    <div class="container-fluid my-5">
+        <div class="row no-gutters">
+            {% for object in object_list %}
+                <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
+                    <div class="project">
+                        <img src="{{ object.image.url }}" class="img-fluid" alt="{{ object.title }}">
+
+                        <div class="text">
+                            <span>{{ object.category }}</span>
+                            <h3><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></h3>
+                            <p>{{ object.description }}</p>
+                            <!-- Add other fields as needed -->
+                        </div>
+
+                        <a href="{{ object.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="icon-expand"></span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-      </div>
-    </section>
-    
-    <section class="ftco-section ftco-no-pt ftco-no-pb">
-			<div class="container-fluid p-0">
-    		<div class="row no-gutters">
-				{% for object in gallery_items %}
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="{{object.image.url}}" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Stylist</span>
-	    					<h3><a href="project.html">Beard</a></h3>
-	    				</div>
-	    				<a href="{{object.galleryitem_list.html }}" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-				{% endfor %}
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="{% static 'images/work-2.jpg' %}" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Haircut</a></h3>
-	    				</div>
-	    				<a href="{% static 'images/work-2.jpg' %}" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="{% static 'images/work-3.jpg' %}" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Hairstylist</a></h3>
-	    				</div>
-	    				<a href="images/work-3.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="images/work-4.jpg" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Haircut</a></h3>
-	    				</div>
-	    				<a href="images/work-4.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="images/work-5.jpg" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Makeup</a></h3>
-	    				</div>
-	    				<a href="images/work-5.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="images/work-6.jpg" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Fashion</span>
-	    					<h3><a href="project.html">Model</a></h3>
-	    				</div>
-	    				<a href="images/work-6.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="images/work-7.jpg" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Makeup</a></h3>
-	    				</div>
-	    				<a href="images/work-7.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    			<div class="col-md-6 col-lg-3 ftco-animate">
-    				<div class="project">
-	    				<img src="images/work-8.jpg" class="img-fluid" alt="Colorlib Template">
-	    				<div class="text">
-	    					<span>Beauty</span>
-	    					<h3><a href="project.html">Makeup</a></h3>
-	    				</div>
-	    				<a href="images/work-8.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
-	    					<span class="icon-expand"></span>
-	    				</a>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-		</section>
+    </div>
+</section>
+
 {% endblock body %}
