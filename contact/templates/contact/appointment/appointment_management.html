@@ -5,27 +5,49 @@
 {% endblock css %}
 {% block body %}
 
-  <div class="container">
-    <h2>{{ verbose_name }}</h2>
+<div class="container my-5 py-5">
+  <h2>Appointment List</h2>
 
-    <!-- List Appointments -->
-    <ul>
-      {% for appointment in object_list %}
-        <li>
-          {{ appointment.name }} - {{ appointment.barber.name }}
-          <a href="{% url 'contact:appointment_update' pk=appointment.pk %}">Edit</a>
-          <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}">Delete</a>
-        </li>
-      {% endfor %}
-    </ul>
+  <!-- List Appointments as Table -->
+  <table class="table">
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Barber</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Service</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Message</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for appointment in object_list %}
+              <tr>
+                  <td>{{ appointment.name }}</td>
+                  <td>{{ appointment.barber.name }}</td>
+                  <td>{{ appointment.date }}</td>
+                  <td>{{ appointment.time }}</td>
+                  <td>{{ appointment.service_type }}</td>
+                  <td>{{ appointment.phone }}</td>
+                  <td>{{ appointment.email }}</td>
+                  <td>{{ appointment.message }}</td>
+                  <td><a href="{% url 'contact:appointment_update' pk=appointment.pk %}">Edit</a></td>
+                  <td><a href="{% url 'contact:appointment_delete' pk=appointment.pk %}">Delete</a></td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  <h3>Create {{ verbose_name }}</h3>
+  <form method="post" action="{% url 'contact:appointment_create' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
 
-    <!-- Create Appointment Form -->
-    <h3>Create {{ verbose_name }}</h3>
-    <form method="post" action="{% url 'contact:appointment_create' %}">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Create</button>
-    </form>
+</div>
+
 
     <!-- Update Appointment Form (hidden by default) -->
     {% if update_form %}
@@ -33,7 +55,7 @@
       <form method="post" action="{% url 'contact:appointment_update' pk=update_form.instance.pk %}">
         {% csrf_token %}
         {{ update_form.as_p }}
-        <button type="submit">Update</button>
+        <button type="submit" class="btn btn-primary">Update</button>
       </form>
     {% endif %}
 
@@ -43,7 +65,7 @@
       <form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
         {% csrf_token %}
         {{ delete_form.as_p }}
-        <button type="submit">Delete</button>
+        <button type="submit" class="btn btn-primary">Delete</button>
       </form>
     {% endif %}
   </div>

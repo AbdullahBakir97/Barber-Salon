@@ -260,9 +260,6 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             form.instance.user = self.request.user
-            barber_id = self.kwargs.get('barber_id')
-            barber = get_object_or_404(Barber, id=barber_id)
-            form.instance.barber = barber
             return super().form_valid(form)
         else:
             raise Http404(_("Sie müssen angemeldet sein, um einen Termin zu erstellen."))
@@ -306,7 +303,7 @@ class AppointmentListView(OwnerProfileRequiredMixin, ListView):
 
 
 # Visitor Views
-class VisitorMixin:
+class VisitorIdMixin:
     def get_visitor_id(self):
         visitor_id = self.request.session.get('visitor_id', None)
         if not visitor_id:
@@ -315,26 +312,26 @@ class VisitorMixin:
         return visitor_id
     
     
-class VisitorAppointmentCreateView(VisitorMixin, CreateView):
+class VisitorAppointmentCreateView(VisitorIdMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
-    template_name = 'appointment_form.html'
-    success_url = reverse_lazy('appointment_list_visitor')
+    template_name = 'appointment_create.html'
+    success_url = reverse_lazy('appointment_list')
 
     def form_valid(self, form):
-        
         visitor_id = self.get_visitor_id()
         form.instance.visitor_id = visitor_id
-        
         try:
             self.object = form.save()
-            messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
+            success_message = _('Termin erfolgreich hinzugefügt.')
+            messages.success(self.request, success_message)
             return super().form_valid(form)
         except IntegrityError:
-            messages.error(self.request, _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.'))
+            error_message = _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.')
+            messages.error(self.request, error_message)
             return self.form_invalid(form)
 
-class VisitorReviewCreateView(VisitorMixin,CreateView):
+class VisitorReviewCreateView(VisitorIdMixin,CreateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'review_form.html'
@@ -353,17 +350,16 @@ class VisitorReviewCreateView(VisitorMixin,CreateView):
             messages.error(self.request, _('Sie haben diesen Friseur bereits bewertet.'))
             return self.form_invalid(form)
 
-class VisitorAppointmentListView(VisitorMixin, ListView):
+class VisitorAppointmentListView(VisitorIdMixin, ListView):
     model = Appointment
-    template_name = 'appointment_list_visitor.html'
+    template_name = 'appointment_list.html'
 
     def get_queryset(self):
-        
         visitor_id = self.get_visitor_id()
         return Appointment.objects.filter(visitor_id=visitor_id)
         
 
-class VisitorReviewListView(VisitorMixin, ListView):
+class VisitorReviewListView(VisitorIdMixin, ListView):
     model = Review
     template_name = 'review_list_visitor.html'
 

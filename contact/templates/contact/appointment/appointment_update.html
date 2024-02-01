@@ -24,6 +24,11 @@
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% if form.instance.pk %}{% url 'contact:appointment_update' pk=form.instance.pk %}{% else %}{% url 'contact:appointment_create' %}{% endif %}">
                     {% csrf_token %}
+                    {% if form.errors %}
+                       <div class="alert alert-danger" role="alert">
+                           {{ form.errors }}
+                       </div>
+                    {% endif %}
                     {% if form.instance.pk %}
                         <input type="hidden" name="operation" value="update">
                     {% else %}
@@ -52,6 +57,12 @@
                             <div class="form-group">
                                 <label for="id_time">Preferred Time</label>
                                 {{ form.time }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_barber">Select Barber</label>
+                                {{ form.barber }}
                             </div>
                         </div>
                         <div class="col-sm-6">
