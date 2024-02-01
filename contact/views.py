@@ -89,85 +89,57 @@ class OwnerListView(OwnerProfileRequiredMixin, ListView):
 class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Barber
     form_class = BarberForm
-    template_name = 'barber_form.html'
-    success_url = reverse_lazy('barber_list')
+    template_name = 'contact/barber/barber_create.html'
+    success_url = reverse_lazy('contact:barber_list')
 
     def form_valid(self, form):
-        owner_profile = self.request.user.owner_user_profile
-        barber_id = self.kwargs.get('barber_id')
-        barber = get_object_or_404(Barber, id=barber_id)
-        form.instance.barber = barber
-        if owner_profile:
-            form.instance.owner = owner_profile
-            try:
-                return super().form_valid(form)
-            except IntegrityError:
-                messages.error(self.request, _('Ein Friseur mit diesem Namen existiert bereits.'))
-                return self.form_invalid(form)
-        else:
-            raise Http404(_("Sie dürfen kein Friseurprofil erstellen."))
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+            name = form.cleaned_data.get('name')
+            existing_barber = Barber.objects.filter(name=name).first()
 
+            if existing_barber:
+                messages.error(self.request, _('A barber with this name already exists.'))
+                return self.form_invalid(form)
+            else:
+                return super().form_valid(form)
+        else:
+            raise Http404(_("You must be logged in to create a barber profile."))
+        
+        
 class BarberUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Barber
     form_class = BarberForm
-    template_name = 'barber_form.html'
-    success_url = reverse_lazy('barber_list')
-
+    template_name = 'contact/barber/barber_update.html'
+    
+    def get_success_url(self):
+        return reverse('contact:barber_list')
 
 
 class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Barber
-    template_name = 'barber_confirm_delete.html'
-    success_url = reverse_lazy('contact/barber/barber_list.html')
+    template_name = 'contact/barber/barber_delete.html'
+
+    
+    def get_success_url(self):
+        return reverse('contact:barber_list')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Barber, pk=self.kwargs['pk'])
+
+    def delete(self, request, *args, **kwargs):
+        barber = self.get_object()
+        barber.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 
 class BarberListView(OwnerProfileRequiredMixin, ListView):
     model = Barber
-    template_name = 'contact/barber/barber_list.html'
+    template_name = 'contact/barber/barber_management.html'
     
     def get_queryset(self):
         return Barber.objects.all()
-    
-    
-class BarberManagementView(
-    OwnerProfileRequiredMixin,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    ListView
-):
-    model = Barber
-    form_class = BarberForm
-    template_name = 'barber_form.html'
-    success_url = reverse_lazy('barber_list')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list'] = self.model.objects.all()
-        return context
-
-    def form_valid(self, form):
-        owner_profile = self.request.user.owner_user_profile
-        barber_id = self.kwargs.get('barber_id')
-        barber = get_object_or_404(Barber, id=barber_id)
-        form.instance.barber = barber
-        if owner_profile:
-            form.instance.owner = owner_profile
-            try:
-                return super().form_valid(form)
-            except IntegrityError:
-                messages.error(self.request, _('Ein Friseur mit diesem Namen existiert bereits.'))
-                return self.form_invalid(form)
-        else:
-            raise Http404(_("Sie dürfen kein Friseurprofil erstellen."))
-
-    def delete(self, request, *args, **kwargs):
-        # Add custom delete logic if needed
-        return super().delete(request, *args, **kwargs)
-
-    def get_success_url(self):
-        return reverse_lazy('barber_list')
     
     
 
@@ -241,7 +213,6 @@ class ReviewUpdateView(OwnerProfileRequiredMixin, UpdateView):
 class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Review
     template_name = 'review_confirm_delete.html'
-    success_url = reverse_lazy('review_list')
 
 
 
@@ -263,6 +234,9 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
             return super().form_valid(form)
         else:
             raise Http404(_("Sie müssen angemeldet sein, um einen Termin zu erstellen."))
+        
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form, form_errors=form.errors))
 
 class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment

@@ -6,11 +6,11 @@
 
 {% block body %}
     <div class="container my-5 py-5">
-        <h2>Create Review</h2>
+        <h2>Update Review</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
         <a href="{% url 'review_list' %}" class="btn btn-secondary">Back to Review List</a>
     </div>

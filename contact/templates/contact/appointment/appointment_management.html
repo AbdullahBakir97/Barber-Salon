@@ -8,6 +8,13 @@
 <div class="container my-5 py-5">
   <h2>Appointment List</h2>
 
+
+  
+  <form method="post" action="{% url 'contact:appointment_create' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-5">Create</button>
+  </form>
   <!-- List Appointments as Table -->
   <table class="table">
       <thead>
@@ -39,13 +46,6 @@
           {% endfor %}
       </tbody>
   </table>
-  <h3>Create {{ verbose_name }}</h3>
-  <form method="post" action="{% url 'contact:appointment_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Create</button>
-  </form>
-
 </div>
 
 

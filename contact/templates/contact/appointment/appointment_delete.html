@@ -11,9 +11,9 @@
     <p>Are you sure you want to delete the appointment for {{ object.name }} with {{ object.barber.name }}?</p>
     <form method="post" action="{% url 'contact:appointment_delete' pk=object.pk %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Delete</button>
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <a href="{% url 'contact:appointment_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
-      <a href="{% url 'contact:appointment_list' %}">Cancel</a>
   </div>
 </section>
 {% endblock body %}

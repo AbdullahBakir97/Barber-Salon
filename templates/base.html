@@ -69,11 +69,9 @@
 {% block body %}
       
 {% endblock body %}
-    
-		
 
-
-		<section class="testimony-section bg-light">
+{% block section %}
+	<section class="testimony-section bg-light">
 		<div class="container">
 			<div class="row ftco-animate justify-content-center">
 				<div class="col-md-6 col-lg-5 d-flex">
@@ -166,7 +164,12 @@
 			</div>
 			</div>
 		</div>
-		</section>
+	</section>
+{% endblock section %}
+		
+
+
+		
 
     <footer class="ftco-footer ftco-section">
       <div class="container">

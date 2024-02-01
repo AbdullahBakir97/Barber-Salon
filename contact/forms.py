@@ -3,6 +3,7 @@ from .models import Owner, Review, Appointment, Barber, GalleryItem
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from PIL import Image
 
 class OwnerForm(forms.ModelForm):
     class Meta:
@@ -47,7 +48,7 @@ class BarberForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'expertise': forms.TextInput(attrs={'class': 'form-control'}),
             'experience_years': forms.NumberInput(attrs={'class': 'form-control'}),
-            'image': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
 
         labels = {
@@ -66,6 +67,20 @@ class BarberForm(forms.ModelForm):
             raise ValidationError(_('Die Berufserfahrung darf nicht negativ sein.'))
         return experience_years
     
+    def clean_image(self):
+        image = self.cleaned_data.get('image', False)
+        if image:
+            # Check if the file is an image
+            try:
+                Image.open(image)
+            except Exception as e:
+                raise ValidationError(_('Invalid image file. Please upload a valid image.'))
+
+            # Check the file size
+            if image.size > 5 * 1024 * 1024:  # 5 MB
+                raise ValidationError(_('File size must be no more than 5 MB.'))
+
+        return image
     
 
 class GalleryItemForm(forms.ModelForm):
@@ -103,16 +118,18 @@ class GalleryItemForm(forms.ModelForm):
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['barber', 'customer_name', 'comment', 'rating']
+        fields = ['image', 'barber', 'customer_name', 'comment', 'rating']
 
         widgets = {
-            'barber': forms.HiddenInput(),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'barber': forms.Select(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
             'rating': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
         labels = {
+            'image': _('Foto'),
             'barber': _('Friseur'),
             'customer_name': _('Kundenname'),
             'comment': _('Kommentar'),
@@ -121,6 +138,22 @@ class ReviewCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
+        
+    
+    def clean_image(self):
+        image = self.cleaned_data.get('image', False)
+        if image:
+            # Check if the file is an image
+            try:
+                Image.open(image)
+            except Exception as e:
+                raise ValidationError(_('Invalid image file. Please upload a valid image.'))
+
+            # Check the file size
+            if image.size > 5 * 1024 * 1024:  # 5 MB
+                raise ValidationError(_('File size must be no more than 5 MB.'))
+
+        return image
 
     def clean_rating(self):
         rating = self.cleaned_data['rating']
@@ -154,6 +187,31 @@ class AppointmentForm(forms.ModelForm):
             'service_type': _('Dienstleistungsart'),
             'phone': _('Ihre Telefonnummer'),
             'message': _('Zusätzliche Nachricht'),
+        }
+        
+        error_messages = {
+            'name': {
+                'required': _('Bitte geben Sie Ihren Namen ein.'),
+            },
+            'barber': {
+                'required': _('Bitte wählen Sie einen Friseur aus.'),
+            },
+            'email': {
+                'required': _('Bitte geben Sie Ihre E-Mail-Adresse ein.'),
+                'invalid': _('Bitte geben Sie eine gültige E-Mail-Adresse ein.'),
+            },
+            'date': {
+                'invalid': _('Bitte geben Sie ein gültiges Datum ein.'),
+            },
+            'time': {
+                'invalid': _('Bitte geben Sie eine gültige Uhrzeit ein.'),
+            },
+            'service_type': {
+                'required': _('Bitte wählen Sie eine Dienstleistungsart aus.'),
+            },
+            'phone': {
+                'required': _('Bitte geben Sie Ihre Telefonnummer ein.'),
+            },
         }
 
     def __init__(self, *args, **kwargs):

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<div class="container my-5 py-5">
+   <h2>Delete Barber</h2>
+
+   <p>Are you sure you want to delete {{ barber.name }}?</p>
+
+   <form method="post" action="{% url 'contact:barber_delete' pk=barber.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <a href="{% url 'contact:barber_list' %}" class="btn btn-secondary">Cancel</a>
+   </form>
+
+</div>
+
+{% endblock body %}

@@ -21,9 +21,9 @@
                 <form method="POST" class="appointment-form" action="{% url 'contact:appointment_create' %}">
                     {% csrf_token %}
                     {% if form.errors %}
-                       <div class="alert alert-danger" role="alert">
-                           {{ form.errors }}
-                       </div>
+                        <div class="alert alert-danger" role="alert">
+                            {{ form.errors }}
+                        </div>
                     {% endif %}
                     <div class="row">
                         <div class="col-sm-6">
