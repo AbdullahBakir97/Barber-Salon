@@ -40,4 +40,4 @@ Introducing your centralized hub for business control.
 - **Time-Saving:** Streamline operations, saving time for what truly matters – growing your business.
 - **Flexibility:** Adapt the management system to your unique business needs.
 
-Explore the possibilities with the Hair Salon Management System and elevate your business today. 
+Explore the possibilities with the Hair Salon Management System and elevate your business today.   
