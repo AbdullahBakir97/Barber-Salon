@@ -29,8 +29,12 @@
 </section>
 
 <div class="container my-5 py-5">
-  <h2>{{ page_title }}</h2>
-
+  <div class="row justify-content-center pb-3">
+    <div class="col-md-10 heading-section text-center ftco-animate">
+        <span class="subheading">Bewertung</span>
+        <h2 class="mb-4">Füge Ein Bewertung</h2>
+    </div>
+</div>
   <form method="POST" class="review-form" action="{% url 'contact:review_create' %}" enctype="multipart/form-data" id="reviewForm">
     {% csrf_token %}
     {{ form.as_p }}
