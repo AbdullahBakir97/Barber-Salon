@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 #from accounts.models import OwnerProfile 
 from django.conf import settings
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
 #from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -39,7 +40,7 @@ class Review(models.Model):
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
-    rating = models.DecimalField(_('Bewertung'), max_digits=3, decimal_places=2)
+    rating = models.IntegerField(_('Bewertung'), validators=[MinValueValidator(1), MaxValueValidator(5)])
 
 
     def __str__(self):

@@ -127,14 +127,14 @@ class GalleryItemForm(forms.ModelForm):
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['image', 'barber', 'customer_name', 'comment', 'rating']
+        fields = ['image', 'barber', 'customer_name', 'comment']
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'barber': forms.Select(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
-            'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'min': '1', 'max': '5'}),
+            
         }
 
         labels = {
@@ -142,7 +142,7 @@ class ReviewCreateForm(forms.ModelForm):
             'barber': _('Friseur'),
             'customer_name': _('Kundenname'),
             'comment': _('Kommentar'),
-            'rating': _('Bewertung'),
+            
         }
 
     def __init__(self, *args, **kwargs):

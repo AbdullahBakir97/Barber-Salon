@@ -7,6 +7,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
   <style>
     .star-rating span { font-size: 20px; color: #ffca08; }
+    .action-links a {
+      margin-right: 10px;
+      color: #007bff;
+    }
+    .action-links a:hover {
+      color: #0056b3;
+      text-decoration: none;
+    }
   </style>
 {% endblock css %}
 
@@ -17,7 +25,7 @@
 
   <!-- List Reviews as Table -->
   <table class="table">
-    <thead>
+    <thead class="thead-dark">
       <tr>
         <th>Customer Name</th>
         <th>Barber</th>
@@ -33,15 +41,19 @@
           <td>{{ review.barber.name }}</td>
           <td>
             <div class="star-rating">
-              {% for i in range(review.rating) %}
-                <span>&#9733;</span>
+              {% for _ in "12345" %}
+              {% if forloop.counter <= review.rating %}
+                  <span class="fa fa-star"></span>
+              {% else %}
+                  <span class="fa fa-star-o"></span>
+              {% endif %}
               {% endfor %}
             </div>
           </td>
           <td>{{ review.comment }}</td>
-          <td>
-            <a href="{% url 'contact:review_update' pk=review.pk %}">Edit</a>
-            <a href="{% url 'contact:review_delete' pk=review.pk %}">Delete</a>
+          <td class="action-links">
+            <a href="{% url 'contact:review_update' pk=review.pk %}"><i class="fa fa-edit"></i> Edit</a>
+            <a href="{% url 'contact:review_delete' pk=review.pk %}" ><i class="fa fa-trash"></i> Delete</a>
           </td>
         </tr>
       {% endfor %}

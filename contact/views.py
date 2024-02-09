@@ -98,23 +98,21 @@ def contact_view(request):
             phone = message_form.cleaned_data['phone']
             message = message_form.cleaned_data['message']
             
-            # Save the message to the database (optional)
-            # You can save it to the database if you want to keep a record of messages
-            # For example:
+            
             Message.objects.create(name=name, email=email, phone=phone, message=message)
             
             
             # Send email
-            send_mail(
-                phone,
-                f'Name: {name}\nEmail: {email}\n\n{message}\n\n{phone}',  
-                'admin@gmail.com',  
-                ['your@example.com'],  # Replace with recipient email address
-                fail_silently=False,
-            )
+            # send_mail(
+            #     phone,
+            #     f'Name: {name}\nEmail: {email}\n\n{message}\n\n{phone}',  
+            #     'admin@gmail.com',  
+            #     ['your@example.com'],  # Replace with recipient email address
+            #     fail_silently=False,
+            # )
 
             
-            return redirect('success_page')  
+            return redirect('contact:contact')  
     else:
         message_form = MessageForm() 
 
@@ -277,10 +275,11 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 class ReviewListView(OwnerProfileRequiredMixin, ListView):
     model = Review
-    template_name = 'contact/review/review_list.html'
+    template_name = 'contact/review/review_management.html'
+    context_object_name = 'object_list'
     
     def get_queryset(self):
-        return GalleryItem.objects.all()
+        return Review.objects.all()
     
 
 # Appointment
