@@ -44,7 +44,11 @@ class Review(models.Model):
 
 
     def __str__(self):
-        return f"{self.customer_name} - {self.barber.name}"
+        if self.barber:
+            return f"{self.customer_name} - {self.barber.name}"
+        else:
+            return f"{self.customer_name} - No associated barber"
+
 
 SERVICE_TYPES = (
         ('HairCut','Haarschnitt'),
@@ -83,7 +87,10 @@ class Appointment(models.Model):
     message = models.TextField(_('Nachricht'),)
 
     def __str__(self):
-        return f"{self.name} - {self.barber.name}"
+        if self.barber:
+            return f"{self.name} - {self.barber.name}"
+        else:
+            return f"{self.name} - No associated barber"
     
 
 class Message(models.Model):

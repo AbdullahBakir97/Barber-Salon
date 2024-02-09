@@ -174,6 +174,13 @@ class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 class BarberListView(OwnerProfileRequiredMixin, ListView):
     model = Barber
+    template_name = 'contact/barber/barber_list.html'
+    
+    def get_queryset(self):
+        return Barber.objects.all()
+    
+class BarberManagementView(OwnerProfileRequiredMixin, ListView):
+    model = Barber
     template_name = 'contact/barber/barber_management.html'
     
     def get_queryset(self):
@@ -227,6 +234,14 @@ class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 class GalleryItemListView(OwnerProfileRequiredMixin, ListView):
     model = GalleryItem
+    template_name = 'contact/gallery/item_list.html'
+    
+    def get_queryset(self):
+        return GalleryItem.objects.all()
+    
+    
+class GalleryItemManagementView(OwnerProfileRequiredMixin, ListView):
+    model = GalleryItem
     template_name = 'contact/gallery/item_management.html'
     
     def get_queryset(self):
@@ -275,12 +290,19 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 class ReviewListView(OwnerProfileRequiredMixin, ListView):
     model = Review
-    template_name = 'contact/review/review_management.html'
+    template_name = 'contact/review/review_list.html'
     context_object_name = 'object_list'
     
     def get_queryset(self):
         return Review.objects.all()
     
+class ReviewManagementView(OwnerProfileRequiredMixin, ListView):
+    model = Review
+    template_name = 'contact/review/review_management.html'
+    context_object_name = 'object_list'
+    
+    def get_queryset(self):
+        return Review.objects.all()
 
 # Appointment
 class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
@@ -327,6 +349,17 @@ class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 
 class AppointmentListView(OwnerProfileRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'contact/appointment/appointment_lsit.html'
+    context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['verbose_name'] = self.model._meta.verbose_name.title()
+        return context
+    
+    
+class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
     model = Appointment
     template_name = 'contact/appointment/appointment_management.html'
     context_object_name = 'object_list'

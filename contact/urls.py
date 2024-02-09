@@ -8,18 +8,22 @@ from .views import (
     BarberUpdateView,
     BarberDeleteView,
     BarberListView,
+    BarberManagementView,
     GalleryItemCreateView,
     GalleryItemUpdateView,
     GalleryItemDeleteView,
     GalleryItemListView,
+    GalleryItemManagementView,
     ReviewCreateView,
     ReviewUpdateView,
     ReviewDeleteView,
     ReviewListView,
+    ReviewManagementView,
     AppointmentCreateView,
     AppointmentUpdateView,
     AppointmentDeleteView,
     AppointmentListView,
+    AppointmentManagementView,
     VisitorAppointmentCreateView,
     VisitorReviewCreateView,
     VisitorAppointmentListView,
@@ -45,24 +49,28 @@ urlpatterns = [
     path('barbers/<int:pk>/update/', BarberUpdateView.as_view(), name='barber_update'),
     path('barbers/<int:pk>/delete/', BarberDeleteView.as_view(), name='barber_delete'),
     path('barbers/', BarberListView.as_view(), name='barber_list'),
+    path('barbers/management', BarberManagementView.as_view(), name='barber_management'),
 
     # GalleryItem Views
     path('items/create/', GalleryItemCreateView.as_view(), name='item_create'),
     path('items/<int:pk>/update/', GalleryItemUpdateView.as_view(), name='item_update'),
     path('items/<int:pk>/delete/', GalleryItemDeleteView.as_view(), name='item_delete'),
     path('items/', GalleryItemListView.as_view(), name='item_list'),
+    path('items/management', GalleryItemManagementView.as_view(), name='item_management'),
 
     # Review Views
     path('reviews/create/', ReviewCreateView.as_view(), name='review_create'),
     path('reviews/<int:pk>/update/', ReviewUpdateView.as_view(), name='review_update'),
     path('reviews/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review_delete'),
     path('reviews/', ReviewListView.as_view(), name='review_list'),
+    path('reviews/management', ReviewManagementView.as_view(), name='review_management'),
 
     # Appointment Views
     path('appointments/create/', AppointmentCreateView.as_view(), name='appointment_create'),
     path('appointments/<int:pk>/update/', AppointmentUpdateView.as_view(), name='appointment_update'),
     path('appointments/<int:pk>/delete/', AppointmentDeleteView.as_view(), name='appointment_delete'),
     path('appointments/', AppointmentListView.as_view(), name='appointment_list'),
+    path('appointments/management', AppointmentManagementView.as_view(), name='appointment_management'),
 
     # Visitor Views
     path('visitor/appointments/create/', VisitorAppointmentCreateView.as_view(), name='visitor_appointment_create'),
