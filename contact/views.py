@@ -4,14 +4,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Owner, Barber, Review, GalleryItem, Appointment
-from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm
 from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.db import IntegrityError
 from django.contrib import messages
 import uuid
 import logging
+from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +85,47 @@ class OwnerListView(OwnerProfileRequiredMixin, ListView):
     template_name = 'owner_list.html'
     
     
+def contact_view(request):
+    template_name = 'contact/contact.html'
+    owner = Owner.objects.first()  
+    message_form = MessageForm()
+    if request.method == 'POST':
+        message_form = MessageForm(request.POST)
+        if message_form.is_valid():
+            # Get form data
+            name = message_form.cleaned_data['name']
+            email = message_form.cleaned_data['email']
+            phone = message_form.cleaned_data['phone']
+            message = message_form.cleaned_data['message']
+            
+            # Save the message to the database (optional)
+            # You can save it to the database if you want to keep a record of messages
+            # For example:
+            Message.objects.create(name=name, email=email, phone=phone, message=message)
+            
+            
+            # Send email
+            send_mail(
+                phone,
+                f'Name: {name}\nEmail: {email}\n\n{message}\n\n{phone}',  
+                'admin@gmail.com',  
+                ['your@example.com'],  # Replace with recipient email address
+                fail_silently=False,
+            )
+
+            
+            return redirect('success_page')  
+    else:
+        message_form = MessageForm() 
+
+    context = {
+        'owner': owner,
+        'message_form': message_form,
+    }
+    return render(request, 'contact/contact.html', context)
+
+def contact_success(request):
+    return render(request, 'contact.html')
 
 # Barber
 class BarberCreateView(OwnerProfileRequiredMixin, CreateView):

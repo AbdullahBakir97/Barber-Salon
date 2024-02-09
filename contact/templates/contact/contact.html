@@ -1,153 +1,64 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load easy_maps_tags %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
 
 {% block body %}
-	{% block css %}
-		<link rel="stylesheet" href="{% static 'css/main.css' %}">
-		<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-		<link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
-		<!-- Custom Style CSS File -->
-		<link rel="stylesheet" type="text/css" href="{% static 'css/custom-style.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'css/loaders.css' %}"/>
-		<!-- Font-Awesome Style CSS File -->
-		<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
-		<link rel="stylesheet" href="{% static 'css/style.css' %}">
-	{% endblock css %}
-    <main>
-        <!-- Hero Start -->
-        <div class="slider-area2">
-            <div class="slider-height2 d-flex align-items-center">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="hero-cap hero-cap2 pt-70 text-center">
-                                <h2>Contact Us</h2>
-                            </div>
+    <!-- Hero Section -->
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+                <div class="col-md-9 ftco-animate pb-5 text-center">
+                    <h2 class="mb-0 bread">Gallery</h2>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container my-5">
+            <div class="row py-5">
+                <div class="col-lg-8">
+                    <form class="message-form" action="{% url 'contact:contact' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
                         </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Your Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+                <div class="col-lg-4">
+                    <div class="owner-info">
+                        <h3>{{ owner.name }}</h3>
+                        <p>Address: {{ owner.address }}</p>
+                        <p>Email: {{ owner.email }}</p>
+                        <p>Phone: {{ owner.phone }}</p>
+                        <p>Mon/Fri  9am-6pm</p>
+                        <p>Website: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
+                        {% if owner.about %}
+                            <p>About: {{ owner.about }}</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Hero End -->
-        <!-- Contact Area start -->
-        <section class="contact-section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <form class="form-contact contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group mt-3">
-                                <button type="submit" class="button button-contactForm boxed-btn">Send</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-3 offset-lg-1">
-                        <div class="media contact-info">
-                            <span class="contact-info__icon"><i class="ti-home"></i></span>
-                            <div class="media-body">
-                                <h3>Buttonwood, California.</h3>
-                                <p>Rosemead, CA 91770</p>
-                            </div>
-                        </div>
-                        <div class="media contact-info">
-                            <span class="contact-info__icon"><i class="ti-tablet"></i></span>
-                            <div class="media-body">
-                                <h3>+1 253 565 2365</h3>
-                                <p>Mon to Fri 9am to 6pm</p>
-                            </div>
-                        </div>
-                        <div class="media contact-info">
-                            <span class="contact-info__icon"><i class="ti-email"></i></span>
-                            <div class="media-body">
-                                <h3>support@colorlib.com</h3>
-                                <p>Send us your query anytime!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="contact-title">Location</h2>
-                    </div>
-                    <div class="col-12">
-                        <div id="map">
-                            {% easy_map "1600 Pennsylvania Ave NW, Washington, DC 20500" %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Contact Area End -->
-        <section id="contact" class="contact-section h-100 bg-dark">
-          <div id="map" class="bg-overlay"></div>
-          <div class="container py-5">
-            <div class="col-lg-8 col-md-6 col-sm-10 form-sec bg-white my-5 p-5 mx-auto">
-                <form>
-                  <h2 class="mb-4">Contact Us!</h2>
-                  <div class="row">
-                    <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sr-only" for="formGroupExampleInput">Full Name</label>
-                      <input class="form-control" id="formGroupExampleInput" placeholder="Full Name" onfocus="this.placeholder=''" onblur="this.placeholder='Full Name'" type="text">
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sr-only" for="formGroupExampleInput2">Phone Number</label>
-                      <input class="form-control" id="formGroupExampleInput2" placeholder="Phone Number" onfocus="this.placeholder=''" onblur="this.placeholder='Phone Number'" type="text">
-                    </div>		
-                    </div>
-                  </div>
-                  <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sr-only" for="formGroupExampleInput2">Email Address</label>
-                      <input class="form-control" id="formGroupExampleInput2" placeholder="Email Address" onfocus="this.placeholder=''" onblur="this.placeholder='Email Address'" type="email">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="sr-only" for="formGroupExampleInput2">Address</label>
-                      <input class="form-control" id="formGroupExampleInput2" placeholder="Enter Address" onfocus="this.placeholder=''" onblur="this.placeholder='Enter Address'" type="email">
-                    </div>
-                  </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                    <div class="form-group">
-                      <label class="sr-only" for="formGroupExampleInput2">Message</label>
-                      <textarea class="form-control" placeholder="Enter your message here!" rows="4" onfocus="this.placeholder=''" onblur="this.placeholder='Enter your message here!'"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <button class="btn btn-primary btn-capsul px-4">Submit</button>
-                    </div>		
-                    </div>
-                  </div>
-                </form>
-              </div>
-          </div>
-        </section>
-    </main>
+    </section>
 {% endblock body %}

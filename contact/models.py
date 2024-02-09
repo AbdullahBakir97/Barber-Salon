@@ -85,3 +85,12 @@ class Appointment(models.Model):
         return f"{self.name} - {self.barber.name}"
     
 
+class Message(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message from {self.name} ({self.email})"

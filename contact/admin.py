@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Owner, Barber, Review, GalleryItem, Appointment
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'timestamp')
+    search_fields = ('name', 'email', 'phone', 'message')
+    list_filter = ('timestamp',)
 
 
 

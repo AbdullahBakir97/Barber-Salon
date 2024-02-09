@@ -27,7 +27,8 @@ from .views import (
     OwnerAppointmentCreateView,
     OwnerReviewCreateView,
     OwnerAppointmentListView,
-    OwnerReviewListView
+    OwnerReviewListView,
+    contact_view
 )
 
 app_name = 'contact'
@@ -74,4 +75,6 @@ urlpatterns = [
     path('owner/reviews/create/', OwnerReviewCreateView.as_view(), name='owner_review_create'),
     path('owner/appointments/', OwnerAppointmentListView.as_view(), name='owner_appointment_list'),
     path('owner/reviews/', OwnerReviewListView.as_view(), name='owner_review_list'),
+    
+    path('contact/', contact_view, name='contact'),
 ]
