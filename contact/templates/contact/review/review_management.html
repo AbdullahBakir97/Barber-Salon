@@ -56,8 +56,8 @@
           </td>
           <td>{{ review.comment }}</td>
           <td class="action-links">
-            <a href="{% url 'contact:review_update' pk=review.pk %}"><i class="fa fa-edit"></i> Edit</a>
-            <a href="{% url 'contact:review_delete' pk=review.pk %}" ><i class="fa fa-trash"></i> Delete</a>
+            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Edit</a>
+            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
           </td>
         </tr>
       {% endfor %}

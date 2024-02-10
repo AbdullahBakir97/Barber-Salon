@@ -309,17 +309,23 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'contact/appointment/appointment_create.html'
-    success_url = reverse_lazy('contact:appointment_list')
+    # success_url = reverse_lazy('contact:appointment_list')
 
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             form.instance.user = self.request.user
+            self.submitted = True
             return super().form_valid(form)
         else:
             raise Http404(_("Sie müssen angemeldet sein, um einen Termin zu erstellen."))
-        
+
+    
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form, form_errors=form.errors))
+        self.submitted = False
+        return self.render_to_response(self.get_context_data(form=form))
+    
+    def get_success_url(self):
+        return reverse('contact:appointment_list')
 
 class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment
@@ -350,7 +356,7 @@ class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
 
 class AppointmentListView(OwnerProfileRequiredMixin, ListView):
     model = Appointment
-    template_name = 'contact/appointment/appointment_lsit.html'
+    template_name = 'contact/appointment/appointment_list.html'
     context_object_name = 'object_list'
 
     def get_context_data(self, **kwargs):
