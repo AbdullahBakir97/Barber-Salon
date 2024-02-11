@@ -11,7 +11,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Owner(models.Model):
-    #user = models.OneToOneField('accounts.OwnerProfile', related_name='owner_user', on_delete=models.CASCADE, verbose_name=_('Eigentümer'))
     name = models.CharField(_('Name'),max_length=255)
     email = models.EmailField(_('Email'),)
     phone = models.CharField(_('Telefon'),max_length=15)

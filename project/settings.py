@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # my app 
     'accounts',
     'contact',
+    'settings',
     
     
 ]
@@ -88,6 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'settings.salon_context_processor.get_salon_data',
             ],
         },
     },
