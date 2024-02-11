@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm
 from django.http import Http404
@@ -31,25 +31,32 @@ class OwnerProfileRequiredMixin(LoginRequiredMixin):
 class OwnerCreateView(LoginRequiredMixin, CreateView):
     model = Owner
     form_class = OwnerForm
-    fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
-    template_name = 'owner_form.html'
-    success_url = reverse_lazy('owner_list') 
+    template_name = 'contact/owner/owner_create.html'
+    success_url = reverse_lazy('contact:owner_list') 
 
     def form_valid(self, form):
-        if not self.request.user.is_authenticated or not hasattr(self.request.user, 'owner_user_profile'):
-            raise Http404(_("Sie dürfen kein Eigentümerprofil erstellen."))
+        # Check if the user is authenticated
+        if not self.request.user.is_authenticated:
+            return self.handle_no_permission()
 
-        # Check if an owner profile already exists for the user
-        if Owner.objects.filter(user=self.request.user).exists():
-            messages.error(self.request, _('Ein Eigentümerprofil für diesen Benutzer existiert bereits. Sie können es stattdessen bearbeiten.'))
-            return self.form_invalid(form)
+        # Check if an owner already exists
+        if Owner.objects.exists():
+            messages.error(self.request, _('Es kann nur einen Eigentümer geben.'))
+            return self.handle_no_permission()
 
+        # Assign the user to the user attribute of the form instance
         form.instance.user = self.request.user
+
         try:
+            # Attempt to save the form
             return super().form_valid(form)
         except IntegrityError:
-            messages.error(self.request, _('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
-            return self.form_invalid(form)
+            # Handle integrity error
+            messages.error(self.request, _('Ein Fehler ist aufgetreten.'))
+            return self.handle_no_permission()
+
+    def handle_no_permission(self):
+        raise Http404(_("Sie sind nicht berechtigt, diese Seite zu sehen."))
 
 
 class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
@@ -80,9 +87,9 @@ class OwnerDeleteView(OwnerProfileRequiredMixin, DeleteView):
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 
-class OwnerListView(OwnerProfileRequiredMixin, ListView):
+class OwnerListView(OwnerProfileRequiredMixin, DetailView):
     model = Owner
-    template_name = 'owner_list.html'
+    template_name = 'owner_detail.html'
     
     
 def contact_view(request):

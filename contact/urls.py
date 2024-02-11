@@ -28,10 +28,7 @@ from .views import (
     VisitorReviewCreateView,
     VisitorAppointmentListView,
     VisitorReviewListView,
-    OwnerAppointmentCreateView,
-    OwnerReviewCreateView,
-    OwnerAppointmentListView,
-    OwnerReviewListView,
+
     contact_view
 )
 
@@ -78,11 +75,6 @@ urlpatterns = [
     path('visitor/appointments/', VisitorAppointmentListView.as_view(), name='visitor_appointment_list'),
     path('visitor/reviews/', VisitorReviewListView.as_view(), name='visitor_review_list'),
 
-    # Owner Views
-    path('owner/appointments/create/', OwnerAppointmentCreateView.as_view(), name='owner_appointment_create'),
-    path('owner/reviews/create/', OwnerReviewCreateView.as_view(), name='owner_review_create'),
-    path('owner/appointments/', OwnerAppointmentListView.as_view(), name='owner_appointment_list'),
-    path('owner/reviews/', OwnerReviewListView.as_view(), name='owner_review_list'),
     
     path('contact/', contact_view, name='contact'),
 ]

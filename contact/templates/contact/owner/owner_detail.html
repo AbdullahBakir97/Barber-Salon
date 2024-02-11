@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          Owner Details: {{ object.name }}
+        </div>
+
+        <div class="card-body">
+          <p><strong>Email:</strong> {{ object.email }}</p>
+          <p><strong>Phone:</strong> {{ object.phone }}</p>
+          <p><strong>Address:</strong> {{ object.address }}</p>
+          <p><strong>Website:</strong> <a href="{{ object.website }}">{{ object.website }}</a></p>
+          <p><strong>About:</strong> {{ object.about }}</p>
+          <p><strong>Logo:</strong><br>
+          <img src="{{ object.logo.url }}" alt="{{ object.name }} Logo" style="max-width: 200px;"></p>
+          <!-- Add display for other fields as needed -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -10,13 +10,13 @@
   </style>
 {% endblock css %}
 
-{% block body %}
+{% block section %}
 
 <section class="testimony-section bg-light">
-  <div class="container">
+  <div class="container my-5 py-5">
     <div class="row ftco-animate justify-content-center">
       <div class="col-md-6 col-lg-5 d-flex">
-        <div class="testimony-img" style="background-image: url(images/testimony-img.jpg);"></div>
+        <div class="testimony-img" style="background-image: url({% static 'images/testimony-img.jpg' %});"></div>
       </div>
       <div class="col-md-6 col-lg-7 py-5 pl-md-5">
         <div class="py-md-5">
@@ -60,4 +60,4 @@
   </div>
 </section>
 
-{% endblock body %}
+{% endblock section %}

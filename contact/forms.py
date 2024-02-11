@@ -38,6 +38,13 @@ class OwnerForm(forms.ModelForm):
             raise ValidationError(_('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
         return email
 
+    def value_from_datadict(self, data, files, name):
+        if name in data:
+            return data.get(name)  # Return the value if present in data
+        elif self.instance and hasattr(self.instance, name):
+            return getattr(self.instance, name)  # Return instance value if present
+        else:
+            return None
 
 class MessageForm(forms.Form):
     name = forms.CharField(label='Your Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))

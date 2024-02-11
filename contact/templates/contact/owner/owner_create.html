@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+{% endblock css %}
+
+{% block body %}
+<section class="ftco-section ftco-booking bg-light">
+    <div class="container ftco-relative">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Owner Registration</span>
+                <h2 class="mb-4">Register as Owner</h2>
+                <p>Register as an owner to manage your salon details</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 ftco-animate">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_name">Your Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Your Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_phone">Your Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address">Your Address</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_logo">Your Logo</label>
+                        {{ form.logo }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_website">Your Website</label>
+                        {{ form.website }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_about">About You</label>
+                        {{ form.about }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_social_media_links">Social Media Links</label>
+                        {% comment %} {{ form.social_media_links }} {% endcomment %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}
