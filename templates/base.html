@@ -38,11 +38,13 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'css/loaders.css' %}"/>
 		<!-- Font-Awesome Style CSS File -->
 		<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+      .star-rating span { font-size: 20px; color: #ffca08; }
+    </style>
 	{% endblock css %}
-	<style>
-		.star-rating span { font-size: 20px; color: #ffca08; }
-	</style>	
+		
 
   </head>
   <body>
@@ -85,7 +87,7 @@
 							<h2 class="mb-0">Happy Customer</h2>
 						</div>
 						<div class="carousel-testimony owl-carousel ftco-animate">
-							{% for review in object_list %}
+							{% for review in review_data %}
 							<div class="item">
 								<div class="testimony-wrap pb-4">
 									<div class="text">
@@ -112,7 +114,7 @@
 									</div>
 								</div>
 							</div>
-							{% endfor %}
+						  {% endfor %}
 						</div>
 					</div>
 				</div>
@@ -132,7 +134,7 @@
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2 logo">{{salon_data.owner.name}}</h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <p>{{salon_data.owner.about}}</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -170,7 +172,7 @@
 	              <ul>
 	                <li><span class="icon icon-map-marker"></span><span class="text">{{salon_data.owner.address}}</span></li>
 	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">{{salon_data.owner.phone}}</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">{{salon_data.owner.website}}</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">{{salon_data.owner.email}}</span></a></li>
 	              </ul>
 	            </div>
             </div>

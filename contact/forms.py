@@ -134,21 +134,25 @@ class GalleryItemForm(forms.ModelForm):
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['image', 'barber', 'customer_name', 'comment']
+        fields = ['image', 'barber', 'customer_name', 'comment', 'rating']
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'barber': forms.Select(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
+            'rating': forms.HiddenInput(),
+        
             
         }
+        rating = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
         labels = {
             'image': _('Foto'),
             'barber': _('Friseur'),
             'customer_name': _('Kundenname'),
             'comment': _('Kommentar'),
+            'rating': _('Bewertung'),
             
         }
 
@@ -172,7 +176,7 @@ class ReviewCreateForm(forms.ModelForm):
         return image
 
     def clean_rating(self):
-        rating = self.cleaned_data['rating']
+        rating = self.cleaned_data.get['rating']
         if not 1 <= rating <= 5:
             raise ValidationError(_('Die Bewertung muss zwischen 1 und 5 liegen.'))
         return rating

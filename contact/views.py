@@ -264,6 +264,7 @@ class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             form.instance.user = self.request.user
+            form.instance.rating = form.cleaned_data['rating']
             try:
                 return super().form_valid(form)
             except IntegrityError:

@@ -90,6 +90,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'settings.salon_context_processor.get_salon_data',
+                'contact.review_context_processor.get_review_data',
             ],
         },
     },
