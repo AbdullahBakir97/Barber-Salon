@@ -1,8 +1,7 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
-from django.utils.translation import gettext_lazy as _
-#from accounts.models import OwnerProfile 
+from django.utils.translation import gettext_lazy as _ 
 from django.conf import settings
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
