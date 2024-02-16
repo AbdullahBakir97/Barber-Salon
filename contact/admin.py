@@ -1,12 +1,5 @@
 from django.contrib import admin
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message
-
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone', 'timestamp')
-    search_fields = ('name', 'email', 'phone', 'message')
-    list_filter = ('timestamp',)
-
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message , Service
 
 
 @admin.register(Owner)
@@ -34,3 +27,14 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'barber', 'date', 'time', 'service_type', 'phone')
     search_fields = ('name', 'barber__name', 'service_type', 'phone')
 
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'timestamp')
+    search_fields = ('name', 'email', 'phone', 'message')
+    list_filter = ('timestamp',)
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('category', 'service', 'price')
+    search_fields = ('category', 'service')
+    list_filter = ('category', 'service')

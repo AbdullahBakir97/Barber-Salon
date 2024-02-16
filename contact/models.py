@@ -64,6 +64,17 @@ CATEGORY_TYPES = (
     ('Massage','Massage'),
     ('Skin Care','Hautpflege'),
 )
+
+
+class Service(models.Model):
+    category = models.CharField(_('Kategorie'),max_length=20,choices=CATEGORY_TYPES,default=CATEGORY_TYPES[0][0])
+    service = models.CharField(_('Service'),max_length=20,choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])
+    price = models.DecimalField(_('Preis'),max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return self.category + " - " + self.service
+
+
 class GalleryItem(models.Model):
     name = models.CharField(_('Element'),max_length=255, default='Galerie Element')
     image = models.ImageField(_('Foto'),upload_to='gallery_images/')
