@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import MultipleObjectMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm
 from django.http import Http404
@@ -459,3 +460,13 @@ class VisitorReviewListView(VisitorIdMixin, ListView):
 
 
 
+class ManagementView(TemplateView):
+    template_name = 'contact/management.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointment_list'] = Appointment.objects.all()
+        context['barber_list'] = Barber.objects.all()
+        context['review_list'] = Review.objects.all()
+        context['gallery_item_list'] = GalleryItem.objects.all()
+        return context

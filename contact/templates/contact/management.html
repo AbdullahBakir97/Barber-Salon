@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+{% block body %}
+
+
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Appointment Management</h2>
+        </div>
+    </div>
+
+    <!-- Appointment List -->
+    <h3>Appointment List</h3>
+    <form method="post" action="{% url 'contact:appointment_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Create</button>
+    </form>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Barber</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Service</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointment_list %}
+                <tr>
+                    <td>{{ appointment.name }}</td>
+                    <td>{{ appointment.barber.name }}</td>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>{{ appointment.service_type }}</td>
+                    <td>{{ appointment.phone }}</td>
+                    <td>{{ appointment.email }}</td>
+                    <td>{{ appointment.message }}</td>
+                    <td><a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-primary">Edit</a></td>
+                    <td><a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-danger">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Update Appointment Form (hidden by default) -->
+    {% if update_form %}
+        <h3>Edit {{ verbose_name }}</h3>
+        <form method="post" action="{% url 'contact:appointment_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    {% endif %}
+
+    <!-- Delete Appointment Form (hidden by default) -->
+    {% if delete_form %}
+        <h3>Delete {{ verbose_name }}</h3>
+        <form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    {% endif %}
+</div>
+
+<div class="container my-5 py-5">
+    <h2>Barber Management</h2>
+
+    <!-- Barber List -->
+    <form method="post" action="{% url 'contact:barber_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+    <div class="row my-5">
+        {% for barber in barber_list %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ barber.image.url }}" class="card-img-top" alt="{{ barber.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ barber.name }}</h5>
+                        <p class="card-text">{{ barber.expertise }}</p>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Barber Appointments -->
+    {% if barber_appointments %}
+        <h3>{{ barber.name }}'s Appointments</h3>
+        <ul>
+            {% for appointment in barber_appointments %}
+                <li>
+                    {{ appointment.name }} - {{ appointment.date }} - {{ appointment.time }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Update Barber Form (hidden by default) -->
+    {% if update_form %}
+        <h3>Edit Barber</h3>
+        <form method="post" action="{% url 'contact:barber_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    {% endif %}
+
+    <!-- Delete Barber Form (hidden by default) -->
+    {% if delete_form %}
+        <h3>Delete Barber</h3>
+        <form method="post" action="{% url 'contact:barber_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    {% endif %}
+</div>
+
+<div class="container my-5 py-5">
+    <h2>Gallery Items</h2>
+
+    <!-- Create Link -->
+    <a href="{% url 'contact:item_create' %}" class="btn btn-primary mb-3">Add New Item</a>
+
+    <!-- List Gallery Items as Cards -->
+    <div class="row">
+        {% for object in gallery_item_list %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card">
+                    <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ object.name }}</h5>
+                        <p class="card-text">{{ object.description }}</p>
+                        <!-- Add other fields as needed -->
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Update and Delete Forms (hidden by default) -->
+    {% if update_form or delete_form %}
+        <div class="container my-5 py-5">
+            <!-- Update Gallery Item Form (hidden by default) -->
+            {% if update_form %}
+                <h3>Edit Gallery Item</h3>
+                <form method="post" action="{% url 'contact:item_update' pk=update_form.instance.pk %}">
+                    {% csrf_token %}
+                    {{ update_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            {% endif %}
+
+            <!-- Delete Gallery Item Form (hidden by default) -->
+            {% if delete_form %}
+                <h3>Delete Gallery Item</h3>
+                <form method="post" action="{% url 'contact:item_delete' pk=delete_form.instance.pk %}">
+                    {% csrf_token %}
+                    {{ delete_form.as_p }}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Review Management</h2>
+        </div>
+    </div>
+
+    <!-- List Reviews as Table -->
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Customer Name</th>
+                <th>Barber</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in review_list %}
+                <tr>
+                    <td>{{ review.customer_name }}</td>
+                    <td>{{ review.barber.name }}</td>
+                    <td>
+                        <div class="star-rating">
+                            {% for _ in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <span class="fa fa-star"></span>
+                                {% else %}
+                                    <span class="fa fa-star-o"></span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>{{ review.comment }}</td>
+                    <td class="action-links">
+                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Edit</a>
+                        <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock body %}
