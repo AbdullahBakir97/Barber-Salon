@@ -2,9 +2,8 @@
 {% load static %}
 
 {% block body %}
-
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
 <section class="ftco-section ftco-pricing">
@@ -17,24 +16,24 @@
             </div>
         </div>
         <div class="row">
-            {% for service in services %}
-            <div class="col-md-4 ftco-animate">
-                <div class="pricing-entry pb-5 text-center">
-                    <div>
-                        <h3 class="mb-4">{{ service.category }}</h3>
+            {% for category in categories %}
+                <div class="col-md-4 ftco-animate">
+                    <div class="pricing-entry pb-5 text-center">
+                        <div>
+                            <h3 class="mb-4">{{ category.name }}</h3>
+                        </div>
+                        <ul>
+                            {% for service in category.service_category.all %}
+                                <li>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Get Offer</a></p>
                     </div>
-                    <ul>
-                        {% for sub_service in service.sub_services.all %}
-                        <li>{{ sub_service.name }}</li>
-                        <p><span class="price">${{ sub_service.price }}</span> <span class="per">/</span></p>
-                        {% endfor %}
-                    </ul>
-                    <p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
                 </div>
-            </div>
             {% endfor %}
         </div>
     </div>
 </section>
-
 {% endblock body %}

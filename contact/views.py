@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm
 from django.http import Http404
 from django.http import HttpResponseRedirect
@@ -385,8 +385,9 @@ class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
 
 
 def pricing_view(request):
+    categories = Category.objects.prefetch_related('service_category').all()
     services = Service.objects.all()
-    return render(request, 'contact/pricing.html', {'services': services})
+    return render(request, 'contact/pricing.html', {'categories': categories, 'services': services})
 
 # Visitor Views
 class VisitorIdMixin:

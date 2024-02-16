@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.http import Http404
 from django.views.generic.edit import FormView
 from contact.forms import AppointmentForm
-from contact.models import GalleryItem, Barber, Review, Appointment
-from contact.views import OwnerProfileRequiredMixin
+from contact.models import GalleryItem, Barber, Review, Appointment, Service, Category
+
 
 
 class HomeView(FormView):
@@ -17,8 +17,9 @@ class HomeView(FormView):
         context = super().get_context_data(**kwargs)
         context['gallery_items'] = GalleryItem.objects.all()[:10]
         context['barbers'] = Barber.objects.all()[:10]
+        context['categories'] = Category.objects.prefetch_related('service_category').all()
+        context['services'] = Service.objects.all()
 
-        
         return context
 
     def form_valid(self, form):
