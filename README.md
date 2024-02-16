@@ -58,6 +58,7 @@ Efficient navigation for seamless user experience.
 - **/galleryitems/**: Manage visual content.
 - **/appointments/**: Schedule and manage appointments.
 - **/prices/**: Set and update service prices.
+- **/management/**: Management Suite Centralized control for salon owners
 - **/profiles/**: Administer user profiles.
 - **/login/**: Access the system login page.
 - **/logout/**: Log out of the system.
