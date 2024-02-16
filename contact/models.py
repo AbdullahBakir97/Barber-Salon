@@ -49,21 +49,6 @@ class Review(models.Model):
             return f"{self.customer_name} - No associated barber"
 
 
-SERVICE_TYPES = (
-        ('HairCut','Haarschnitt'),
-        ('Beard','Bart'),
-        ('Hair coloring','haare Färben'),
-        ('Massage','Massage'),
-        ('Maskes','Masken'),
-        ('Stayling Products','Styling Produkte'),
-        ('Skin Cleaning','Gesicht Reinigung'),
-        
-        )
-CATEGORY_TYPES = (
-    ('Stayling','Styling'),
-    ('Massage','Massage'),
-    ('Skin Care','Hautpflege'),
-)
 
 class Category(models.Model):
     name = models.CharField(_('Name'), max_length=255, default='Default Category Name')
