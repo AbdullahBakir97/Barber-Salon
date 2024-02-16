@@ -60,7 +60,7 @@ Efficient navigation for seamless user experience.
 - **/owners/**: Manage salon owners.
 - **/barbers/**: Control barber information.
 - **/reviews/**: Handle customer reviews.
-- **/galleryitems/**: Manage visual content.
+- **/items/**: Manage visual content.
 - **/appointments/**: Schedule and manage appointments.
 - **/prices/**: Set and update service prices.
 - **/management/**: Management Suite Centralized control for salon owners
