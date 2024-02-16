@@ -29,7 +29,8 @@ from .views import (
     VisitorAppointmentListView,
     VisitorReviewListView,
 
-    contact_view
+    contact_view,
+    pricing_view
 )
 
 app_name = 'contact'
@@ -77,4 +78,5 @@ urlpatterns = [
 
     
     path('contact/', contact_view, name='contact'),
+    path('pricing/', pricing_view, name='pricing'),
 ]

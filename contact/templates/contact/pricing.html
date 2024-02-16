@@ -1,64 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block body %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/main.css' %}">
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'css/bootstrap2.min.css' %}">
-<!-- Custom Style CSS File -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/custom-style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/loaders.css' %}"/>
-<!-- Font-Awesome Style CSS File -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
-    <div class="best-pricing section-padding2 position-relative">
-        <div class="container">
-            <div class="row justify-content-end">
-                <div class="col-xl-7 col-lg-7">
-                    <div class="section-tittle mb-50">
-                        <span>Our Best Pricing</span>
-                        <h2>We provide best price<br> in the city!</h2>
-                    </div>
-                    <!-- Pricing  -->
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="pricing-list">
-                                <ul>
-                                    <li>Styling. . . . . . . . . . . . . . . . . . . . . . . . . . . . <span>$25</span></li>
-                                    <li>Styling + Color. . . . . . . . . . . . . . . . . . . <span>$65</span></li>
-                                    <li>Styling + Tint. . . . . . . . . . . . . . . . . . . . . .<span>$65</span></li>
-                                    <li>  Semi-permanent wave. . . . . . . . . . . . .<span>$65</span></li>
-                                    <li> Cut + Styling. . . . . . . . . . . . . . . . . . . . . .<span>$63</span></li>
-                                    <li> Cut + Styling + Color. . . . . . . . . . . . . <span>$100</span></li>
-                                    <li> Cut + Styling + Tint. . . . . . . . . . . . . . . .<span>$100</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="pricing-list">
-                                <ul>
-                                    <li>Cut. . . . . . . . . . . . . . . . . . . . . . . . . . . . .<span>$25</span></li>
-                                    <li>Shave. . . . . . . . . . . . . . . . . . . . . . . . . . <span>$65</span></li>
-                                    <li>Beard trim. . . . . . . . . . . . . . . . . . . . . .  <span>$65</span></li>
-                                    <li>Cut + beard trim. . . . . . . . . . . . . . . . .  <span>$65</span></li>
-                                    <li>Cut + shave. . . . . . . . . . . . . . . . . . . . . . .<span>$63</span></li>
-                                    <li>Clean up. . . . . . . . . . . . . . . . . . . . . . . . .<span>$100</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+<section class="ftco-section ftco-pricing">
+    <div class="container">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Pricing</span>
+                <h2 class="mb-4">Our Prices</h2>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
             </div>
         </div>
-        <!-- pricing img -->
-        <div class="pricing-img">
-            <img class="pricing-img1" src="assets/img/gallery/pricing1.png" alt="">
-            <img class="pricing-img2" src="assets/img/gallery/pricing2.png" alt="">
+        <div class="row">
+            {% for service in services %}
+            <div class="col-md-4 ftco-animate">
+                <div class="pricing-entry pb-5 text-center">
+                    <div>
+                        <h3 class="mb-4">{{ service.category }}</h3>
+                    </div>
+                    <ul>
+                        {% for sub_service in service.sub_services.all %}
+                        <li>{{ sub_service.name }}</li>
+                        <p><span class="price">${{ sub_service.price }}</span> <span class="per">/</span></p>
+                        {% endfor %}
+                    </ul>
+                    <p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
-    <!-- Best Pricing Area End -->
+</section>
+
 {% endblock body %}

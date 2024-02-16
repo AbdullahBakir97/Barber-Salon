@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message , Service
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message , Service , Category
 
 
 @admin.register(Owner)
@@ -33,8 +33,18 @@ class MessageAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'phone', 'message')
     list_filter = ('timestamp',)
 
+
+class ServiceInline(admin.TabularInline):
+    model = Service
+    
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    inlines = [ServiceInline]
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('category', 'service', 'price')
-    search_fields = ('category', 'service')
-    list_filter = ('category', 'service')
+    list_display = ('name', 'category', 'price')
+    list_filter = ('category',)
+    search_fields = ('name', )

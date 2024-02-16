@@ -65,22 +65,27 @@ CATEGORY_TYPES = (
     ('Skin Care','Hautpflege'),
 )
 
+class Category(models.Model):
+    name = models.CharField(_('Name'), max_length=255, default='Default Category Name')
+    
+    def __str__(self):
+        return self.name
 
 class Service(models.Model):
-    category = models.CharField(_('Kategorie'),max_length=20,choices=CATEGORY_TYPES,default=CATEGORY_TYPES[0][0])
-    service = models.CharField(_('Service'),max_length=20,choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])
+    name = models.CharField(_('Name'), max_length=255, default='Default Service Name')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='service_category')
     price = models.DecimalField(_('Preis'),max_digits=10, decimal_places=2)
     
     def __str__(self):
-        return self.category + " - " + self.service
+        return self.name
 
 
 class GalleryItem(models.Model):
     name = models.CharField(_('Element'),max_length=255, default='Galerie Element')
     image = models.ImageField(_('Foto'),upload_to='gallery_images/')
     description = models.TextField(_('Beschriebeung'),)
-    category = models.CharField(_('Kategorie'),max_length=20,choices=CATEGORY_TYPES,default=CATEGORY_TYPES[0][0])
-    service = models.CharField(_('Service'),max_length=20,choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='gallery_category')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='gallery_service')
 
     def __str__(self):
         return self.name
@@ -91,7 +96,7 @@ class Appointment(models.Model):
     barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
-    service_type = models.CharField(_('Service'),max_length=20, choices=SERVICE_TYPES,default=SERVICE_TYPES[0][0])
+    service_type = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='appointment_service')
     phone = models.CharField(_('Telefon'),max_length=15)
     email = models.EmailField(_('Email'),default='no-reply@example.com')
     message = models.TextField(_('Nachricht'),)
