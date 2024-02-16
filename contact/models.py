@@ -95,7 +95,7 @@ class Message(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
-    message = models.TextField()
+    message = models.TextField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
