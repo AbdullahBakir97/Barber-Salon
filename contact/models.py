@@ -16,6 +16,7 @@ class Owner(models.Model):
     address = models.TextField(_('Adresse'),)
     logo = models.ImageField(_('Logo'),upload_to='owner_logos/')
     website = models.URLField(_('Webseite'),blank=True, null=True)
+    work_days = models.CharField(_('Arbeits Tage'),max_length=255, default='Montag-Freitag')
     about = models.TextField(_('Über'),blank=True, null=True)
     social_media_links = models.JSONField(_('Social Links'),blank=True, null=True)
     

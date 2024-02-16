@@ -54,17 +54,15 @@
                 <div class="col-lg-4">
                     <div class="owner-info">
                         <h3>{{ owner.name }}</h3>
-                        <p>Address: {{ owner.address }}</p>
-                        <p>Email: {{ owner.email }}</p>
-                        <p>Phone: {{ owner.phone }}</p>
-                        <p>Mon/Fri  9am-6pm</p>
-                        <p>Website: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
-                        {% if owner.about %}
-                            <p>About: {{ owner.about }}</p>
-                        {% endif %}
+                        <p class="icon icon-map-marker"> Address: {{ owner.address }}</p>
+                        <p class="icon icon-envelope"> Email: {{ owner.email }}</p>
+                        <p class="icon icon-phone"> Phone: {{ owner.phone }}</p>
+                        <p class="icon icon-clock-o"> {{ owner.work_days }} </p>
+                        <p class="icon icon-link"> Website: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 {% endblock body %}
+

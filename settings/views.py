@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.http import Http404
 from django.views.generic.edit import FormView
@@ -10,18 +11,13 @@ from contact.views import OwnerProfileRequiredMixin
 class HomeView(FormView):
     template_name = 'settings/home.html'
     form_class = AppointmentForm
-    success_url = '/'
-
+    success_url = reverse_lazy('home') 
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gallery_items'] = GalleryItem.objects.all()[:10]
         context['barbers'] = Barber.objects.all()[:10]
-        context['reviews'] = Review.objects.all()[:10]
-        
-        # Debugging output
-        print("Gallery Items:", context['gallery_items'])
-        print("Barbers:", context['barbers'])
-        print("Reviews:", context['reviews'])
+
         
         return context
 

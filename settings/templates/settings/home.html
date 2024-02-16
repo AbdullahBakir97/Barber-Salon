@@ -110,7 +110,7 @@
           <h3 class="vr">Call Us: 012-3456-7890</h3>
           <div class="row justify-content-center">
               <div class="col-md-8 ftco-animate">
-                  <form method="POST" class="appointment-form" action="{% url 'contact:appointment_create' %}">
+                  <form method="POST" class="appointment-form" action="{% url 'home' %}">
                       {% csrf_token %}
                       {% if form.errors and view.submitted %}
                           {% for field in form %}
