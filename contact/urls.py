@@ -29,6 +29,10 @@ from .views import (
     VisitorAppointmentListView,
     VisitorReviewListView,
     
+    ServiceCreateView,
+    ServiceUpdateView,
+    ServiceDeleteView,
+    
     ManagementView,
 
     contact_view,
@@ -71,6 +75,10 @@ urlpatterns = [
     path('appointments/<int:pk>/delete/', AppointmentDeleteView.as_view(), name='appointment_delete'),
     path('appointments/', AppointmentListView.as_view(), name='appointment_list'),
     path('appointments/management', AppointmentManagementView.as_view(), name='appointment_management'),
+    
+    path('service/add/', ServiceCreateView.as_view(), name='service_create'),
+    path('service/<int:pk>/update/', ServiceUpdateView.as_view(), name='service_update'),
+    path('service/<int:pk>/delete/', ServiceDeleteView.as_view(), name='service_delete'),
 
     # Visitor Views
     path('visitor/appointments/create/', VisitorAppointmentCreateView.as_view(), name='visitor_appointment_create'),

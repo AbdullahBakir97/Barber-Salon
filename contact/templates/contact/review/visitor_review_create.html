@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Add the following link for star rating -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #ffca08; }
+  </style>
+{% endblock css %}
+
+{% block body %}
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+      <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+          <div class="col-md-9 ftco-animate pb-5 text-center">
+              <h2 class="mb-0 bread">Contact Us</h2>
+              <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Contact Us<i class="ion-ios-arrow-round-forward"></i></span></p>
+          </div>
+      </div>
+  </div>
+</section>
+
+<div class="container my-5 py-5">
+  <div class="row justify-content-center pb-3">
+    <div class="col-md-10 heading-section text-center ftco-animate">
+        <span class="subheading">Bewertung</span>
+        <h2 class="mb-4">Füge Ein Bewertung</h2>
+    </div>
+</div>
+  <form method="POST" class="review-form" action="{% url 'contact:visitor_review_create' %}" enctype="multipart/form-data" id="reviewForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <!-- Star Rating -->
+    <div class="form-group">
+      <label for="id_rating">Bewertung</label>
+      <div class="star-rating" onclick="updateRating()">
+        <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
+        <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
+        <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
+        <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">&#9733;</label>
+        <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
+      </div>
+      <!-- Hidden input field to store the selected star rating -->
+      <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary mt-5">{{ submit_btn_label }}Bewertung Einfügen</button>
+  </form>
+</div>
+
+<script>
+  // Function to update the hidden input field with the selected star rating
+  function updateRating() {
+    const ratingInput = document.getElementById('ratingInput');
+    const stars = document.querySelectorAll('.star-rating input:checked');
+    
+    if (stars.length > 0) {
+      ratingInput.value = stars[0].value;
+    }
+  }
+</script>
+
+{% endblock body %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Owner, Review, Appointment, Barber, GalleryItem
+from .models import Owner, Review, Appointment, Barber, GalleryItem, Service
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -145,7 +145,6 @@ class ReviewCreateForm(forms.ModelForm):
         
             
         }
-        rating = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 
         labels = {
             'image': _('Foto'),
@@ -155,7 +154,7 @@ class ReviewCreateForm(forms.ModelForm):
             'rating': _('Bewertung'),
             
         }
-
+        
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
         
@@ -176,7 +175,7 @@ class ReviewCreateForm(forms.ModelForm):
         return image
 
     def clean_rating(self):
-        rating = self.cleaned_data.get['rating']
+        rating = self.cleaned_data.get('rating')
         if not 1 <= rating <= 5:
             raise ValidationError(_('Die Bewertung muss zwischen 1 und 5 liegen.'))
         return rating
@@ -242,5 +241,19 @@ class AppointmentForm(forms.ModelForm):
         if date < timezone.now().date():
             raise ValidationError(_('Das Datum darf nicht in der Vergangenheit liegen.'))
         return date
-
-
+    
+    
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'price', 'category']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'name': _('Name'),
+            'price': _('Price'),
+            'category': _('Category'),
+        }

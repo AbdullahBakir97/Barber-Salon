@@ -27,7 +27,7 @@
     
     <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-	
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
 	
 	{% block css %}
 		<link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -38,11 +38,9 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'css/loaders.css' %}"/>
 		<!-- Font-Awesome Style CSS File -->
 		<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+    
 		<link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-      .star-rating span { font-size: 20px; color: #ffca08; }
-    </style>
+
 	{% endblock css %}
 		
 
@@ -121,7 +119,9 @@
 			</div>
 		</div>
 	</section>
-  
+  <style>
+    .star-rating span { font-size: 20px; color: #ffca08; }
+  </style>
 
 		
 
@@ -211,13 +211,11 @@
   <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
   <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
   <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{% static 'js/google-map.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   
   <script  src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
   <script src="{% static 'js/bootstrap.min2.js' %}" ></script>
-  <script async deffer type="text/javascript" src="https://maps.google.com/maps/api/js?key= AIzaSyB52BfJHBtqiqYBn_D4ZUqujiWxAOiRyTc&callback=initMap"></script>
   <script src="{% static 'js/gmap-custom2.js' %}" ></script>
   <script src="{% static 'js/core2.js' %}"></script>
 

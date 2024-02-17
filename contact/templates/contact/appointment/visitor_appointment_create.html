@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<section class="ftco-section ftco-booking bg-light">
+    <div class="container ftco-relative">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Booking</span>
+                <h2 class="mb-4">Make an Appointment</h2>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+            </div>
+        </div>
+        <h3 class="vr">Call Us: 012-3456-7890</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-8 ftco-animate">
+                <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
+                    {% csrf_token %}
+                    {% if form.errors and view.submitted %}
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_name">Your Name</label>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_email">Your Email</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_date">Preferred Date</label>
+                                {{ form.date }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_time">Preferred Time</label>
+                                {{ form.time }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_barber">Select Barber</label>
+                                {{ form.barber }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_service_type">Service Type</label>
+                                <div class="select-wrap">
+                                    <div class="icon">
+                                        <span class="fas fa-chevron-down"></span>
+                                    </div>
+                                    {{ form.service_type }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_phone">Your Phone</label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_message">Additional Message</label>
+                                {{ form.message }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Make an Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

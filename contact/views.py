@@ -6,13 +6,15 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
-from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm
 from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.db import IntegrityError
+from django.db.models import Q
 from django.contrib import messages
 import uuid
 import logging
+import hashlib
 from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
@@ -390,6 +392,23 @@ def pricing_view(request):
     services = Service.objects.all()
     return render(request, 'contact/pricing.html', {'categories': categories, 'services': services})
 
+class ServiceCreateView(CreateView):
+    model = Service
+    fields = ['name', 'price', 'category']
+    template_name = 'prices/service_create.html'
+    success_url = reverse_lazy('contact:management')
+
+class ServiceUpdateView(UpdateView):
+    model = Service
+    fields = ['name', 'price', 'category']
+    template_name = 'prices/service_update.html'
+    success_url = reverse_lazy('contact:management')
+
+class ServiceDeleteView(DeleteView):
+    model = Service
+    template_name = 'prices/service_delete.html'
+    success_url = reverse_lazy('contact:management')
+
 # Visitor Views
 class VisitorIdMixin:
     def get_visitor_id(self):
@@ -400,63 +419,101 @@ class VisitorIdMixin:
         return visitor_id
     
     
-class VisitorAppointmentCreateView(VisitorIdMixin, CreateView):
+class VisitorAppointmentCreateView(CreateView):
     model = Appointment
     form_class = AppointmentForm
-    template_name = 'appointment_create.html'
-    success_url = reverse_lazy('appointment_list')
+    template_name = 'contact/appointment/visitor_appointment_create.html'
+    success_url = reverse_lazy('contact:visitor_appointment_list')
 
     def form_valid(self, form):
-        visitor_id = self.get_visitor_id()
-        form.instance.visitor_id = visitor_id
+        # Get visitor information (IP address and user-agent)
+        visitor_info = self.request.META.get('REMOTE_ADDR', '') + self.request.META.get('HTTP_USER_AGENT', '')
+        # Hash visitor information
+        visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
+        
+        # Check for existing appointment with same visitor hash, date, and time
+        existing_appointment = Appointment.objects.filter(visitor_hash=visitor_hash, date=form.instance.date, time=form.instance.time).first()
+        
+        if existing_appointment:
+            messages.error(self.request, _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.'))
+            return self.form_invalid(form)
+        
+        # Save the appointment with visitor hash
+        form.instance.visitor_hash = visitor_hash
         try:
             self.object = form.save()
-            success_message = _('Termin erfolgreich hinzugefügt.')
-            messages.success(self.request, success_message)
+            messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
             return super().form_valid(form)
         except IntegrityError:
-            error_message = _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.')
-            messages.error(self.request, error_message)
+            messages.error(self.request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
             return self.form_invalid(form)
 
-class VisitorReviewCreateView(VisitorIdMixin,CreateView):
+
+class VisitorReviewCreateView(CreateView):
     model = Review
     form_class = ReviewCreateForm
-    template_name = 'review_form.html'
-    success_url = reverse_lazy('review_list_visitor')
+    template_name = 'contact/review/visitor_review_create.html'
+    success_url = reverse_lazy('contact:visitor_review_list')
 
     def form_valid(self, form):
+        # Get visitor information (IP address and user-agent)
+        visitor_info = self.request.META.get('REMOTE_ADDR', '') + self.request.META.get('HTTP_USER_AGENT', '')
+        # Hash visitor information
+        visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
         
-        visitor_id = self.get_visitor_id()
-        form.instance.visitor_id = visitor_id
+        # Check for existing review with same visitor hash, barber, and name
+        existing_review = Review.objects.filter(visitor_hash=visitor_hash, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
         
+        if existing_review:
+            messages.error(self.request, _('Sie haben bereits eine Bewertung für diesen Friseur mit dem gleichen Namen abgegeben.'))
+            return self.form_invalid(form)
+        
+        # Save the review with visitor hash
+        form.instance.visitor_hash = visitor_hash
         try:
             self.object = form.save()
             messages.success(self.request, _('Bewertung erfolgreich hinzugefügt.'))
+            print(form.cleaned_data)
             return super().form_valid(form)
         except IntegrityError:
-            messages.error(self.request, _('Sie haben diesen Friseur bereits bewertet.'))
+            messages.error(self.request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
             return self.form_invalid(form)
 
-class VisitorAppointmentListView(VisitorIdMixin, ListView):
+class VisitorAppointmentListView(ListView):
     model = Appointment
-    template_name = 'appointment_list.html'
+    template_name = 'contact/appointment/appointment_list.html'
+   
 
     def get_queryset(self):
-        visitor_id = self.get_visitor_id()
-        return Appointment.objects.filter(visitor_id=visitor_id)
+        # Get visitor information (IP address and user-agent)
+        visitor_info = self.request.META.get('REMOTE_ADDR', '') + self.request.META.get('HTTP_USER_AGENT', '')
+        # Hash visitor information
+        visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
+
+        # Check if the visitor has any appointments
+        appointments = Appointment.objects.filter(visitor_hash=visitor_hash)
+        if appointments.exists():
+            return appointments
+        else:
+            # If no appointments found for the visitor, search appointments by email
+            email = self.request.POST.get('email', '')  # Get email from the appointment form
+            if email:
+                return Appointment.objects.filter(Q(email=email) | Q(visitor_hash=visitor_hash))
+            else:
+                return Appointment.objects.none()
         
 
 class VisitorReviewListView(VisitorIdMixin, ListView):
     model = Review
-    template_name = 'review_list_visitor.html'
+    template_name = 'contact/review/visitor_review_list.html'
 
     def get_queryset(self):
 
-            visitor_id = self.get_visitor_id()
-            visitor_reviews = Review.objects.filter(visitor_id=visitor_id)
-            other_reviews = Review.objects.exclude(visitor_id=visitor_id)
-            return list(visitor_reviews) + list(other_reviews)
+            visitor_info = self.request.META.get('REMOTE_ADDR', '') + self.request.META.get('HTTP_USER_AGENT', '')
+            visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
+            visitor_reviews = Review.objects.filter(visitor_hash=visitor_hash)
+
+            return list(visitor_reviews)
 
 
 
@@ -469,4 +526,7 @@ class ManagementView(TemplateView):
         context['barber_list'] = Barber.objects.all()
         context['review_list'] = Review.objects.all()
         context['gallery_item_list'] = GalleryItem.objects.all()
+        context['category_list'] = Category.objects.all()
+        context['service_list'] = Service.objects.all()
+        context['service_form'] = ServiceForm()
         return context

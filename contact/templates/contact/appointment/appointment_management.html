@@ -9,12 +9,13 @@
   <h2>Appointment List</h2>
 
 
-  
+  <div class=" my-1">
   <form method="post" action="{% url 'contact:appointment_create' %}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary mt-5">Create</button>
   </form>
+  </div>
   <!-- List Appointments as Table -->
   <table class="table">
       <thead class="thead-dark">

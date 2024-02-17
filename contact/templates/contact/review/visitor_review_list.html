@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .star-rating span { font-size: 20px; color: #ffca08; }
+  </style>
+{% endblock css %}
+
+{% block body %}
+
+<section class="testimony-section bg-light">
+  <div class="container my-5 py-5">
+    <div class="row ftco-animate justify-content-center">
+      <div class="col-md-6 col-lg-5 d-flex">
+        <div class="testimony-img" style="background-image: url({% static 'images/testimony-img.jpg' %});"></div>
+      </div>
+      <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+        <div class="py-md-5">
+          <div class="heading-section ftco-animate">
+            <span class="subheading">Testimony</span>
+            <h2 class="mb-0">Happy Customer</h2>
+          </div>
+          <div class="carousel-testimony owl-carousel ftco-animate">
+            {% for review in object_list %}
+            <div class="item">
+              <div class="testimony-wrap pb-4">
+                <div class="text">
+                  <p class="mb-4">{{ review.comment }}</p>
+                </div>
+                <div class="d-flex">
+                  {% if review.image %}
+                  <div class="user-img" style="background-image: url({{ review.image.url }})">
+                  </div>
+                  {% endif %}
+                  <div class="pos ml-3">
+                    <p class="name">{{ review.customer_name }}</p>
+                    <span class="position">{{ review.barber.name }}</span>
+                    <div class="star-rating">
+                      {% for _ in "12345" %}
+                          {% if forloop.counter <= review.rating %}
+                              <span class="fa fa-star"></span>
+                          {% else %}
+                              <span class="fa fa-star-o"></span>
+                          {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock body %}

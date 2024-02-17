@@ -231,4 +231,65 @@
     </table>
 </div>
 
+
+<section class="ftco-section ftco-pricing">
+    <div class="container">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Pricing</span>
+                <h2 class="mb-4">Our Prices</h2>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+            </div>
+        </div>
+        <div class="row">
+            {% for category in category_list %}
+                <div class="col-md-4 ftco-animate">
+                    <div class="pricing-entry pb-5 text-center">
+                        <div>
+                            <h3 class="mb-4">{{ category.name }}</h3>
+                        </div>
+                        <ul>
+                            {% for service in category.service_category.all %}
+                                <li>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Edit</a>
+                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Get Offer</a></p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Update Service Form (hidden by default) -->
+{% if update_form %}
+    <div class="container my-5 py-5">
+        <h3>Edit Service</h3>
+        <form method="post" action="{% url 'contact:service_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+{% endif %}
+
+<!-- Delete Service Form (hidden by default) -->
+{% if delete_form %}
+    <div class="container my-5 py-5">
+        <h3>Delete Service</h3>
+        <form method="post" action="{% url 'contact:service_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+{% endif %}
+
+
 {% endblock body %}

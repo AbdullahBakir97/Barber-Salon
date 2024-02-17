@@ -34,12 +34,20 @@ class Barber(models.Model):
         return self.name
 
 class Review(models.Model):
-    visitor_id = models.UUIDField(_('Besucher-ID'), default=uuid.uuid4, editable=False, unique=True)
+    visitor_hash = models.CharField(max_length=64, null=True, blank=True)
     image = models.ImageField(_('Foto'),upload_to='review_images/', null=True, blank=True)
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
     comment = models.TextField(_('Kommentare'),)
     rating = models.IntegerField(_('Bewertung'), validators=[MinValueValidator(1), MaxValueValidator(5)])
+    
+    def save(self, *args, **kwargs):
+        if self.rating < 1:
+            self.rating = 1
+        elif self.rating > 5:
+            self.rating = 5
+        
+        super().save(*args, **kwargs)
 
 
     def __str__(self):
@@ -76,7 +84,7 @@ class GalleryItem(models.Model):
         return self.name
 
 class Appointment(models.Model):
-    visitor_id = models.UUIDField(_('Besucher-ID'), default=uuid.uuid4, editable=False, unique=True)
+    visitor_hash = models.CharField(max_length=64, null=True, blank=True)
     name = models.CharField(_('Name'),max_length=255)
     barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
