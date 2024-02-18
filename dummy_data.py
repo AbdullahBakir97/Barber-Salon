@@ -15,7 +15,7 @@ from django.core.files import File
 
 def generate_owners(n):
     fake = Faker()
-    logo = ('01.jpg')
+    logo = ('loc.png')
     for _ in range(n):
         owner = Owner.objects.create(
             name=fake.name(),
@@ -37,7 +37,7 @@ def generate_owners(n):
 
 def generate_barbers(n):
     fake = Faker()
-    image = ('01.jpg','02.jpg')
+    image = ('person_1.jpg','person_2.jpg')
     for _ in range(n):
         barber = Barber.objects.create(
             name=fake.name(),
@@ -52,7 +52,7 @@ def generate_barbers(n):
 def generate_reviews(n):
     fake = Faker()
     barbers = Barber.objects.all()
-    image = ('01.jpg','02.jpg')
+    image = ('person_1.jpg','person_2.jpg')
     for _ in range(n):
         Review.objects.create(
             image=f"review_images/{random.randint(0,2)}",
@@ -89,7 +89,7 @@ def generate_gallery_items(n):
     fake = Faker()
     categories = Category.objects.all()
     services = Service.objects.all()
-    image = ('01.jpg','02.jpg')
+    image = ('product_HSShU2u.webp','mask.jpeg')
     for _ in range(n):
         GalleryItem.objects.create(
             name=fake.word(),
