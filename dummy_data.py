@@ -1,16 +1,16 @@
-import os
-import django
+import os , django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
+django.setup()
+
 import random
 from faker import Faker
 from contact.models import Owner, Barber, Review, Category, Service, GalleryItem, Appointment, Message
 from settings.models import Salon
 from django.core.files import File
-from django.core.files.images import ImageFile
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
-django.setup()
+
+
 
 
 def generate_owners(n):
@@ -19,13 +19,13 @@ def generate_owners(n):
     for _ in range(n):
         owner = Owner.objects.create(
             name=fake.name(),
-            logo=f"owner_logos/{[random.randint(0,1)]}"
+            logo=f"owner_logos/{random.randint(0,1)}",
             email=fake.email(),
             phone=fake.phone_number(),
             address=fake.address(),
             website=fake.url(),
-            work_days=fake.text(max_nb_chars=255),
-            about=fake.text(),
+            work_days=fake.time(),
+            about=fake.text(max_nb_chars=30),
         )
         
         # Create Salon after Owner creation
@@ -37,27 +37,28 @@ def generate_owners(n):
 
 def generate_barbers(n):
     fake = Faker()
+    image = ('01.jpg','02.jpg')
     for _ in range(n):
         barber = Barber.objects.create(
             name=fake.name(),
-            expertise=fake.text(max_nb_chars=255),
+            image=f"barber_images/{random.randint(0,2)}",
+            expertise=fake.text(max_nb_chars=30),
             experience_years=random.randint(1, 20),
         )
-        # Generate a dummy image for barber
-        image_path = fake.image_path(category='people', width=400, height=400)
-        barber.image.save(os.path.basename(image_path), File(open(image_path, 'rb')))
+
     print(f'{n} Barbers were created successfully')
 
 
 def generate_reviews(n):
     fake = Faker()
     barbers = Barber.objects.all()
+    image = ('01.jpg','02.jpg')
     for _ in range(n):
         Review.objects.create(
-            image=ImageFile(open(fake.image_path(), 'rb')),
+            image=f"review_images/{random.randint(0,2)}",
             barber=random.choice(barbers),
             customer_name=fake.name(),
-            comment=fake.text(),
+            comment=fake.text(max_nb_chars=10),
             rating=random.randint(1, 5),
         )
     print(f'{n} Reviews were created successfully')
@@ -88,11 +89,12 @@ def generate_gallery_items(n):
     fake = Faker()
     categories = Category.objects.all()
     services = Service.objects.all()
+    image = ('01.jpg','02.jpg')
     for _ in range(n):
         GalleryItem.objects.create(
             name=fake.word(),
-            image=ImageFile(open(fake.image_path(), 'rb')),
-            description=fake.text(),
+            image=f"gallery_images/{random.randint(0,2)}",
+            description=fake.text(max_nb_chars=15),
             category=random.choice(categories),
             service=random.choice(services),
         )
@@ -112,7 +114,7 @@ def generate_appointments(n):
             service_type=random.choice(services),
             phone=fake.phone_number(),
             email=fake.email(),
-            message=fake.text(),
+            message=fake.text(max_nb_chars=15),
         )
     print(f'{n} Appointments were created successfully')
 
@@ -124,16 +126,16 @@ def generate_messages(n):
             name=fake.name(),
             email=fake.email(),
             phone=fake.phone_number(),
-            message=fake.text(),
+            message=fake.text(max_nb_chars=15),
         )
     print(f'{n} Messages were created successfully')
 
 
-generate_owners(1)
-generate_barbers(5)
-generate_reviews(10)
+# generate_owners(1)
+generate_barbers(4)
+generate_reviews(4)
 generate_categories(4)
-generate_services(16)
-generate_gallery_items(10)
-generate_appointments(10)
-generate_messages(5)
+generate_services(4)
+generate_gallery_items(4)
+generate_appointments(4)
+generate_messages(4)
