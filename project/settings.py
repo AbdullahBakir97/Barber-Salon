@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     
     
     # 3rd party apps
+    'rest_framework',
+    'django_filters',
     "phonenumber_field",
     'faker',
     
@@ -64,6 +66,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# restapi settings
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'] ,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

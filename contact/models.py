@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _ 
 from django.conf import settings
+from django.db.models import Avg, Count
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 #from phonenumber_field.modelfields import PhoneNumberField
@@ -32,6 +33,21 @@ class Barber(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def review_count(self):
+        return self.barber_review.count()
+
+    def avg_rate(self):
+        avg = self.barber_review.aggregate(rate_avg=Avg('rating'))
+        return round(avg['rate_avg'], 2) if avg['rate_avg'] else 0
+
+    def appointment_count(self):
+        return self.barber_appointment.count()
+    
+
+    def avg_appointment(self):
+        avg = Barber.objects.annotate(avg_count=Count('barber_appointment')).aggregate(avg_appointment=Avg('avg_count'))
+        return round(avg['avg_appointment'], 2) if avg['avg_appointment'] else 0
 
 class Review(models.Model):
     visitor_hash = models.CharField(max_length=64, null=True, blank=True)
@@ -55,6 +71,9 @@ class Review(models.Model):
             return f"{self.customer_name} - {self.barber.name}"
         else:
             return f"{self.customer_name} - No associated barber"
+        
+    def barber_review_count(self):
+        return Review.objects.filter(barber=self.barber).count()
 
 
 
@@ -86,7 +105,7 @@ class GalleryItem(models.Model):
 class Appointment(models.Model):
     visitor_hash = models.CharField(max_length=64, null=True, blank=True)
     name = models.CharField(_('Name'),max_length=255)
-    barber = models.ForeignKey(Barber,related_name='barber_reserved', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
+    barber = models.ForeignKey(Barber,related_name='barber_appointment', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
     service_type = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='appointment_service')
@@ -99,6 +118,14 @@ class Appointment(models.Model):
             return f"{self.name} - {self.barber.name}"
         else:
             return f"{self.name} - No associated barber"
+        
+    @classmethod
+    def total_count(cls):
+        return cls.objects.count()
+
+    @classmethod
+    def count_with_no_barber(cls):
+        return cls.objects.filter(barber__isnull=True).count()
     
 
 class Message(models.Model):

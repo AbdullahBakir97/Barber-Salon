@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css %}
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
@@ -193,6 +194,16 @@
                                 <div class="img" style="background-image: url({{ barber.image.url }});"></div>
                                 <h2>{{ barber.name }}</h2>
                                 <span class="position">{{ barber.expertise }}</span>
+                                <!-- Display average rating with stars -->
+                                <div class="star-rating">
+                                    {% for _ in "12345" %}
+                                        {% if forloop.counter <= barber.avg_rate %}
+                                            <span>&#9733;</span>
+                                        {% else %}
+                                            <span>&#9734;</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </a>
                         </div>
                     {% endfor %}
@@ -201,7 +212,9 @@
         </div>
     </div>
   </section>
-
+  <style>
+    .star-rating span { font-size: 20px; color: #ffca48; }
+  </style>
   <section class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
     <div class="container-fluid my-5">
         <div class="row no-gutters justify-content-center mb-5 pb-2">

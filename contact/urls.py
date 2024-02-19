@@ -42,6 +42,20 @@ from .views import (
     pricing_view
 )
 
+from .api import (
+    ContactAPIView,
+    BarberListAPIView, BarberCreateAPIView, BarberRetrieveUpdateDestroyAPIView,
+    ReviewListAPIView, ReviewCreateAPIView, ReviewRetrieveUpdateDestroyAPIView,
+    GalleryItemListAPIView, GalleryItemCreateAPIView, GalleryItemRetrieveUpdateDestroyAPIView,
+    AppointmentListAPIView, AppointmentCreateAPIView, AppointmentRetrieveUpdateDestroyAPIView,
+    MessageListAPIView, MessageCreateAPIView, MessageRetrieveUpdateDestroyAPIView,
+    ServiceListAPIView, ServiceCreateAPIView, ServiceRetrieveUpdateDestroyAPIView,
+    CategoryListAPIView, CategoryCreateAPIView, CategoryRetrieveUpdateDestroyAPIView,
+    VisitorAppointmentCreateAPIView, VisitorReviewCreateAPIView,
+    VisitorAppointmentListAPIView, VisitorReviewListAPIView,
+    ManagementAPIView,
+)
+
 app_name = 'contact'
 
 urlpatterns = [
@@ -93,4 +107,44 @@ urlpatterns = [
     
     path('contact/', contact_view, name='contact'),
     path('pricing/', pricing_view, name='pricing'),
+    
+    
+    # API Views
+    path('api/contact/', ContactAPIView.as_view(), name='contact-api'),
+    
+    path('api/barbers/', BarberListAPIView.as_view(), name='barber-list-api'),
+    path('api/barbers/create/', BarberCreateAPIView.as_view(), name='barber-create-api'),
+    path('api/barbers/<int:pk>/', BarberRetrieveUpdateDestroyAPIView.as_view(), name='barber-detail-api'),
+    
+    path('api/reviews/', ReviewListAPIView.as_view(), name='review-list-api'),
+    path('api/reviews/create/', ReviewCreateAPIView.as_view(), name='review-create-api'),
+    path('api/reviews/<int:pk>/', ReviewRetrieveUpdateDestroyAPIView.as_view(), name='review-detail-api'),
+    
+    path('api/gallery-items/', GalleryItemListAPIView.as_view(), name='gallery-item-list-api'),
+    path('api/gallery-items/create/', GalleryItemCreateAPIView.as_view(), name='gallery-item-create-api'),
+    path('api/gallery-items/<int:pk>/', GalleryItemRetrieveUpdateDestroyAPIView.as_view(), name='gallery-item-detail-api'),
+    
+    path('api/appointments/', AppointmentListAPIView.as_view(), name='appointment-list-api'),
+    path('api/appointments/create/', AppointmentCreateAPIView.as_view(), name='appointment-create-api'),
+    path('api/appointments/<int:pk>/', AppointmentRetrieveUpdateDestroyAPIView.as_view(), name='appointment-detail-api'),
+    
+    path('api/messages/', MessageListAPIView.as_view(), name='message-list-api'),
+    path('api/messages/create/', MessageCreateAPIView.as_view(), name='message-create-api'),
+    path('api/messages/<int:pk>/', MessageRetrieveUpdateDestroyAPIView.as_view(), name='message-detail-api'),
+    
+    path('api/services/', ServiceListAPIView.as_view(), name='service-list-api'),
+    path('api/services/create/', ServiceCreateAPIView.as_view(), name='service-create-api'),
+    path('api/services/<int:pk>/', ServiceRetrieveUpdateDestroyAPIView.as_view(), name='service-detail-api'),
+    
+    path('api/categories/', CategoryListAPIView.as_view(), name='category-list-api'),
+    path('api/categories/create/', CategoryCreateAPIView.as_view(), name='category-create-api'),
+    path('api/categories/<int:pk>/', CategoryRetrieveUpdateDestroyAPIView.as_view(), name='category-detail-api'),
+    
+    path('api/visitors/appointments/create/', VisitorAppointmentCreateAPIView.as_view(), name='visitor-appointment-create-api'),
+    path('api/visitors/reviews/create/', VisitorReviewCreateAPIView.as_view(), name='visitor-review-create-api'),
+    path('api/visitors/appointments/', VisitorAppointmentListAPIView.as_view(), name='visitor-appointment-list-api'),
+    path('api/visitors/reviews/', VisitorReviewListAPIView.as_view(), name='visitor-review-list-api'),
+    
+    path('api/management/', ManagementAPIView.as_view(), name='management-list-api'),
 ]
+
