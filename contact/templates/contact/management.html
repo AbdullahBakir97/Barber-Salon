@@ -190,6 +190,13 @@
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Review Management</h2>
+            <div class="row my-1">
+                <form method="post" action="{% url 'contact:review_create' %}">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit" class="btn btn-primary mt-5">Add Review</button>
+                </form>
+              </div>
         </div>
     </div>
 

@@ -120,9 +120,9 @@ urlpatterns = [
     path('api/reviews/create/', ReviewCreateAPIView.as_view(), name='review-create-api'),
     path('api/reviews/<int:pk>/', ReviewRetrieveUpdateDestroyAPIView.as_view(), name='review-detail-api'),
     
-    path('api/gallery-items/', GalleryItemListAPIView.as_view(), name='gallery-item-list-api'),
-    path('api/gallery-items/create/', GalleryItemCreateAPIView.as_view(), name='gallery-item-create-api'),
-    path('api/gallery-items/<int:pk>/', GalleryItemRetrieveUpdateDestroyAPIView.as_view(), name='gallery-item-detail-api'),
+    path('api/items/', GalleryItemListAPIView.as_view(), name='gallery-item-list-api'),
+    path('api/items/create/', GalleryItemCreateAPIView.as_view(), name='gallery-item-create-api'),
+    path('api/items/<int:pk>/', GalleryItemRetrieveUpdateDestroyAPIView.as_view(), name='gallery-item-detail-api'),
     
     path('api/appointments/', AppointmentListAPIView.as_view(), name='appointment-list-api'),
     path('api/appointments/create/', AppointmentCreateAPIView.as_view(), name='appointment-create-api'),

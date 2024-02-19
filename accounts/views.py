@@ -13,7 +13,6 @@ from .models import CustomUser, UserProfile, OwnerProfile
 
 class CustomUserLoginView(LoginView):
     template_name = 'login.html'
-    authentication_form = CustomAuthenticationForm
 
 class CustomUserLogoutView(LogoutView):
     template_name = 'accounts/logout.html'

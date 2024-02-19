@@ -7,31 +7,73 @@ from faker import Faker
 from contact.models import Owner, Barber, Review, Category, Service, GalleryItem, Appointment, Message
 from settings.models import Salon
 from django.core.files import File
+from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
+from accounts.models import UserProfile, OwnerProfile, CustomUser
 
 
 
+User = get_user_model()
+fake = Faker()
 
+def generate_users(n):
+    for _ in range(n):
+        username = fake.user_name()
+        email = fake.email()
+        password = '12345'  
+        
+        user = CustomUser.objects.create(
+            username=username,
+            email=email,
+            password=password
+        )
 
+        create_user_profile(user)
+
+    print(f'{n} users created successfully.')
+
+def create_user_profile(user):
+    UserProfile.objects.create(
+        user=user,
+        profile_image=None,
+        barber=None,
+    )
+
+def create_owner_profile(user, owner):
+    OwnerProfile.objects.create(
+        user=user,
+        image=f"barber_images/{random.randint(0,1)}",
+        owner=owner, 
+    )
 
 def generate_owners(n):
-    fake = Faker()
-    logo = ('loc.png')
     for _ in range(n):
         owner = Owner.objects.create(
             name=fake.name(),
             logo=f"owner_logos/{random.randint(0,1)}",
             email=fake.email(),
-            phone=fake.phone_number(),
+            phone=fake.phone_number()[:15],
             address=fake.address(),
             website=fake.url(),
             work_days=fake.time(),
             about=fake.text(max_nb_chars=30),
         )
         
+        # Create a CustomUser instance
+        user = CustomUser.objects.create(
+            username=fake.user_name(),
+            email=fake.email(),
+            password='12345'
+        )
+        
+        # Create an OwnerProfile instance associated with the CustomUser and Owner
+        create_owner_profile(user, owner)
+        
         # Create Salon after Owner creation
         Salon.objects.create(owner=owner)
         
         print(f'Salon created successfully for Owner: {owner.name}')
+
     print(f'{n} Owners were created successfully')
 
 
@@ -125,17 +167,17 @@ def generate_messages(n):
         Message.objects.create(
             name=fake.name(),
             email=fake.email(),
-            phone=fake.phone_number(),
+            phone=fake.phone_number()[:15],
             message=fake.text(max_nb_chars=15),
         )
     print(f'{n} Messages were created successfully')
 
-
 # generate_owners(1)
-generate_barbers(4)
-generate_reviews(4)
-generate_categories(4)
-generate_services(4)
-generate_gallery_items(4)
-generate_appointments(4)
+# generate_users(1)
+# generate_barbers(4)
+# generate_reviews(4)
+# generate_categories(4)
+# generate_services(4)
+# generate_gallery_items(4)
+# generate_appointments(4)
 generate_messages(4)
