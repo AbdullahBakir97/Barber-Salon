@@ -7,6 +7,18 @@
 
 Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business.
 
+## API Functionality
+
+The Salon Management System provides a comprehensive set of APIs to interact with various aspects of the system. These APIs enable seamless integration with other applications and services, allowing for enhanced flexibility and customization. Here's an overview of the key functionalities offered by the API:
+
+- **Barber Management**: Retrieve, create, update, and delete barber profiles.
+- **Review Management**: Access and manage customer reviews for barbers.
+- **Gallery Management**: Retrieve, upload, update, and delete visual content for showcasing salon work.
+- **Appointment Management**: Schedule, modify, and cancel appointments for customers.
+- **Message Handling**: Receive and process messages from customers for inquiries and feedback.
+- **Service and Category Management**: View, create, update, and delete service categories and offerings.
+
+
 ## 📅 Appointment Management
 
 Optimize your schedule effortlessly.
@@ -27,9 +39,10 @@ Showcase your work with ease.
 
 ## 🌟 Transform Reviews
 
-Elevate your salon's reputation.
+Elevate your salon's reputation with real-time review updates.
+- Implement AJAX to seamlessly load and update reviews without page reloads.
 - Respond promptly to customer feedback, demonstrating your commitment to customer satisfaction.
-- Efficiently manage reviews to maintain a positive brand image and foster customer engagement.
+
 
 ## 👤 Owner Management Suite
 
