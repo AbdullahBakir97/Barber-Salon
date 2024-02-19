@@ -66,56 +66,126 @@
       
 {% endblock body %}
 
+<div class="row">
+  <div class="col-md-6">
+      <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+  </div>
+</div>
 
-	<section class="testimony-section bg-light">
-		<div class="container">
-			<div class="row ftco-animate justify-content-center">
-				<div class="col-md-6 col-lg-5 d-flex">
-					<div class="testimony-img" style="background-image: url({% static 'images/testimony-img.jpg' %});"></div>
-				</div>
-				<div class="col-md-6 col-lg-7 py-5 pl-md-5">
-					<div class="py-md-5">
-						<div class="heading-section ftco-animate">
-							<span class="subheading">Testimony</span>
-							<h2 class="mb-0">Happey Coustomer</h2>
-						</div>
-						<div class="carousel-testimony owl-carousel ftco-animate">
-							{% for review in review_data %}
-							<div class="item">
-								<div class="testimony-wrap pb-4">
-									<div class="text">
-										<p class="mb-4">{{ review.comment }}</p>
-									</div>
-									<div class="d-flex">
-										{% if review.image %}
-										<div class="user-img" style="background-image: url({{ review.image.url }})">
-										</div>
-										{% endif %}
-										<div class="pos ml-3">
-											<p class="name">{{ review.customer_name }}</p>
-											<span class="position">barber: {{ review.barber.name }}</span>
-											<div class="star-rating">
-												{% for _ in "12345" %}
-													{% if forloop.counter <= review.rating %}
-														<span class="fa fa-star"></span>
-													{% else %}
-														<span class="fa fa-star-o"></span>
-													{% endif %}
-												{% endfor %}
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						  {% endfor %}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+<!-- Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Review Form -->
+        <form method="POST" id="reviewForm" class="review-form" action="{% url 'contact:visitor_review_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_image">Foto</label>
+            <input type="file" name="image" class="form-control-file" id="id_image">
+          </div>
+          <div class="form-group">
+            <label for="id_barber">Friseur</label>
+            <select name="barber" class="form-control" id="id_barber">
+              {% for barber in barbers %}
+                <option value="{{ barber.id }}">{{ barber.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="id_customer_name">Kundenname</label>
+            <input type="text" name="customer_name" class="form-control" id="id_customer_name">
+          </div>
+          <div class="form-group">
+            <label for="id_comment">Kommentar</label>
+            <textarea name="comment" class="form-control" id="id_comment"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="id_rating">Bewertung</label>
+            <div class="star-rating" onclick="updateRating()">
+              <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
+              <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
+              <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
+              <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">&#9733;</label>
+              <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
+            </div>
+            <!-- Hidden input field to store the selected star rating -->
+            <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
+          </div>
+          <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Submit Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="testimony-section bg-light">
+  <div class="container">
+    <div class="row ftco-animate justify-content-center">
+      <div class="col-md-6 col-lg-5 d-flex">
+        <div class="testimony-img" style="background-image: url({% static 'images/testimony-img.jpg' %});"></div>
+      </div>
+      <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+        <div class="py-md-5" id="all-reviews">
+          <div class="heading-section ftco-animate">
+            <span class="subheading">Testimony</span>
+            <h2 class="mb-0">Happy Customer</h2>
+          </div>
+          {% include "include/reviews.html"%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+  // Function to update the hidden input field with the selected star rating
+  function updateRating() {
+    const ratingInput = document.getElementById('ratingInput');
+    const stars = document.querySelectorAll('.star-rating input:checked');
+    
+    if (stars.length > 0) {
+      ratingInput.value = stars[0].value;
+    }
+  }
+
+  $(document).ready(function() {
+    // Submit review form via AJAX
+    $(document).on('submit', '#reviewForm', function(event){
+      event.preventDefault();
+      $.ajax({
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(response){
+          // Append the new review HTML to the existing reviews
+          $('#all-reviews .carousel-testimony').append(response.html);
+          $('#reviewModal').modal('hide'); // Close modal after successful submission
+          $('#reviewForm')[0].reset(); // Reset the form fields
+        },
+        error: function(xhr, status, error) {
+          console.error(xhr.responseText); // Log error message to console
+        }
+      });
+    });
+  });
+</script>
+
+
   <style>
-    .star-rating span { font-size: 20px; color: #ffca08; }
+    .star-rating span { font-size: 20px; color: #ffca48; }
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #ffca08; }
   </style>
 
 		
@@ -209,7 +279,6 @@
   <script src="{% static 'js/google-map.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   
-  <script  src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
 
 
   </body>

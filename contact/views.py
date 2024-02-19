@@ -1,16 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import MultipleObjectMixin
+from django.template.loader import render_to_string
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.http import require_POST
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm
-from django.http import Http404
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q
+from django.core import serializers
 from django.contrib import messages
 import uuid
 import logging
@@ -299,7 +301,7 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ReviewListView(OwnerProfileRequiredMixin, ListView):
+class ReviewListView(ListView):
     model = Review
     template_name = 'contact/review/review_list.html'
     context_object_name = 'object_list'
@@ -446,7 +448,6 @@ class VisitorReviewCreateView(VisitorInfoAndHashMixin, CreateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'contact/review/visitor_review_create.html'
-    success_url = reverse_lazy('contact:visitor_review_list')
 
     def form_valid(self, form):
         visitor_info, visitor_hash = self.get_visitor_info_and_hash()
@@ -461,11 +462,52 @@ class VisitorReviewCreateView(VisitorInfoAndHashMixin, CreateView):
         try:
             self.object = form.save()
             messages.success(self.request, _('Bewertung erfolgreich hinzugefügt.'))
-            print(form.cleaned_data)
-            return super().form_valid(form)
+            
+            # Render the new review HTML
+            new_review_html = render_to_string('include/reviews.html', {'review': self.object}, request=self.request)
+            return JsonResponse({'html': new_review_html})
         except IntegrityError:
             messages.error(self.request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
             return self.form_invalid(form)
+        
+
+def create_visitor_review(request):
+    if request.method == 'POST':
+        form = ReviewCreateForm(request)
+        if form.is_valid():
+            visitor_info = request.META.get('REMOTE_ADDR', '') + request.META.get('HTTP_USER_AGENT', '')
+            visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
+            existing_review = Review.objects.filter(visitor_hash=visitor_hash, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
+            if existing_review:
+                messages.error(request, _('Sie haben bereits eine Bewertung für diesen Friseur mit dem gleichen Namen abgegeben.'))
+                return JsonResponse({'error': _('Duplicate review for this barber with the same name.')}, status=400)
+            form.instance.visitor_hash = visitor_hash
+            try:
+                new_review = form.save()
+                messages.success(request, _('Bewertung erfolgreich hinzugefügt.'))
+                new_review_html = render_to_string('include/reviews.html', {'review': new_review}, request=request)
+                return JsonResponse({'html': new_review_html})
+            except IntegrityError:
+                messages.error(request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
+                return JsonResponse({'error': _('An error occurred. Please try again.')}, status=500)
+        else:
+            return JsonResponse({'error': _('Form validation failed.')}, status=400)
+    else:
+        return JsonResponse({'error': _('Invalid request method.')}, status=405)
+
+@require_POST
+def submit_review(request):
+    form = ReviewCreateForm(request.POST, request.FILES)
+    if form.is_valid():
+        try:
+            review = form.save()
+            reviews_html = render_to_string('include/reviews.html', {'review_data': Review.objects.all()})
+            return JsonResponse({'success': True, 'reviews_html': reviews_html})
+        except IntegrityError:
+            return JsonResponse({'success': False, 'message': 'An error occurred while saving the review.'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Form data is not valid.'})
+        
 
 class VisitorAppointmentListView(VisitorInfoAndHashMixin, ListView):
     model = Appointment

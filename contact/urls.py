@@ -35,6 +35,9 @@ from .views import (
     
     ManagementView,
 
+    create_visitor_review,
+    submit_review,
+    
     contact_view,
     pricing_view
 )
@@ -82,7 +85,7 @@ urlpatterns = [
 
     # Visitor Views
     path('visitor/appointments/create/', VisitorAppointmentCreateView.as_view(), name='visitor_appointment_create'),
-    path('visitor/reviews/create/', VisitorReviewCreateView.as_view(), name='visitor_review_create'),
+    path('visitor/reviews/create/', create_visitor_review, name='visitor_review_create'),
     path('visitor/appointments/', VisitorAppointmentListView.as_view(), name='visitor_appointment_list'),
     path('visitor/reviews/', VisitorReviewListView.as_view(), name='visitor_review_list'),
 
