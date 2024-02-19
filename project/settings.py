@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     'rest_framework',
     'django_filters',
+    'drf_yasg',
     "phonenumber_field",
     'faker',
     

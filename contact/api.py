@@ -45,15 +45,19 @@ class ModelListAPIView(generics.ListAPIView):
     search_fields = []
 
     def get_queryset(self):
-        raise NotImplementedError("Subclasses must implement this method.")
+        return self.queryset
 
 class ModelCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return self.queryset
+    
 class ModelRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     
-    
+    def get_queryset(self):
+        return self.queryset
 
 class BarberListAPIView(ModelListAPIView):
     queryset = Barber.objects.all()
@@ -62,8 +66,6 @@ class BarberListAPIView(ModelListAPIView):
     search_fields = ['name', 'expertise', 'experience_years']
     filterset_class = BarberFilter
     
-    def get_queryset(self):
-        return self.queryset
 
 class BarberCreateAPIView(ModelCreateAPIView):
     queryset = Barber.objects.all()
@@ -73,60 +75,51 @@ class BarberRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Barber.objects.all()
     serializer_class = BarberSerializer
 
-class ReviewListAPIView(generics.ListAPIView):
+class ReviewListAPIView(ModelListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['barber', 'customer_name', 'rating']
     search_fields = ['barber__name', 'customer_name', 'rating']
     filterset_class = ReviewFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-class ReviewCreateAPIView(generics.CreateAPIView):
+class ReviewCreateAPIView(ModelCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
 
-class ReviewRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ReviewRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
 
-class GalleryItemListAPIView(generics.ListAPIView):
+class GalleryItemListAPIView(ModelListAPIView):
     queryset = GalleryItem.objects.all()
     serializer_class = GalleryItemSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['name', 'category', 'service']
     search_fields = ['name', 'category__name', 'service__name']
     filterset_class = GalleryItemFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+     
 
-class GalleryItemCreateAPIView(generics.CreateAPIView):
+class GalleryItemCreateAPIView(ModelCreateAPIView):
     queryset = GalleryItem.objects.all()
     serializer_class = GalleryItemSerializer
-    permission_classes = [IsAuthenticated]
 
-class GalleryItemRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class GalleryItemRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = GalleryItem.objects.all()
     serializer_class = GalleryItemSerializer
-    permission_classes = [IsAuthenticated]
 
-class AppointmentListAPIView(generics.ListAPIView):
+class AppointmentListAPIView(ModelListAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['barber', 'date', 'service_type']
     search_fields = ['barber__name', 'date', 'service_type__name']
     filterset_class = AppointmentFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-class AppointmentCreateAPIView(generics.CreateAPIView):
+class AppointmentCreateAPIView(ModelCreateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         service_type_id = self.request.data.get('service_type')
@@ -138,70 +131,57 @@ class AppointmentCreateAPIView(generics.CreateAPIView):
             return Response({"service_type": ["Invalid service type ID."]}, status=status.HTTP_400_BAD_REQUEST)
         serializer.save(service_type=service_type)
 
-class AppointmentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class AppointmentRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = [IsAuthenticated]
 
-class MessageListAPIView(generics.ListAPIView):
+class MessageListAPIView(ModelListAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['name', 'email', 'phone', 'message']
     search_fields = ['name', 'email', 'phone', 'message']
     filterset_class = MessageFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-class MessageCreateAPIView(generics.CreateAPIView):
+class MessageCreateAPIView(ModelCreateAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
 
-class MessageRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class MessageRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
 
-class ServiceListAPIView(generics.ListAPIView):
+class ServiceListAPIView(ModelListAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['name', 'category__name', 'price']
     search_fields = ['name', 'category__name', 'price']
     filterset_class = ServiceFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-class ServiceCreateAPIView(generics.CreateAPIView):
+class ServiceCreateAPIView(ModelCreateAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
 
-class ServiceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ServiceRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
 
-class CategoryListAPIView(generics.ListAPIView):
+class CategoryListAPIView(ModelListAPIView):
     queryset = Category.objects.prefetch_related('service_category').all()
     serializer_class = CategorySerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['name','service_category__name']
     search_fields = ['name','service_category__name']   
     filterset_class = CategoryFilter
     pagination_class = MyPagination
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-class CategoryCreateAPIView(generics.CreateAPIView):
+class CategoryCreateAPIView(ModelCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
 
-class CategoryRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class CategoryRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
 
 
 class VisitorInfoAndHashMixin:
