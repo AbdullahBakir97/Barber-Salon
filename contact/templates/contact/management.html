@@ -47,7 +47,10 @@
                     <td>{{ appointment.email }}</td>
                     <td>{{ appointment.message }}</td>
                     <td><a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-primary">Edit</a></td>
-                    <td><a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-danger">Delete</a></td>
+                    <td>
+                        <!-- Button to trigger delete popup -->
+                        <button type="button" class="btn btn-danger" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-target="#delete-popup" hx-swap="innerHTML">Delete</button>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -63,16 +66,25 @@
         </form>
     {% endif %}
 
-    <!-- Delete Appointment Form (hidden by default) -->
-    {% if delete_form %}
-        <h3>Delete {{ verbose_name }}</h3>
-        <form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
-            {% csrf_token %}
-            {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    {% endif %}
 </div>
+
+<!-- Delete Appointment Popup Section -->
+<div id="delete-popup" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be replaced by HTMX -->
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container my-5 py-5">
     <h2>Barber Management</h2>

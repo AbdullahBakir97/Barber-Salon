@@ -32,7 +32,7 @@ class BarberSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    barber = serializers.StringRelatedField()
+    barber = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Review
@@ -48,7 +48,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ServiceSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
+    category = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Service
@@ -56,8 +56,8 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class GalleryItemSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
-    service = serializers.StringRelatedField()
+    category = serializers.StringRelatedField(read_only=True)
+    service = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = GalleryItem
@@ -65,8 +65,8 @@ class GalleryItemSerializer(serializers.ModelSerializer):
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    barber = serializers.StringRelatedField()
-    service_type = serializers.StringRelatedField()
+    barber = serializers.StringRelatedField(read_only=True)
+    service_type = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Appointment

@@ -166,7 +166,7 @@
         dataType: 'json',
         success: function(response){
           // Append the new review HTML to the existing reviews
-          $('#all-reviews .carousel-testimony').append(response.html);
+          $('#all-reviews').html(response.html);
           $('#reviewModal').modal('hide'); // Close modal after successful submission
           $('#reviewForm')[0].reset(); // Reset the form fields
         },
