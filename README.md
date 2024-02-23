@@ -111,4 +111,4 @@ Gain valuable insights into salon performance.
 - **Consistency:** Maintain uniformity and accuracy in data management for enhanced reliability.
 - **User-Friendly:** Intuitive interfaces ensure ease of use for both salon staff and clients.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
-- **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness.
+- **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness. 
