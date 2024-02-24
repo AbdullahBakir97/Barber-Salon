@@ -184,21 +184,13 @@ class CategoryRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
 
 
-class VisitorInfoAndHashMixin:
-    def get_visitor_info_and_hash(self, request):
-        visitor_info = request.META.get('REMOTE_ADDR', '') + request.META.get('HTTP_USER_AGENT', '')
-        visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
-        return visitor_info, visitor_hash
-
 
 class VisitorAppointmentCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
     serializer_class = AppointmentSerializer
 
     def perform_create(self, serializer):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash(self.request)
 
         existing_appointment = Appointment.objects.filter(
-            visitor_hash=visitor_hash,
             date=serializer.validated_data['date'],
             time=serializer.validated_data['time']
         ).first()
@@ -207,17 +199,17 @@ class VisitorAppointmentCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
             return Response({'error': 'Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save(visitor_hash=visitor_hash)
+        serializer.save()
 
 
 class VisitorReviewCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
     serializer_class = ReviewSerializer
 
     def perform_create(self, serializer):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash(self.request)
+        
 
         existing_review = Review.objects.filter(
-            visitor_hash=visitor_hash,
+            
             barber=serializer.validated_data['barber'],
             customer_name=serializer.validated_data['customer_name']
         ).first()
@@ -226,7 +218,7 @@ class VisitorReviewCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
             return Response({'error': 'Sie haben bereits eine Bewertung für diesen Friseur mit dem gleichen Namen abgegeben.'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save(visitor_hash=visitor_hash)
+        serializer.save()
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -240,21 +232,21 @@ class VisitorAppointmentListAPIView(VisitorInfoAndHashMixin, ListAPIView):
     serializer_class = AppointmentSerializer
 
     def get_queryset(self):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash(self.request)
+    
         email = self.request.POST.get('email', '')
 
         if email:
-            return Appointment.objects.filter(Q(email=email) | Q(visitor_hash=visitor_hash))
+            return Appointment.objects.filter(Q(email=email) | Q(name=name))
         else:
-            return Appointment.objects.filter(visitor_hash=visitor_hash)
+            return Appointment.objects.filter()
 
 
 class VisitorReviewListAPIView(VisitorInfoAndHashMixin, ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash(self.request)
-        return Review.objects.filter(visitor_hash=visitor_hash)
+        
+        return Review.objects.filter()
 
 
 class ManagementAPIView(generics.ListAPIView):
