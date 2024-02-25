@@ -1,11 +1,19 @@
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.12%2B-brightgreen)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-4.2%2B-brightgreen)](https://www.djangoproject.com/)
-## Salon Management System
+## Salon Management System ✨✂️
+  
+  <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="40" height="40" /> </a> <a  target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="40" height="40"/> </a> <a href="https://developer.apple.com/swift/" target="_blank" rel="noreferrer">
+  <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" /> 
+                                  
 
-  <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> 
+Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by HTMX for seamless, dynamic interactions.
 
-Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business.
+## Demo
+See it in action: [Live Demo](https://hair-salon-ni23.onrender.com/)
+
+
+<p align="center">
+    <img src="https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/e6071e9c-14cc-4069-b43b-2e4255f541a8" alt="photo_2024-02-25_05-34-09" style="display: inline-block;">
+</p>
+
 
 ## API Functionality
 
@@ -46,7 +54,7 @@ Elevate your salon's reputation with real-time review updates.
 
 ## 👤 Owner Management Suite
 
-Centralized control for salon owners.
+Centralized control for salon owners, enhanced with HTMX for seamless and dynamic management of appointments, barbers, gallery items, reviews, and more.
 - Handle appointments, barbers, gallery items, and reviews from a unified dashboard.
 - Empower your business with comprehensive owner oversight and control.
 
@@ -112,3 +120,5 @@ Gain valuable insights into salon performance.
 - **User-Friendly:** Intuitive interfaces ensure ease of use for both salon staff and clients.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
 - **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness...
+
+## Please ⭐ the repo to support our project .
