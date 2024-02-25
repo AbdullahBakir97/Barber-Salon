@@ -2,8 +2,9 @@
 [![Python](https://img.shields.io/badge/Python-3.12%2B-brightgreen)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-4.2%2B-brightgreen)](https://www.djangoproject.com/)
 ## Salon Management System
-
-  <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> 
+  
+  <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" />
+                                
 
 Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, now powered by HTMX for seamless, dynamic interactions.
 
