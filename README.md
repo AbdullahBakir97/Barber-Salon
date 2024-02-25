@@ -5,9 +5,13 @@
 
   <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> 
 
-Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business.
+Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, now powered by HTMX for seamless, dynamic interactions.
 
-![photo_2024-02-25_05-34-09](https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/e6071e9c-14cc-4069-b43b-2e4255f541a8)
+
+<div style="text-align: center;">
+    <img src="https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/e6071e9c-14cc-4069-b43b-2e4255f541a8" alt="photo_2024-02-25_05-34-09" style="display: inline-block;">
+</div>
+
 
 ## API Functionality
 
