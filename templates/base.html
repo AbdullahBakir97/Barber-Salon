@@ -44,7 +44,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	  <div class="container">
-		<a class="navbar-brand" href="index.html"><span class="flaticon-scissors-in-a-hair-salon-badge"></span>{{salon_data.owner.name}}</a>
+		<a class="navbar-brand" href="index.html"><span class=""></span>{{salon_data.owner.name}}</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 		  <span class="oi oi-menu"></span> Menu
 		</button>
@@ -68,7 +68,7 @@
 
 <div class="row">
   <div class="col-md-6">
-      <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#reviewModal">Add Review</button>
+      <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#reviewModal">Bewertung Einfügen</button>
   </div>
 </div>
 
@@ -77,7 +77,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="reviewModalLabel">Add Review</h5>
+        <h5 class="modal-title" id="reviewModalLabel">Füge Dein Bewertung Ein</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -103,6 +103,10 @@
             <input type="text" name="customer_name" class="form-control" id="id_customer_name">
           </div>
           <div class="form-group">
+            <label for="id_email">Email</label>
+            <input type="email" name="email" class="form-control" id="id_email" required>
+          </div>
+          <div class="form-group">
             <label for="id_comment">Kommentar</label>
             <textarea name="comment" class="form-control" id="id_comment"></textarea>
           </div>
@@ -118,7 +122,7 @@
             <!-- Hidden input field to store the selected star rating -->
             <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
           </div>
-          <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Submit Review</button>
+          <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
       </div>
     </div>
@@ -128,7 +132,7 @@
   <div class="container">
     <div class="row ftco-animate justify-content-center">
       <div class="col-md-6 col-lg-5 d-flex">
-        <div class="testimony-img" style="background-image: url({% static 'images/testimony-img.jpg' %});"></div>
+        <div class="testimony-img" style="background-image: url({% static 'images/reviews.jpeg' %});"></div>
       </div>
       <div class="col-md-6 col-lg-7 py-5 pl-md-5">
         <div class="py-md-5" id="all-reviews">
@@ -159,11 +163,16 @@
     // Submit review form via AJAX
     $(document).on('submit', '#reviewForm', function(event){
       event.preventDefault();
+      var formData = new FormData(this);
+      
       $.ajax({
         type: $(this).attr('method'),
         url: $(this).attr('action'),
-        data: $(this).serialize(),
+        data: formData,
         dataType: 'json',
+        processData: false,
+        contentType: false,
+        cache: false,
         success: function(response){
           // Append the new review HTML to the existing reviews
           $('#all-reviews').html(response.html);

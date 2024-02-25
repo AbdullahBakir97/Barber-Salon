@@ -134,12 +134,13 @@ class GalleryItemForm(forms.ModelForm):
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['image', 'barber', 'customer_name', 'comment', 'rating']
+        fields = ['image', 'barber', 'customer_name', 'email', 'comment', 'rating']
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'barber': forms.Select(attrs={'class': 'form-control'}),
             'customer_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
             'rating': forms.HiddenInput(),
         
@@ -150,6 +151,7 @@ class ReviewCreateForm(forms.ModelForm):
             'image': _('Foto'),
             'barber': _('Friseur'),
             'customer_name': _('Kundenname'),
+            'email': _('Email'),
             'comment': _('Kommentar'),
             'rating': _('Bewertung'),
             

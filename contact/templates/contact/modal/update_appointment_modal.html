@@ -1,0 +1,60 @@
+<div class="modal fade" id="update-appointment-modal-{{ appointment.pk }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-appointment-form-{{ appointment.pk }}" method="post" hx-post="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-target="#appointment-{{ appointment.pk }}" hx-swap="outerHTML">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="update_name">Your Name</label>
+                        <input type="text" name="name" id="update_name" class="form-control" value="{{ appointment.name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_email">Your Email</label>
+                        <input type="email" name="email" id="update_email" class="form-control" value="{{ appointment.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_date">Preferred Date</label>
+                        <input type="date" name="date" id="update_date" class="form-control" value="{{ appointment.date }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_time">Preferred Time</label>
+                        <input type="time" name="time" id="update_time" class="form-control" value="{{ appointment.time }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_barber">Select Barber</label>
+                        <select name="barber" id="update_barber" class="form-control">
+                            {% for barber in barber_list %}
+                            <option value="{{ barber.id }}" {% if barber.id == appointment.barber.id %} selected {% endif %}>{{ barber.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update_service_type">Service Type</label>
+                        <select name="service_type" id="update_service_type" class="form-control">
+                            {% for service in service_list %}
+                            <option value="{{ service.id }}" {% if service.id == appointment.service_type.id %} selected {% endif %}>{{ service.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="update_phone">Your Phone</label>
+                        <input type="tel" name="phone" id="update_phone" class="form-control" value="{{ appointment.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="update_message">Additional Message</label>
+                        <textarea name="message" id="update_message" class="form-control">{{ appointment.message }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

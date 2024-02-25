@@ -206,7 +206,7 @@ class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
     model = GalleryItem
     form_class = GalleryItemForm
     template_name = 'contact/gallery/item_create.html'
-    success_url = reverse_lazy('contact:item_list')
+    success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
         if self.request.user.is_authenticated:
@@ -223,7 +223,7 @@ class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = GalleryItem
     form_class = GalleryItemForm
     template_name = 'contact/gallery/item_update.html'
-    success_url = reverse_lazy('contact:item_list')
+    success_url = reverse_lazy('contact:management')
 
 
 
@@ -322,7 +322,7 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'contact/appointment/appointment_create.html'
-    # success_url = reverse_lazy('contact:appointment_list')
+    success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
         if self.request.user.is_authenticated:
@@ -337,33 +337,33 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
         self.submitted = False
         return self.render_to_response(self.get_context_data(form=form))
     
-    def get_success_url(self):
-        return reverse('contact:appointment_list')
+    # def get_success_url(self):
+    #     return reverse('contact:appointment_list')
 
 class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'contact/appointment/appointment_update.html'
+    success_url = reverse_lazy('contact:management')
 
-    def get_success_url(self):
-        return reverse('contact:appointment_list')
+    # def get_success_url(self):
+    #     return reverse('contact:appointment_list')
     
 
 
 class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Appointment
     template_name = 'contact/appointment/appointment_delete.html'
+    success_url = reverse_lazy('contact:management')
     
-    def get_success_url(self):
-        return reverse('contact:appointment_management')
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(Appointment, pk=self.kwargs['pk'])
-
     def delete(self, request, *args, **kwargs):
-        appointment = self.get_object()
-        appointment.delete()
-        return HttpResponseRedirect(self.get_success_url())
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+    def get_success_url(self):
+        return self.success_url
 
 
 
@@ -412,29 +412,14 @@ class ServiceDeleteView(DeleteView):
     success_url = reverse_lazy('contact:management')
 
 # Visitor Views
-class VisitorInfoAndHashMixin:
-    def get_visitor_info_and_hash(self):
-        visitor_info = self.request.META.get('REMOTE_ADDR', '') + self.request.META.get('HTTP_USER_AGENT', '')
-        visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
-        return visitor_info, visitor_hash
-    
-    
-class VisitorAppointmentCreateView(VisitorInfoAndHashMixin, CreateView):
+
+class VisitorAppointmentCreateView(CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'contact/appointment/visitor_appointment_create.html'
     success_url = reverse_lazy('contact:visitor_appointment_list')
 
     def form_valid(self, form):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash()
-        
-        existing_appointment = Appointment.objects.filter(visitor_hash=visitor_hash, date=form.instance.date, time=form.instance.time).first()
-        
-        if existing_appointment:
-            messages.error(self.request, _('Sie haben bereits einen Termin für dieses Datum und diese Uhrzeit.'))
-            return self.form_invalid(form)
-        
-        form.instance.visitor_hash = visitor_hash
         try:
             self.object = form.save()
             messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
@@ -444,56 +429,48 @@ class VisitorAppointmentCreateView(VisitorInfoAndHashMixin, CreateView):
             return self.form_invalid(form)
 
 
-class VisitorReviewCreateView(VisitorInfoAndHashMixin, CreateView):
+class VisitorReviewCreateView(CreateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'contact/review/visitor_review_create.html'
 
     def form_valid(self, form):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash()
-        
-        existing_review = Review.objects.filter(visitor_hash=visitor_hash, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
-        
-        if existing_review:
-            messages.error(self.request, _('Sie haben bereits eine Bewertung für diesen Friseur mit dem gleichen Namen abgegeben.'))
-            return self.form_invalid(form)
-        
-        form.instance.visitor_hash = visitor_hash
         try:
             self.object = form.save()
             messages.success(self.request, _('Bewertung erfolgreich hinzugefügt.'))
             
-            # Render the new review HTML
             new_review_html = render_to_string('include/reviews.html', {'review': self.object}, request=self.request)
             return JsonResponse({'html': new_review_html})
         except IntegrityError:
             messages.error(self.request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
             return self.form_invalid(form)
-        
 
 def create_visitor_review(request):
     if request.method == 'POST':
-        form = ReviewCreateForm(request)
+        form = ReviewCreateForm(request.POST, request.FILES)
         if form.is_valid():
-            visitor_info = request.META.get('REMOTE_ADDR', '') + request.META.get('HTTP_USER_AGENT', '')
-            visitor_hash = hashlib.sha256(visitor_info.encode()).hexdigest()
-            existing_review = Review.objects.filter(visitor_hash=visitor_hash, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
+            email = form.cleaned_data['email']
+            existing_review = Review.objects.filter(email=email, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
             if existing_review:
-                messages.error(request, _('Sie haben bereits eine Bewertung für diesen Friseur mit dem gleichen Namen abgegeben.'))
-                return JsonResponse({'error': _('Duplicate review for this barber with the same name.')}, status=400)
-            form.instance.visitor_hash = visitor_hash
+                error_message = _('Duplicate review for this barber with the same name.')
+                messages.error(request, error_message)
+                return JsonResponse({'error': error_message}, status=400)
             try:
                 new_review = form.save()
                 messages.success(request, _('Bewertung erfolgreich hinzugefügt.'))
-                new_review_html = render_to_string('include/reviews.html', {'review': new_review}, request=request)
-                return JsonResponse({'html': new_review_html})
-            except IntegrityError:
-                messages.error(request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
-                return JsonResponse({'error': _('An error occurred. Please try again.')}, status=500)
+                review_data = Review.objects.all()
+                review_html = render_to_string('include/reviews.html', {'review_data': review_data}, request=request)
+                return JsonResponse({'html': review_html})
+            except IntegrityError as e:
+                error_message = _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
+                messages.error(request, error_message)
+                return JsonResponse({'error': error_message}, status=500)
         else:
-            return JsonResponse({'error': _('Form validation failed.')}, status=400)
+            error_message = _('Form validation failed.')
+            return JsonResponse({'error': error_message}, status=400)
     else:
-        return JsonResponse({'error': _('Invalid request method.')}, status=405)
+        error_message = _('Invalid request method.')
+        return JsonResponse({'error': error_message}, status=405)
 
 @require_POST
 def submit_review(request):
@@ -509,45 +486,48 @@ def submit_review(request):
         return JsonResponse({'success': False, 'message': 'Form data is not valid.'})
         
 
-class VisitorAppointmentListView(VisitorInfoAndHashMixin, ListView):
+class VisitorAppointmentListView(ListView):
     model = Appointment
-    template_name = 'contact/appointment/appointment_list.html'
-   
+    template_name = 'contact/appointment/visitor_appointment_list.html'
 
     def get_queryset(self):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash()
-        
-        appointments = Appointment.objects.filter(visitor_hash=visitor_hash)
-        if appointments.exists():
-            return appointments
+        email = self.request.POST.get('email', '')
+        if email:
+            return Appointment.objects.filter(email=email)
         else:
-            email = self.request.POST.get('email', '')
-            if email:
-                return Appointment.objects.filter(Q(email=email) | Q(visitor_hash=visitor_hash))
-            else:
-                return Appointment.objects.none()
+            return Appointment.objects.none()
 
-class VisitorReviewListView(VisitorInfoAndHashMixin, ListView):
+class VisitorReviewListView(ListView):
     model = Review
     template_name = 'contact/review/visitor_review_list.html'
 
     def get_queryset(self):
-        visitor_info, visitor_hash = self.get_visitor_info_and_hash()
-        visitor_reviews = Review.objects.filter(visitor_hash=visitor_hash)
-        return list(visitor_reviews)
+        email = self.request.POST.get('email', '')
+        if email:
+            return Review.objects.filter(email=email)
+        else:
+            return Review.objects.none()
 
 
 
-class ManagementView(TemplateView):
-    template_name = 'contact/management.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['appointment_list'] = Appointment.objects.all()
-        context['barber_list'] = Barber.objects.all()
-        context['review_list'] = Review.objects.all()
-        context['gallery_item_list'] = GalleryItem.objects.all()
-        context['category_list'] = Category.objects.all()
-        context['service_list'] = Service.objects.all()
-        context['service_form'] = ServiceForm()
-        return context
+def management_view(request):
+    appointment_list = Appointment.objects.all()
+    barber_list = Barber.objects.all()
+    review_list = Review.objects.all()
+    gallery_item_list = GalleryItem.objects.all()
+    category_list = Category.objects.all()
+    service_list = Service.objects.all()
+    service_form = ServiceForm()
+    
+    context = {
+        'appointment_list': appointment_list,
+        'barber_list': barber_list,
+        'review_list': review_list,
+        'gallery_item_list': gallery_item_list,
+        'category_list': category_list,
+        'service_list': service_list,
+        'service_form': service_form,
+    }
+    
+    return render(request, 'contact/management.html', context)

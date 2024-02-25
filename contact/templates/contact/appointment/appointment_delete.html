@@ -12,7 +12,7 @@
     <form method="post" action="{% url 'contact:appointment_delete' pk=object.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Delete</button>
-      <a href="{% url 'contact:appointment_list' %}" class="btn btn-secondary">Cancel</a>
+      <a href="{% url 'contact:management' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
 </section>

@@ -14,7 +14,7 @@
    <form method="post" action="{% url 'contact:barber_delete' pk=barber.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Delete</button>
-      <a href="{% url 'contact:barber_list' %}" class="btn btn-secondary">Cancel</a>
+      <a href="{% url 'contact:management' %}" class="btn btn-secondary">Cancel</a>
    </form>
 
 </div>

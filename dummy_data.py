@@ -100,6 +100,7 @@ def generate_reviews(n):
             image=f"review_images/{random.randint(0,2)}",
             barber=random.choice(barbers),
             customer_name=fake.name(),
+            email=fake.email(),
             comment=fake.text(max_nb_chars=10),
             rating=random.randint(1, 5),
         )

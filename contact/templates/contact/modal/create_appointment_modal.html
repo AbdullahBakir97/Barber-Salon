@@ -1,0 +1,78 @@
+<div class="modal fade" id="create-appointment-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-appointment-form" method="post" action="{% url 'contact:appointment_create' %}" hx-post hx-target=".appointment-list">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_name">Your Name</label>
+                                <input type="text" name="name" id="id_name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_email">Your Email</label>
+                                <input type="email" name="email" id="id_email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_date">Preferred Date</label>
+                                <input type="date" name="date" id="id_date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_time">Preferred Time</label>
+                                <input type="time" name="time" id="id_time" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_barber">Select Barber</label>
+                                <select name="barber" id="id_barber" class="form-control">
+                                    {% for barber in barber_list  %}
+                                    <option value="{{ barber.id }}">{{ barber.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_service_type">Service Type</label>
+                                <select name="service_type" id="id_service_type" class="form-control">
+                                    {% for service in service_list  %}
+                                    <option value="{{ service.id }}">{{ service.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_phone">Your Phone</label>
+                                <input type="tel" name="phone" id="id_phone" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_message">Additional Message</label>
+                                <textarea name="message" id="id_message" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Make an Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

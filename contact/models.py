@@ -50,10 +50,10 @@ class Barber(models.Model):
         return round(avg['avg_appointment'], 2) if avg['avg_appointment'] else 0
 
 class Review(models.Model):
-    visitor_hash = models.CharField(max_length=64, null=True, blank=True)
     image = models.ImageField(_('Foto'),upload_to='review_images/', null=True, blank=True)
     barber = models.ForeignKey(Barber,related_name='barber_review', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     customer_name = models.CharField(_('Name'),max_length=255)
+    email = models.EmailField(_('Email'))
     comment = models.TextField(_('Kommentare'),)
     rating = models.IntegerField(_('Bewertung'), validators=[MinValueValidator(1), MaxValueValidator(5)])
     
@@ -103,15 +103,14 @@ class GalleryItem(models.Model):
         return self.name
 
 class Appointment(models.Model):
-    visitor_hash = models.CharField(max_length=64, null=True, blank=True)
-    name = models.CharField(_('Name'),max_length=255)
+    name = models.CharField(_('Name'),max_length=30)
     barber = models.ForeignKey(Barber,related_name='barber_appointment', on_delete=models.SET_NULL, null=True, verbose_name=_('Friseur'))
     date = models.DateField(_('Datum'),)
     time = models.TimeField(_('Zeit'),)
     service_type = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='appointment_service')
     phone = models.CharField(_('Telefon'),max_length=15)
     email = models.EmailField(_('Email'),default='no-reply@example.com')
-    message = models.TextField(_('Nachricht'),)
+    message = models.TextField(_('Nachricht'),max_length=200, null=True)
 
     def __str__(self):
         if self.barber:
@@ -129,7 +128,7 @@ class Appointment(models.Model):
     
 
 class Message(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=30)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
     message = models.TextField(max_length=500)

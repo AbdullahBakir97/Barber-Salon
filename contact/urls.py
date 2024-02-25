@@ -33,7 +33,7 @@ from .views import (
     ServiceUpdateView,
     ServiceDeleteView,
     
-    ManagementView,
+    management_view,
 
     create_visitor_review,
     submit_review,
@@ -103,7 +103,7 @@ urlpatterns = [
     path('visitor/appointments/', VisitorAppointmentListView.as_view(), name='visitor_appointment_list'),
     path('visitor/reviews/', VisitorReviewListView.as_view(), name='visitor_review_list'),
 
-    path('management/', ManagementView.as_view(), name='management'),
+    path('management/', management_view, name='management'),
     
     path('contact/', contact_view, name='contact'),
     path('pricing/', pricing_view, name='pricing'),
