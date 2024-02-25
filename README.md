@@ -7,6 +7,8 @@
 
 Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business.
 
+![photo_2024-02-25_05-34-09](https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/e6071e9c-14cc-4069-b43b-2e4255f541a8)
+
 ## API Functionality
 
 The Salon Management System provides a comprehensive set of APIs to interact with various aspects of the system. These APIs enable seamless integration with other applications and services, allowing for enhanced flexibility and customization. Here's an overview of the key functionalities offered by the API:
