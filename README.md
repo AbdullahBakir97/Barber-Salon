@@ -1,7 +1,4 @@
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.12%2B-brightgreen)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-4.2%2B-brightgreen)](https://www.djangoproject.com/)
-## Salon Management System
+## Salon Management System ✨✂️
   
   <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" />
                                 
@@ -119,3 +116,5 @@ Gain valuable insights into salon performance.
 - **User-Friendly:** Intuitive interfaces ensure ease of use for both salon staff and clients.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
 - **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness...
+
+## Please ⭐ the repo to support our project .
