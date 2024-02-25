@@ -4,7 +4,7 @@
   <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" /> 
                                   
 
-Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, now powered by HTMX for seamless, dynamic interactions.
+Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by HTMX for seamless, dynamic interactions.
 
 ## Demo
 See it in action: [Live Demo](https://hair-salon-ni23.onrender.com/)
@@ -54,7 +54,7 @@ Elevate your salon's reputation with real-time review updates.
 
 ## 👤 Owner Management Suite
 
-Centralized control for salon owners.
+Centralized control for salon owners, enhanced with HTMX for seamless and dynamic management of appointments, barbers, gallery items, reviews, and more.
 - Handle appointments, barbers, gallery items, and reviews from a unified dashboard.
 - Empower your business with comprehensive owner oversight and control.
 
