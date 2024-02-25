@@ -16,13 +16,13 @@
 
 {% block body %}
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
   <div class="overlay"></div>
   <div class="container">
       <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
           <div class="col-md-9 ftco-animate pb-5 text-center">
-              <h2 class="mb-0 bread">Contact Us</h2>
-              <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Contact Us<i class="ion-ios-arrow-round-forward"></i></span></p>
+              <h2 class="mb-0 bread">Kontaktiere uns</h2>
+              <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'home' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Kontaktiere uns<i class="ion-ios-arrow-round-forward"></i></span></p>
           </div>
       </div>
   </div>
@@ -49,7 +49,7 @@
       <input type="hidden" name="rating" id="ratingInput" value="{{ review.rating }}">
     </div>
     
-    <button type="submit" class="btn btn-primary mt-5">{{ submit_btn_label }}Aktualisieren </button>
+    <button type="submit" class="btn btn-primary mt-5">{{ submit_btn_label }}Aktualisieren</button>
   </form>
 </div>
 

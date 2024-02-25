@@ -10,16 +10,16 @@
     <div class="container ftco-relative">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Booking</span>
+                <span class="subheading">Buchung</span>
                 {% if form.instance.pk %}
-                    <h2 class="mb-4">Update Appointment</h2>
+                    <h2 class="mb-4">Termin aktualisieren</h2>
                 {% else %}
-                    <h2 class="mb-4">Create Appointment</h2>
+                    <h2 class="mb-4">Termin erstellen</h2>
                 {% endif %}
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+                <p>Weit, weit entfernt, hinter den Wortbergen, fernab der Länder Vokalien und Konsonantien</p>
             </div>
         </div>
-        <h3 class="vr">Call Us: 012-3456-7890</h3>
+        <h3 class="vr">Rufen Sie uns an: 012-3456-7890</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% if form.instance.pk %}{% url 'contact:appointment_update' pk=form.instance.pk %}{% else %}{% url 'contact:appointment_create' %}{% endif %}">
@@ -37,55 +37,55 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_name">Your Name</label>
+                                <label for="id_name">Ihr Name</label>
                                 {{ form.name }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_email">Your Email</label>
+                                <label for="id_email">Ihre E-Mail</label>
                                 {{ form.email }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_date">Preferred Date</label>
+                                <label for="id_date">Bevorzugtes Datum</label>
                                 {{ form.date }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_time">Preferred Time</label>
+                                <label for="id_time">Bevorzugte Uhrzeit</label>
                                 {{ form.time }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_barber">Select Barber</label>
+                                <label for="id_barber">Friseur auswählen</label>
                                 {{ form.barber }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_service_type">Service Type</label>
+                                <label for="id_service_type">Serviceart</label>
                                 {{ form.service_type }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_phone">Your Phone</label>
+                                <label for="id_phone">Ihre Telefonnummer</label>
                                 {{ form.phone }}
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="id_message">Additional Message</label>
+                                <label for="id_message">Zusätzliche Nachricht</label>
                                 {{ form.message }}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="{% if form.instance.pk %}Update{% else %}Create{% endif %} Appointment" class="btn btn-primary">
+                        <input type="submit" value="{% if form.instance.pk %}Aktualisieren{% else %}Erstellen{% endif %} Termin" class="btn btn-primary">
                     </div>
                 </form>
             </div>

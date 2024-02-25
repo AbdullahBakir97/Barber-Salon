@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block body %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
+
+{% block body %}
 
 <section class="ftco-section ftco-pricing">
     <div class="container">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Pricing</span>
-                <h2 class="mb-4">Our Prices</h2>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+                <span class="subheading">Preisgestaltung</span>
+                <h2 class="mb-4">Unsere Preise</h2>
+                <p>Weit, weit entfernt, hinter den Wortbergen, fernab der Länder Vokalien und Konsonantien</p>
             </div>
         </div>
         <div class="row">
@@ -29,7 +30,7 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Get Offer</a></p>
+                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p>
                     </div>
                 </div>
             {% endfor %}

@@ -3,7 +3,7 @@ from .views import (
     OwnerCreateView,
     OwnerUpdateView,
     OwnerDeleteView,
-    OwnerListView,
+    OwnerDetailView,
     BarberCreateView,
     BarberUpdateView,
     BarberDeleteView,
@@ -32,6 +32,9 @@ from .views import (
     ServiceCreateView,
     ServiceUpdateView,
     ServiceDeleteView,
+    create_service_category,
+    update_service,
+    delete_service,
     
     management_view,
 
@@ -63,7 +66,7 @@ urlpatterns = [
     path('owners/create/', OwnerCreateView.as_view(), name='owner_create'),
     path('owners/<int:pk>/update/', OwnerUpdateView.as_view(), name='owner_update'),
     path('owners/<int:pk>/delete/', OwnerDeleteView.as_view(), name='owner_delete'),
-    path('owners/', OwnerListView.as_view(), name='owner_list'),
+    path('owners/<int:pk>', OwnerDetailView.as_view(), name='owner_detail'),
 
     # Barber Views
     path('barbers/create/', BarberCreateView.as_view(), name='barber_create'),
@@ -96,6 +99,7 @@ urlpatterns = [
     path('service/add/', ServiceCreateView.as_view(), name='service_create'),
     path('service/<int:pk>/update/', ServiceUpdateView.as_view(), name='service_update'),
     path('service/<int:pk>/delete/', ServiceDeleteView.as_view(), name='service_delete'),
+    path('service/create', create_service_category, name='create_service_category'),
 
     # Visitor Views
     path('visitor/appointments/create/', VisitorAppointmentCreateView.as_view(), name='visitor_appointment_create'),

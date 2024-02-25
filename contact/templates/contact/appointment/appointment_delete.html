@@ -7,12 +7,12 @@
 
 <section class="ftco-section ftco-booking bg-light">
   <div class="container ftco-relative">
-    <h2>Delete Appointment</h2>
-    <p>Are you sure you want to delete the appointment for {{ object.name }} with {{ object.barber.name }}?</p>
+    <h2>Termin löschen</h2>
+    <p>Sind Sie sicher, dass Sie den Termin für {{ object.name }} mit {{ object.barber.name }} löschen möchten?</p>
     <form method="post" action="{% url 'contact:appointment_delete' pk=object.pk %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Delete</button>
-      <a href="{% url 'contact:management' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-danger">Löschen</button>
+      <a href="{% url 'contact:management' %}" class="btn btn-secondary">Abbrechen</a>
     </form>
   </div>
 </section>

@@ -1,25 +1,61 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header bg-primary text-white">
-          Update Owner: {{ object.name }}
-        </div>
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+{% endblock css %}
 
-        <div class="card-body">
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <img src="{{ object.logo.url }}" alt="{{ object.name }} Logo" style="max-width: 200px;">
-            <button type="submit" class="btn btn-primary">Update</button>
-          </form>
+{% block body %}
+<section class="ftco-section ftco-booking bg-light">
+    <div class="container ftco-relative">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Eigentümer Aktualisierung</span>
+                <h2 class="mb-4">Eigentümerdetails aktualisieren</h2>
+                <p>Aktualisieren Sie Ihre Salon-Details</p>
+            </div>
         </div>
-      </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 ftco-animate">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_name">Ihr Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Ihre E-Mail</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_phone">Ihre Telefonnummer</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address">Ihre Adresse</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_logo">Ihr Logo</label>
+                        {{ form.logo }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_website">Ihre Webseite</label>
+                        {{ form.website }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_about">Über Sie</label>
+                        {{ form.about }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_social_media_links">Links zu sozialen Medien</label>
+                        <input type="text" name="social_media_links" id="id_social_media_links" value="{{ form.social_media_links.value }}" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Aktualisieren</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-{% endblock %}
+</section>
+{% endblock body %}

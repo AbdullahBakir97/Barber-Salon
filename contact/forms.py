@@ -1,5 +1,5 @@
 from django import forms
-from .models import Owner, Review, Appointment, Barber, GalleryItem, Service
+from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -8,7 +8,7 @@ from PIL import Image
 class OwnerForm(forms.ModelForm):
     class Meta:
         model = Owner
-        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
+        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', ]
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -18,7 +18,7 @@ class OwnerForm(forms.ModelForm):
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'about': forms.Textarea(attrs={'class': 'form-control'}),
-            'social_media_links': forms.JSONField(),
+            
         }
 
         labels = {
@@ -29,7 +29,7 @@ class OwnerForm(forms.ModelForm):
             'logo': _('Logo'),
             'website': _('Webseite'),
             'about': _('Über'),
-            'social_media_links': _('Social Links'),
+
         }
 
     def clean_email(self):
@@ -46,11 +46,15 @@ class OwnerForm(forms.ModelForm):
         else:
             return None
 
-class MessageForm(forms.Form):
+class MessageForm(forms.ModelForm):
     name = forms.CharField(label='Your Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='Your Email', widget=forms.EmailInput(attrs={'class': 'form-control'}))
     phone = forms.CharField(label='Your Phone', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
     message = forms.CharField(label='Message', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = Message  
+        fields = ['name', 'email', 'phone', 'message']
 
 
 class BarberForm(forms.ModelForm):
@@ -246,6 +250,8 @@ class AppointmentForm(forms.ModelForm):
     
     
 class ServiceForm(forms.ModelForm):
+    new_category_name = forms.CharField(required=False, label=_('New Category Name'), widget=forms.TextInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Service
         fields = ['name', 'price', 'category']
@@ -259,3 +265,49 @@ class ServiceForm(forms.ModelForm):
             'price': _('Price'),
             'category': _('Category'),
         }
+
+    class ServiceForm(forms.ModelForm):
+        new_category_name = forms.CharField(required=False, label=_('New Category Name'), widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Service
+        fields = ['name', 'price', 'category']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'name': _('Name'),
+            'price': _('Price'),
+            'category': _('Category'),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        category = cleaned_data.get('category')
+        new_category_name = cleaned_data.get('new_category_name')
+
+        if not self.is_category_selected(category) and not self.is_new_category_provided(new_category_name):
+            raise forms.ValidationError(_('Please select an existing category or provide a new category name.'))
+
+        return cleaned_data
+
+    def is_category_selected(self, category):
+        return category is not None
+
+    def is_new_category_provided(self, new_category_name):
+        return bool(new_category_name)
+
+    def create_or_get_category(self):
+        category = self.cleaned_data.get('category')
+        new_category_name = self.cleaned_data.get('new_category_name')
+
+        if category:
+            return category
+
+        if new_category_name:
+            new_category, _ = Category.objects.get_or_create(name=new_category_name)
+            return new_category
+
+        return None

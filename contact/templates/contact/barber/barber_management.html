@@ -8,14 +8,14 @@
 {% block body %}
 
 <div class="container my-5 py-5">
-    <h2>Barber List</h2>
+    <h2>Friseur Liste</h2>
 
     <form method="post" action="{% url 'contact:barber_create' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Erstellen</button>
     </form>
-    <!-- List Barbers -->
+    <!-- Liste der Friseure -->
     <div class="row my-5">
         {% for barber in object_list %}
             <div class="col-md-4 mb-4">
@@ -26,17 +26,17 @@
                         <p class="card-text">{{ barber.expertise }}</p>
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Edit</a>
-                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Bearbeiten</a>
+                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Löschen</a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 
-    <!-- Barber Appointments -->
+    <!-- Friseur Termine -->
     {% if barber_appointments %}
-        <h3>{{ barber.name }}'s Appointments</h3>
+        <h3>{{ barber.name }}'s Termine</h3>
         <ul>
             {% for appointment in barber_appointments %}
                 <li>
@@ -46,25 +46,26 @@
         </ul>
     {% endif %}
 
-    <!-- Update Barber Form (hidden by default) -->
+    <!-- Formular zum Bearbeiten von Friseuren (standardmäßig ausgeblendet) -->
     {% if update_form %}
-        <h3>Edit Barber</h3>
+        <h3>Friseur bearbeiten</h3>
         <form method="post" action="{% url 'contact:barber_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Aktualisieren</button>
         </form>
     {% endif %}
 
-    <!-- Delete Barber Form (hidden by default) -->
+    <!-- Formular zum Löschen von Friseuren (standardmäßig ausgeblendet) -->
     {% if delete_form %}
-        <h3>Delete Barber</h3>
+        <h3>Friseur löschen</h3>
         <form method="post" action="{% url 'contact:barber_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger">Löschen</button>
         </form>
     {% endif %}
 </div>
+
 
 {% endblock body %}

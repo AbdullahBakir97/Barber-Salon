@@ -6,71 +6,71 @@
 {% block body %}
 
 <div class="container my-5 py-5">
-  <h2>Appointment List</h2>
+  <h2>Terminliste</h2>
 
-
-  <div class=" my-1">
-  <form method="post" action="{% url 'contact:appointment_create' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary mt-5">Create</button>
-  </form>
+  <!-- Create Appointment Form -->
+  <div class="my-1">
+    <form method="post" action="{% url 'contact:appointment_create' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary mt-5">Erstellen</button>
+    </form>
   </div>
+
   <!-- List Appointments as Table -->
   <table class="table">
-      <thead class="thead-dark">
-          <tr>
-              <th>Name</th>
-              <th>Barber</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Service</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Message</th>
-              <th></th>
-              <th></th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for appointment in object_list %}
-              <tr>
-                  <td>{{ appointment.name }}</td>
-                  <td>{{ appointment.barber.name }}</td>
-                  <td>{{ appointment.date }}</td>
-                  <td>{{ appointment.time }}</td>
-                  <td>{{ appointment.service_type }}</td>
-                  <td>{{ appointment.phone }}</td>
-                  <td>{{ appointment.email }}</td>
-                  <td>{{ appointment.message }}</td>
-                  <td><a href="{% url 'contact:appointment_update' pk=appointment.pk %}">Edit</a></td>
-                  <td><a href="{% url 'contact:appointment_delete' pk=appointment.pk %}">Delete</a></td>
-              </tr>
-          {% endfor %}
-      </tbody>
+    <thead class="thead-dark">
+      <tr>
+        <th>Name</th>
+        <th>Friseur</th>
+        <th>Datum</th>
+        <th>Zeit</th>
+        <th>Service</th>
+        <th>Telefon</th>
+        <th>E-Mail</th>
+        <th>Nachricht</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for appointment in object_list %}
+      <tr>
+        <td>{{ appointment.name }}</td>
+        <td>{{ appointment.barber.name }}</td>
+        <td>{{ appointment.date }}</td>
+        <td>{{ appointment.time }}</td>
+        <td>{{ appointment.service_type }}</td>
+        <td>{{ appointment.phone }}</td>
+        <td>{{ appointment.email }}</td>
+        <td>{{ appointment.message }}</td>
+        <td><a href="{% url 'contact:appointment_update' pk=appointment.pk %}">Bearbeiten</a></td>
+        <td><a href="{% url 'contact:appointment_delete' pk=appointment.pk %}">Löschen</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 
+<!-- Update Appointment Form (hidden by default) -->
+{% if update_form %}
+<h3>{{ verbose_name }} bearbeiten</h3>
+<form method="post" action="{% url 'contact:appointment_update' pk=update_form.instance.pk %}">
+  {% csrf_token %}
+  {{ update_form.as_p }}
+  <button type="submit" class="btn btn-primary">Aktualisieren</button>
+</form>
+{% endif %}
 
-    <!-- Update Appointment Form (hidden by default) -->
-    {% if update_form %}
-      <h3>Edit {{ verbose_name }}</h3>
-      <form method="post" action="{% url 'contact:appointment_update' pk=update_form.instance.pk %}">
-        {% csrf_token %}
-        {{ update_form.as_p }}
-        <button type="submit" class="btn btn-primary">Update</button>
-      </form>
-    {% endif %}
-
-    <!-- Delete Appointment Form (hidden by default) -->
-    {% if delete_form %}
-      <h3>Delete {{ verbose_name }}</h3>
-      <form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
-        {% csrf_token %}
-        {{ delete_form.as_p }}
-        <button type="submit" class="btn btn-primary">Delete</button>
-      </form>
-    {% endif %}
-  </div>
+<!-- Delete Appointment Form (hidden by default) -->
+{% if delete_form %}
+<h3>{{ verbose_name }} löschen</h3>
+<form method="post" action="{% url 'contact:appointment_delete' pk=delete_form.instance.pk %}">
+  {% csrf_token %}
+  {{ delete_form.as_p }}
+  <button type="submit" class="btn btn-primary">Löschen</button>
+</form>
+{% endif %}
+</div>
   
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %} 
+{% load static %}
 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -11,12 +11,12 @@
     <div class="container ftco-relative">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Booking</span>
-                <h2 class="mb-4">Make an Appointment</h2>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+                <span class="subheading">Buchung</span>
+                <h2 class="mb-4">Vereinbaren Sie einen Termin</h2>
+                <p>Weit weit weg, hinter den Wortbergen, fernab von den Ländern Vokalien und Konsonantien</p>
             </div>
         </div>
-        <h3 class="vr">Call Us: 012-3456-7890</h3>
+        <h3 class="vr">Rufen Sie uns an: 012-3456-7890</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
@@ -33,37 +33,37 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_name">Your Name</label>
+                                <label for="id_name">Ihr Name</label>
                                 {{ form.name }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_email">Your Email</label>
+                                <label for="id_email">Ihre E-Mail</label>
                                 {{ form.email }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_date">Preferred Date</label>
+                                <label for="id_date">Bevorzugtes Datum</label>
                                 {{ form.date }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_time">Preferred Time</label>
+                                <label for="id_time">Bevorzugte Zeit</label>
                                 {{ form.time }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_barber">Select Barber</label>
+                                <label for="id_barber">Wählen Sie einen Friseur</label>
                                 {{ form.barber }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_service_type">Service Type</label>
+                                <label for="id_service_type">Serviceart</label>
                                 <div class="select-wrap">
                                     <div class="icon">
                                         <span class="fas fa-chevron-down"></span>
@@ -74,19 +74,19 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_phone">Your Phone</label>
+                                <label for="id_phone">Ihre Telefonnummer</label>
                                 {{ form.phone }}
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="id_message">Additional Message</label>
+                                <label for="id_message">Zusätzliche Nachricht</label>
                                 {{ form.message }}
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Make an Appointment</button>
+                        <button type="submit" class="btn btn-primary">Termin vereinbaren</button>
                     </div>
                 </form>
             </div>

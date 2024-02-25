@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block body %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">Delete Service</div>
-        <div class="card-body">
-          <p>Are you sure you want to delete this service?</p>
-          <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-{% endblock %}
+{% block body %}
+
+<section class="ftco-section ftco-booking bg-light">
+  <div class="container ftco-relative">
+      <div class="row justify-content-center pb-3">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+              <span class="subheading">Service löschen</span>
+              <h2 class="mb-4">Service-Löschung bestätigen</h2>
+          </div>
+      </div>
+      <div class="row justify-content-center">
+          <div class="col-md-8 ftco-animate">
+              <p>Sind Sie sicher, dass Sie diesen Service löschen möchten?</p>
+              <form method="POST" action="{% url 'contact:delete_service' service_id %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <button type="submit" class="btn btn-danger">Service löschen</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>
+
+{% endblock body %}

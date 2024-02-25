@@ -12,10 +12,10 @@
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h2 class="mb-0 bread">Gallery</h2>
+                <h2 class="mb-0 bread">Galerie</h2>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-round-forward"></i></a></span>
-                    <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span>
+                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span>Galerie <i class="ion-ios-arrow-round-forward"></i></span>
                 </p>
             </div>
         </div>
@@ -26,18 +26,18 @@
     <div class="container ftco-relative">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Gallery</span>
-                <h2 class="mb-4">Delete Gallery Item</h2>
+                <span class="subheading">Galerie</span>
+                <h2 class="mb-4">Galerieelement löschen</h2>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% url 'contact:item_delete' pk=object.pk %}">
                     {% csrf_token %}
-                    <p>Are you sure you want to delete this gallery item?</p>
+                    <p>Sind Sie sicher, dass Sie dieses Galerieelement löschen möchten?</p>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                        <a href="{% url 'contact:management' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Löschen</button>
+                        <a href="{% url 'contact:management' %}" class="btn btn-secondary">Abbrechen</a>
                     </div>
                 </form>
             </div>
