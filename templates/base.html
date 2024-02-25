@@ -66,11 +66,7 @@
       
 {% endblock body %}
 
-<div class="row">
-  <div class="col-md-6">
-      <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#reviewModal">Bewertung Einfügen</button>
-  </div>
-</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
@@ -135,7 +131,13 @@
         <div class="testimony-img" style="background-image: url({% static 'images/reviews.jpeg' %});"></div>
       </div>
       <div class="col-md-6 col-lg-7 py-5 pl-md-5">
+        <div class="row">
+          <div class="col-md-6">
+              <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#reviewModal">Bewertung Einfügen</button>
+          </div>
+        </div>
         <div class="py-md-5" id="all-reviews">
+          
           <div class="heading-section ftco-animate">
             <span class="subheading">Testimony</span>
             <h2 class="mb-0">Happy Customer</h2>
