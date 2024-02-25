@@ -12,8 +12,8 @@
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
                 <div class="col-md-9 ftco-animate pb-5 text-center">
-                    <h2 class="mb-0 bread">Contact Us</h2>
-                    <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Contact Us<i class="ion-ios-arrow-round-forward"></i></span></p>
+                    <h2 class="mb-0 bread">Kontaktieren Sie uns</h2>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Kontakt<i class="ion-ios-arrow-round-forward"></i></span></p>
                 </div>
             </div>
         </div>
@@ -24,8 +24,8 @@
         <div class="container my-5">
             <div class="row justify-content-center pb-3">
                 <div class="col-md-10 heading-section text-center ftco-animate">
-                    <span class="subheading">Contact Us</span>
-                    <h2 class="mb-4">Get In Touch</h2>
+                    <span class="subheading">Kontaktieren Sie uns</span>
+                    <h2 class="mb-4">Treten Sie mit uns in Verbindung</h2>
                 </div>
             </div>
             <div class="row py-5">
@@ -33,32 +33,32 @@
                     <form class="message-form" action="{% url 'contact:contact' %}" method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                            <label for="name">Ihr Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Geben Sie Ihren Namen ein" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Your Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                            <label for="email">Ihre E-Mail</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Geben Sie Ihre E-Mail ein" required>
                         </div>
                         <div class="form-group">
-                            <label for="phone">Your Phone</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            <label for="phone">Ihr Telefon</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Geben Sie Ihre Telefonnummer ein" required>
                         </div>
                         <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                            <label for="message">Nachricht</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Geben Sie Ihre Nachricht ein" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        <button type="submit" class="btn btn-primary">Nachricht senden</button>
                     </form>
                 </div>
                 <div class="col-lg-4">
                     <div class="owner-info">
                         <h3>{{ owner.name }}</h3>
-                        <p class="icon icon-map-marker"> Address: {{ owner.address }}</p>
-                        <p class="icon icon-envelope"> Email: {{ owner.email }}</p>
-                        <p class="icon icon-phone"> Phone: {{ owner.phone }}</p>
+                        <p class="icon icon-map-marker"> Adresse: {{ owner.address }}</p>
+                        <p class="icon icon-envelope"> E-Mail: {{ owner.email }}</p>
+                        <p class="icon icon-phone"> Telefon: {{ owner.phone }}</p>
                         <p class="icon icon-clock-o"> {{ owner.work_days }} </p>
-                        <p class="icon icon-link"> Website: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
+                        <p class="icon icon-link"> Webseite: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
                     </div>
                 </div>
             </div>

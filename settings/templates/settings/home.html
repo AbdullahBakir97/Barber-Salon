@@ -40,7 +40,7 @@
                     </h1>
                     <h2>Willkommen in unserem Salon</h2>
                     <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt ihn mit der nötigen Regelialia. Es ist ein paradisisches Land, in dem geröstete Teile von Sätzen in deinen Mund fliegen. Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien, leben die Blindtexte.</p>
-                    <p class="mt-3"><a href="#" class="btn btn-primary btn-outline-primary">Mehr lesen</a></p>
+                    <p class="mt-3"><a href="#service" class="btn btn-primary btn-outline-primary">Mehr lesen</a></p>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
     </div>
 </section>
 
-<section class="services-section ftco-section">
+<section id=service class="services-section ftco-section">
     <div class="container">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
@@ -101,7 +101,7 @@
         <h3 class="vr">Rufen Sie uns an: {{owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="POST" class="appointment-form" action="{% url 'home' %}">
+                <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
                     {% csrf_token %}
                     {% if form.errors and view.submitted %}
                         {% for field in form %}
@@ -280,7 +280,7 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p>
+                        <p class="button text-center"><a href="{% url 'contact:visitor_appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p>
                     </div>
                 </div>
             {% endfor %}

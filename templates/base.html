@@ -51,11 +51,11 @@
 
 		<div class="collapse navbar-collapse" id="ftco-nav">
 		  <ul class="navbar-nav ml-auto">
-			  <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
-			  <li class="nav-item"><a href="#price" class="nav-link">Services</a></li>
-			  <li class="nav-item"><a href="#gallery" class="nav-link">Gallery</a></li>
-			  <li class="nav-item"><a href="#barber" class="nav-link">About</a></li>
-			<li class="nav-item"><a href="{% url 'contact:contact' %}" class="nav-link">Contact</a></li>
+			  <li class="nav-item active"><a href="/" class="nav-link">Startseite</a></li>
+        <li class="nav-item"><a href="/#price" class="nav-link">Dienstleistungen</a></li>
+        <li class="nav-item"><a href="/#gallery" class="nav-link">Galerie</a></li>
+        <li class="nav-item"><a href="/#barber" class="nav-link">Über uns</a></li>
+        <li class="nav-item"><a href="{% url 'contact:contact' %}" class="nav-link">Kontakt</a></li>
 		  </ul>
 		</div>
 	  </div>
@@ -139,8 +139,8 @@
         <div class="py-md-5" id="all-reviews">
           
           <div class="heading-section ftco-animate">
-            <span class="subheading">Testimony</span>
-            <h2 class="mb-0">Happy Customer</h2>
+            <span class="subheading">Testimonium</span>
+            <h2 class="mb-0">Zufriedene Kunden</h2>
           </div>
           {% include "include/reviews.html"%}
         </div>
@@ -213,7 +213,7 @@
               <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-linkedin-square"></span></a></li>
                 <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
               </ul>
             </div>
@@ -232,18 +232,17 @@
              <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2">Links</h2>
               <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Home</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Services</a></li>
-                <li><a href="#" class="py-2 d-block">Work</a></li>
-                <li><a href="#" class="py-2 d-block">Blog</a></li>
-                <li><a href="#" class="py-2 d-block">Contact</a></li>
+                <li class="nav-item active"><a href="/" class="nav-link">Startseite</a></li>
+                <li class="nav-item"><a href="/#price" class="nav-link">Dienstleistungen</a></li>
+                <li class="nav-item"><a href="/#gallery" class="nav-link">Galerie</a></li>
+                <li class="nav-item"><a href="/#barber" class="nav-link">Über uns</a></li>
+                <li class="nav-item"><a href="{% url 'contact:contact' %}" class="nav-link">Kontakt</a></li>
               </ul>
             </div>
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<h2 class="ftco-heading-2">HABEN SIE FRAGEN?</h2>
             	<div class="block-23 mb-3">
 	              <ul>
 	                <li><span class="icon icon-map-marker"></span><span class="text">{{salon_data.owner.address}}</span></li>

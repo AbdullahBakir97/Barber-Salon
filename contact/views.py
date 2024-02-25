@@ -491,9 +491,9 @@ class VisitorAppointmentListView(ListView):
     template_name = 'contact/appointment/visitor_appointment_list.html'
 
     def get_queryset(self):
-        email = self.request.POST.get('email', '')
+        email = self.request.POST.get('email', 'name')
         if email:
-            return Appointment.objects.filter(email=email)
+            return Appointment.objects.filter(email=email, name=self.request.POST.get('name', ''))
         else:
             return Appointment.objects.none()
 
