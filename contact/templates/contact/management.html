@@ -421,7 +421,7 @@
                         <ul>
                             {% for service in category.service_category.all %}
                                 <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                                     <div class="btn-group" role="group">
                                         <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Edit</a>
                                         <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Delete</a>

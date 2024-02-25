@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="id_phone">Ihr Telefon</label>
                                 {{ form.phone }}
@@ -276,7 +276,7 @@
                         <ul>
                             {% for service in category.service_category.all %}
                                 <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                                 </li>
                             {% endfor %}
                         </ul>
