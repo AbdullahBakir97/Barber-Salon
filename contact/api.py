@@ -185,7 +185,7 @@ class CategoryRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView):
 
 
 
-class VisitorAppointmentCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
+class VisitorAppointmentCreateAPIView(CreateAPIView):
     serializer_class = AppointmentSerializer
 
     def perform_create(self, serializer):
@@ -202,7 +202,7 @@ class VisitorAppointmentCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
         serializer.save()
 
 
-class VisitorReviewCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
+class VisitorReviewCreateAPIView(CreateAPIView):
     serializer_class = ReviewSerializer
 
     def perform_create(self, serializer):
@@ -228,7 +228,7 @@ class VisitorReviewCreateAPIView(VisitorInfoAndHashMixin, CreateAPIView):
         return Response({'html': new_review_html})
 
 
-class VisitorAppointmentListAPIView(VisitorInfoAndHashMixin, ListAPIView):
+class VisitorAppointmentListAPIView(ListAPIView):
     serializer_class = AppointmentSerializer
 
     def get_queryset(self):
@@ -241,7 +241,7 @@ class VisitorAppointmentListAPIView(VisitorInfoAndHashMixin, ListAPIView):
             return Appointment.objects.filter()
 
 
-class VisitorReviewListAPIView(VisitorInfoAndHashMixin, ListAPIView):
+class VisitorReviewListAPIView(ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
