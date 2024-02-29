@@ -14,6 +14,11 @@ from .views import (
     GalleryItemDeleteView,
     GalleryItemListView,
     GalleryItemManagementView,
+    ProductCreateView,
+    ProductUpdateView,
+    ProductDeleteView,
+    ProductListView,
+    ProductManagementView,
     ReviewCreateView,
     ReviewUpdateView,
     ReviewDeleteView,
@@ -81,6 +86,13 @@ urlpatterns = [
     path('items/<int:pk>/delete/', GalleryItemDeleteView.as_view(), name='item_delete'),
     path('items/', GalleryItemListView.as_view(), name='item_list'),
     path('items/management', GalleryItemManagementView.as_view(), name='item_management'),
+    
+    # Product Views
+    path('products/create/', ProductCreateView.as_view(), name='item_create'),
+    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='item_update'),
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='item_delete'),
+    path('products/', ProductListView.as_view(), name='item_list'),
+    path('products/management/', ProductManagementView.as_view(), name='item_management'),
 
     # Review Views
     path('reviews/create/', ReviewCreateView.as_view(), name='review_create'),

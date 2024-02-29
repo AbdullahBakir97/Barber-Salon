@@ -1,5 +1,5 @@
 from django import forms
-from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message
+from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message , Product
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -133,6 +133,32 @@ class GalleryItemForm(forms.ModelForm):
         if category == 'A' and not service:
             raise ValidationError(_('Bitte wählen Sie eine Dienstleistung für die Kategorie A aus.'))
         return cleaned_data
+
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'image', 'description', 'category', 'price']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'name': _('Name'),
+            'image': _('Bild'),
+            'description': _('Beschreibung'),
+            'category': _('Kategorie'),
+            'price': _('Price'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
 
 
 class ReviewCreateForm(forms.ModelForm):

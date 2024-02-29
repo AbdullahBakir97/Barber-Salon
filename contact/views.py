@@ -7,8 +7,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
-from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category, Product
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, ProductForm
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q
@@ -237,9 +237,6 @@ class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
     template_name = 'contact/gallery/item_delete.html'
     success_url = reverse_lazy('contact:item_management')
 
-    # def get_success_url(self):
-    #     return reverse('contact:item_list')
-
     def get_object(self, queryset=None):
         return get_object_or_404(GalleryItem, pk=self.kwargs['pk'])
 
@@ -263,6 +260,64 @@ class GalleryItemManagementView(OwnerProfileRequiredMixin, ListView):
     
     def get_queryset(self):
         return GalleryItem.objects.all()
+
+
+
+# Product
+class ProductCreateView(OwnerProfileRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'contact/product/product_create.html'
+    success_url = reverse_lazy('contact:management')
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+            try:
+                return super().form_valid(form)
+            except IntegrityError:
+                messages.error(self.request, _('Ein Element mit diesem Titel existiert bereits.'))
+                return self.form_invalid(form)
+        else:
+            raise Http404(_("Sie dürfen kein Galerieelement erstellen."))
+
+class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'contact/product/product_update.html'
+    success_url = reverse_lazy('contact:management')
+
+
+
+class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
+    model = ProductForm
+    template_name = 'contact/product/product_delete.html'
+    success_url = reverse_lazy('contact:management')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Product, pk=self.kwargs['pk'])
+
+    def delete(self, request, *args, **kwargs):
+        item = self.get_object()
+        item.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ProductListView(OwnerProfileRequiredMixin, ListView):
+    model = Product
+    template_name = 'contact/product/product_list.html'
+    
+    def get_queryset(self):
+        return Product.objects.all()
+    
+    
+class ProductManagementView(OwnerProfileRequiredMixin, ListView):
+    model = Product
+    template_name = 'contact/product/product_management.html'
+    
+    def get_queryset(self):
+        return Product.objects.all()
+
 
 # Review
 class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):

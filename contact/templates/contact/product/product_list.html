@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
+	<div class="overlay"></div>
+	<div class="container">
+	  <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+		<div class="col-md-9 ftco-animate pb-5 text-center">
+		  <h2 class="mb-0 bread">Produkt</h2>
+		  <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Produkt <i class="ion-ios-arrow-round-forward"></i></span></p>
+		</div>
+	  </div>
+	</div>
+</section>
+
+<section class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
+    <div class="container-fluid my-5">
+        <div class="row no-gutters">
+            {% for object in object_list %}
+                <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
+                    <div class="project">
+                        <img src="{{ object.image.url }}" class="img-fluid fixed-size-img" alt="{{ object.title }}">
+
+                        <div class="text">
+                            <span>{{ object.category }}</span>
+                            <h3><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></h3>
+                            <p>{{ object.description }}</p>
+                            <!-- Andere Felder hinzufügen, wenn benötigt -->
+                        </div>
+
+                        <a href="{{ object.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="icon-expand"></span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+  .fixed-size-img {
+      height: 500px; 
+      width: 500px;
+      object-fit: fill;
+  }
+</style>
+
+{% endblock body %}

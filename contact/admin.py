@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message , Service , Category
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message , Service , Category, Product
 
 
 @admin.register(Owner)
@@ -19,6 +19,12 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(GalleryItem)
 class GalleryItemAdmin(admin.ModelAdmin):
+    list_display = ('description',)
+    search_fields = ('description',)
+    
+    
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
     list_display = ('description',)
     search_fields = ('description',)
 

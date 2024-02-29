@@ -36,7 +36,7 @@
             <div class="col-md-3 text-center d-flex align-items-stretch">
                 <div class="text-about py-5 px-4">
                     <h1 class="logo">
-                        <a href="#"><span class="flaticon-scissors-in-a-hair-salon-badge"></span>Haircare</a>
+                        <a href="#"><span class=""></span>{{salon_data.owner.name}}</a>
                     </h1>
                     <h2>Willkommen in unserem Salon</h2>
                     <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt ihn mit der nötigen Regelialia. Es ist ein paradisisches Land, in dem geröstete Teile von Sätzen in deinen Mund fliegen. Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien, leben die Blindtexte.</p>
@@ -140,7 +140,12 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="id_barber">Friseur auswählen</label>
-                                {{ form.barber }}
+                                <div class="select-wrap">
+                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                    <select name="" id="" class="form-control">
+                                        <option value="">{{ form.barber }}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -148,7 +153,7 @@
                                 <label for="id_service_type">Dienstleistungsart</label>
                                 <div class="select-wrap">
                                     <div class="icon">
-                                        <span class="fas fa-chevron-down"></span>
+                                        <span class="fas fa-chevron-down"></span>   
                                     </div>
                                     {{ form.service_type }}
                                 </div>
