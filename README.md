@@ -75,6 +75,15 @@ Take control with administrative features.
 - **Price Management:** Set and update service prices to ensure profitability and competitiveness.
 - **User Profiles:** Administer user profiles for enhanced security and customization.
 
+## 🧑‍💼 User Management
+
+Effortless account management for users.
+- **Login:** Securely access the system with your credentials.
+- **Logout:** Sign out of your account to ensure data security.
+- **Signup:** Register for a new account to access system features.
+- **Password Change:** Update your account password for enhanced security.
+- **Password Reset:** Reset your password if forgotten for continued access.
+
 ## 🚀 URL Routing
 
 Efficient navigation for seamless user experience.
@@ -91,15 +100,6 @@ Efficient navigation for seamless user experience.
 - **/signup/**: Register for a new account.
 - **/password/change/**: Change account password.
 - **/password/reset/**: Reset account password.
-
-## 🧑‍💼 User Management
-
-Effortless account management for users.
-- **Login:** Securely access the system with your credentials.
-- **Logout:** Sign out of your account to ensure data security.
-- **Signup:** Register for a new account to access system features.
-- **Password Change:** Update your account password for enhanced security.
-- **Password Reset:** Reset your password if forgotten for continued access.
 
 ## 🌐 Internationalization and Localization
 
@@ -121,4 +121,4 @@ Gain valuable insights into salon performance.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
 - **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness...
 
-## Please ⭐ the repo to support our project .
+## Please ⭐ the repo to support our project . 
