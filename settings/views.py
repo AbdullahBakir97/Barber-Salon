@@ -5,7 +5,7 @@ from django.http import Http404
 from django.views.generic.edit import FormView
 from django.utils.translation import gettext as _
 from contact.forms import AppointmentForm
-from contact.models import Owner, GalleryItem, Barber, Review, Appointment, Service, Category
+from contact.models import Owner, GalleryItem, Barber, Review, Appointment, Service, Category, Product
 
 class HomeView(FormView):
     template_name = 'settings/home.html'
@@ -14,6 +14,7 @@ class HomeView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gallery_items'] = GalleryItem.objects.all()[:10]
+        context['product'] = Product.objects.all()[:10]
         context['barbers'] = Barber.objects.all()[:10]
         context['categories'] = Category.objects.prefetch_related('service_category').all()
         context['services'] = Service.objects.all()

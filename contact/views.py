@@ -306,6 +306,7 @@ class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
 class ProductListView(OwnerProfileRequiredMixin, ListView):
     model = Product
     template_name = 'contact/product/product_list.html'
+    context_object_name = 'product_list'
     
     def get_queryset(self):
         return Product.objects.all()
@@ -314,6 +315,7 @@ class ProductListView(OwnerProfileRequiredMixin, ListView):
 class ProductManagementView(OwnerProfileRequiredMixin, ListView):
     model = Product
     template_name = 'contact/product/product_management.html'
+    context_object_name = 'product_list'
     
     def get_queryset(self):
         return Product.objects.all()

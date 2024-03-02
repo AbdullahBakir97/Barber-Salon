@@ -6,8 +6,7 @@
 {% endblock css %}
 
 {% block body %}
-      
-<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/center2.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight justify-content-center align-items-center">
@@ -36,6 +35,7 @@
             <div class="col-md-3 text-center d-flex align-items-stretch">
                 <div class="text-about py-5 px-4">
                     <h1 class="logo">
+                        <img src="{{salon_data.owner.logo.url}}" alt="{{salon_data.owner.name }}">
                         <a href="#"><span class=""></span>{{salon_data.owner.name}}</a>
                     </h1>
                     <h2>Willkommen in unserem Salon</h2>
@@ -140,12 +140,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="id_barber">Friseur auswählen</label>
-                                <div class="select-wrap">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">{{ form.barber }}</option>
-                                    </select>
-                                </div>
+                                {{ form.barber }}
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -261,6 +256,51 @@
         object-fit: fill;
     }
 </style>
+
+
+<section id="gallery" class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
+    <div class="container-fluid my-5">
+        <div class="row no-gutters justify-content-center mb-5 pb-2">
+            <div class="col-md-6 text-center heading-section ftco-animate">
+                <span class="subheading">Produkt</span>
+                <h2 class="mb-4">Unsere Produkte</h2>
+                <p>Getrennt leben sie in. Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt ihn mit der nötigen Regelialia.</p>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            {% for product in product_list %}
+            <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
+                <div class="project">
+                    <img src="{{ product.image.url }}" class="img-fluid fixed-size-img" alt="{{ product.name }}">
+
+                    <div class="text">
+                        <span>{{ product.category }}</span>
+                        <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+                        <p>{{ product.description }}</p>
+                        <p>Price: {{ product.price }}</p> <!-- Include price here -->
+                        <!-- Add other attributes as needed -->
+                    </div>
+
+                    <!-- You may choose to link the image to a larger view or to the product page -->
+                    <a href="{{ product.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                        <span class="icon-expand"></span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+    .fixed-size-img {
+        height: 500px; 
+        width: 500px;
+        object-fit: fill;
+    }
+</style>
+
+
 
 <section id=price class="ftco-section ftco-pricing">
     <div class="container">

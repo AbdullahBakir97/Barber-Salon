@@ -12,7 +12,7 @@
 	<div class="container">
 	  <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
 		<div class="col-md-9 ftco-animate pb-5 text-center">
-		  <h2 class="mb-0 bread">Produkt</h2>
+		  <h2 class="mb-0 bread">Product</h2>
 		  <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Produkt <i class="ion-ios-arrow-round-forward"></i></span></p>
 		</div>
 	  </div>
@@ -22,7 +22,7 @@
 <section class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
     <div class="container-fluid my-5">
         <div class="row no-gutters">
-            {% for object in object_list %}
+            {% for product in product_list %}
                 <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
                     <div class="project">
                         <img src="{{ object.image.url }}" class="img-fluid fixed-size-img" alt="{{ object.title }}">
