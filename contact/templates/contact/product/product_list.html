@@ -23,18 +23,18 @@
     <div class="container-fluid my-5">
         <div class="row no-gutters">
             {% for product in product_list %}
-                <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
+                <div class="col-md-6 col-lg-3 ftco-animate product">
                     <div class="project">
-                        <img src="{{ object.image.url }}" class="img-fluid fixed-size-img" alt="{{ object.title }}">
+                        <img src="{{ product.image.url }}" class="img-fluid fixed-size-img" alt="{{ object.title }}">
 
                         <div class="text">
-                            <span>{{ object.category }}</span>
-                            <h3><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></h3>
-                            <p>{{ object.description }}</p>
+                            <span>{{ product.category }}</span>
+                            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }} / <span class="price">€{{ product.price }}</span></a></h3>
+                            <p>{{ product.description }}</p>
                             <!-- Andere Felder hinzufügen, wenn benötigt -->
                         </div>
 
-                        <a href="{{ object.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                        <a href="{{ product.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
                             <span class="icon-expand"></span>
                         </a>
                     </div>
@@ -50,6 +50,7 @@
       width: 500px;
       object-fit: fill;
   }
+
 </style>
 
 {% endblock body %}

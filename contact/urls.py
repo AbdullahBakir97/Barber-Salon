@@ -33,13 +33,14 @@ from .views import (
     VisitorReviewCreateView,
     VisitorAppointmentListView,
     VisitorReviewListView,
-    
+    CategoryCreateView,
+    CategoryUpdateView,
+    CategoryDeleteView,
     ServiceCreateView,
     ServiceUpdateView,
     ServiceDeleteView,
-    create_service_category,
-    update_service,
-    delete_service,
+    ServiceManagementView,
+
     
     management_view,
 
@@ -88,11 +89,11 @@ urlpatterns = [
     path('items/management', GalleryItemManagementView.as_view(), name='item_management'),
     
     # Product Views
-    path('products/create/', ProductCreateView.as_view(), name='item_create'),
-    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='item_update'),
-    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='item_delete'),
-    path('products/', ProductListView.as_view(), name='item_list'),
-    path('products/management/', ProductManagementView.as_view(), name='item_management'),
+    path('products/create/', ProductCreateView.as_view(), name='product_create'),
+    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product_update'),
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),
+    path('products/', ProductListView.as_view(), name='product_list'),
+    path('products/management/', ProductManagementView.as_view(), name='product_management'),
 
     # Review Views
     path('reviews/create/', ReviewCreateView.as_view(), name='review_create'),
@@ -108,10 +109,16 @@ urlpatterns = [
     path('appointments/', AppointmentListView.as_view(), name='appointment_list'),
     path('appointments/management', AppointmentManagementView.as_view(), name='appointment_management'),
     
+    # Category Views
+    path('categories/create/', CategoryCreateView.as_view(), name='category_create'),
+    path('categories/<int:pk>/update/', CategoryUpdateView.as_view(), name='category_update'),
+    path('categories/<int:pk>/delete/', CategoryDeleteView.as_view(), name='category_delete'),
+    path('categories/', CategoryListAPIView.as_view(), name='category_list'),
+    
     path('service/add/', ServiceCreateView.as_view(), name='service_create'),
     path('service/<int:pk>/update/', ServiceUpdateView.as_view(), name='service_update'),
     path('service/<int:pk>/delete/', ServiceDeleteView.as_view(), name='service_delete'),
-    path('service/create', create_service_category, name='create_service_category'),
+    path('service/management', ServiceManagementView.as_view(), name='service_management'),
 
     # Visitor Views
     path('visitor/appointments/create/', VisitorAppointmentCreateView.as_view(), name='visitor_appointment_create'),

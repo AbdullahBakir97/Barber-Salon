@@ -17,7 +17,7 @@
       </div>
       <div class="row justify-content-center">
           <div class="col-md-8 ftco-animate">
-              <form method="POST" class="appointment-form" action="{% url 'contact:update_service' service_id %}">
+              <form method="POST" class="appointment-form" action="{% url 'contact:service_update' pk=service.pk %}">
                   {% csrf_token %}
                   {{ form.non_field_errors }}
                   <div class="row">

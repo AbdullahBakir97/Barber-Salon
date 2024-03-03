@@ -17,22 +17,19 @@
       </div>
       <div class="row justify-content-center">
           <div class="col-md-8 ftco-animate">
-              <form method="POST" class="appointment-form" action="{% url 'contact:create_service_category' %}">
+              <form method="POST" class="appointment-form" action="{% url 'contact:service_create' %}">
                   {% csrf_token %}
-                  {{ form.non_field_errors }}
                   <div class="row">
                       <div class="col-sm-6">
                           <div class="form-group">
                               <label for="id_name">Servicename</label>
                               {{ form.name }}
-                              {{ form.name.errors }}
                           </div>
                       </div>
                       <div class="col-sm-6">
                           <div class="form-group">
                               <label for="id_price">Preis</label>
                               {{ form.price }}
-                              {{ form.price.errors }}
                           </div>
                       </div>
                   </div>
@@ -40,25 +37,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="id_category">Kategorie auswählen</label>
-                            {% if form.category.value %}
                                 {{ form.category }}
-                            {% else %}
-                                {% comment %} If no category is selected, display the select input {% endcomment %}
-                                {{ form.category }}
-                                {{ form.category.errors }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="id_new_category_name">Oder neue Kategorie erstellen</label>
-                            {% if form.new_category_name.value %}
-                                {{ form.new_category_name }}
-                            {% else %}
-                                {% comment %} If no new category name is provided, display the text input {% endcomment %}
-                                {{ form.new_category_name }}
-                                {{ form.new_category_name.errors }}
-                            {% endif %}
                         </div>
                     </div>
                   </div>

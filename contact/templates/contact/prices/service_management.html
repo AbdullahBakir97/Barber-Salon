@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->
+            <div class="row my-1">
+                <form method="post" action="{% url 'contact:create_service_category' %}">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button type="submit" class="btn btn-primary mt-5">Service hinzufügen</button> <!-- Add Review -->
+                </form>
+              </div>
+        </div>
+    </div>
+        <div class="row">
+            {% for category in category_list %}
+                <div class="col-md-4 ftco-animate">
+                    <div class="pricing-entry pb-5 text-center">
+                        <div>
+                            <h3 class="mb-4">{{ category.name }}</h3>
+                        </div>
+                        <ul>
+                            {% for service in category.service_category.all %}
+                                <li>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
+                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p> <!-- Get Offer -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Update Service Form (hidden by default) -->
+{% if update_form %}
+    <div class="container my-5 py-5">
+        <h3>Dienstleistung bearbeiten</h3> <!-- Edit Service -->
+        <form method="post" action="{% url 'contact:service_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
+        </form>
+    </div>
+{% endif %}
+
+<!-- Delete Service Form (hidden by default) -->
+{% if delete_form %}
+    <div class="container my-5 py-5">
+        <h3>Dienstleistung löschen</h3> <!-- Delete Service -->
+        <form method="post" action="{% url 'contact:service_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+        </form>
+    </div>
+{% endif %}
+
+{% endblock body %}

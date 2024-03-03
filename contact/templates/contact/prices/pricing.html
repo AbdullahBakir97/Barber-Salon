@@ -23,7 +23,7 @@
                         <div>
                             <h3 class="mb-4">{{ category.name }}</h3>
                         </div>
-                        <ul>
+                        <ul class="scrollable-list">
                             {% for service in category.service_category.all %}
                                 <li>
                                     <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
@@ -37,4 +37,12 @@
         </div>
     </div>
 </section>
+
+<style>
+.scrollable-list {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+</style>
+
 {% endblock body %}

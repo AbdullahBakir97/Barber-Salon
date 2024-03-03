@@ -11,17 +11,17 @@
   <div class="container ftco-relative">
       <div class="row justify-content-center pb-3">
           <div class="col-md-10 heading-section text-center ftco-animate">
-              <span class="subheading">Service löschen</span>
-              <h2 class="mb-4">Service-Löschung bestätigen</h2>
+              <span class="subheading">Category löschen</span>
+              <h2 class="mb-4">Category löschen</h2>
           </div>
       </div>
       <div class="row justify-content-center">
           <div class="col-md-8 ftco-animate">
-              <p>Sind Sie sicher, dass Sie diesen Service löschen möchten?</p>
-              <form method="POST" action="{% url 'contact:service_delete' pk=service.pk %}">
+              <form method="POST" class="category-form" action="{% url 'contact:category_delete' pk=category.pk %}">
                   {% csrf_token %}
+                  <p>Sind Sie sicher, dass Sie diese Kategorie löschen möchten?</p>
                   <div class="form-group">
-                      <button type="submit" class="btn btn-danger">Service löschen</button>
+                      <button type="submit" class="btn btn-danger">Category löschen</button>
                   </div>
               </form>
           </div>

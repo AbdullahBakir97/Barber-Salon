@@ -8,11 +8,10 @@ from django.views.decorators.http import require_POST
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category, Product
-from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, ProductForm
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, ProductForm, CategoryForm
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.db import IntegrityError
 from django.db.models import Q
-from django.core import serializers
 from django.contrib import messages
 import logging
 from django.core.mail import send_mail
@@ -23,19 +22,18 @@ logger = logging.getLogger(__name__)
 # Owner
 
 class OwnerProfileRequiredMixin(LoginRequiredMixin):
-    # def handle_no_permission(self):
-    #     raise Http404(_("Sie sind nicht berechtigt, diese Seite zu sehen."))
+    def handle_no_permission(self):
+        raise Http404(_("Sie sind nicht berechtigt, diese Seite zu sehen, melden sie sich erstmal an."))
     
-    # def dispatch(self, request, *args, **kwargs):
-    #     if not request.user.is_authenticated:
-    #         return self.handle_no_permission()
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
         
-    #     owner_profile = request.user.owner_user_profile
-    #     if not owner_profile:
-    #         raise Http404(_("Sie dürfen diese Seite nicht anzeigen."))
+        # owner_profile = request.user.owner_user_profile
+        # if not owner_profile:
+        #     raise Http404(_("Sie dürfen diese Seite nicht anzeigen."))
 
-    #     return super().dispatch(request, *args, **kwargs)
-    pass
+        return super().dispatch(request, *args, **kwargs)
 
     
 class OwnerCreateView(LoginRequiredMixin, CreateView):
@@ -120,13 +118,13 @@ def contact_view(request):
             
             
             # Send email
-            # send_mail(
-            #     phone,
-            #     f'Name: {name}\nEmail: {email}\n\n{message}\n\n{phone}',  
-            #     'admin@gmail.com',  
-            #     ['your@example.com'],  # Replace with recipient email address
-            #     fail_silently=False,
-            # )
+            send_mail(
+                f'Message from {name}',
+                f'Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}',  
+                owner.email,
+                [email],
+                fail_silently=False,
+            )
 
             
             return redirect('contact:contact')  
@@ -147,10 +145,9 @@ class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Barber
     form_class = BarberForm
     template_name = 'contact/barber/barber_create.html'
-    success_url = reverse_lazy('contact:barber_list')
+    success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             name = form.cleaned_data.get('name')
             existing_barber = Barber.objects.filter(name=name).first()
@@ -160,23 +157,20 @@ class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
                 return self.form_invalid(form)
             else:
                 return super().form_valid(form)
-        else:
-            raise Http404(_("You must be logged in to create a barber profile."))
+
         
         
 class BarberUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Barber
     form_class = BarberForm
     template_name = 'contact/barber/barber_update.html'
+    success_url = reverse_lazy('contact:management')
     
-    def get_success_url(self):
-        return reverse('contact:barber_list')
-
 
 class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Barber
     template_name = 'contact/barber/barber_delete.html'
-    success_url = reverse_lazy('contact:barber_management')
+    success_url = reverse_lazy('contact:management')
     
 
     def get_object(self, queryset=None):
@@ -214,15 +208,13 @@ class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
     success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             try:
                 return super().form_valid(form)
             except IntegrityError:
                 messages.error(self.request, _('Ein Element mit diesem Titel existiert bereits.'))
                 return self.form_invalid(form)
-        else:
-            raise Http404(_("Sie dürfen kein Galerieelement erstellen."))
+
 
 class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = GalleryItem
@@ -231,11 +223,10 @@ class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     success_url = reverse_lazy('contact:management')
 
 
-
 class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = GalleryItem
     template_name = 'contact/gallery/item_delete.html'
-    success_url = reverse_lazy('contact:item_management')
+    success_url = reverse_lazy('contact:management')
 
     def get_object(self, queryset=None):
         return get_object_or_404(GalleryItem, pk=self.kwargs['pk'])
@@ -271,15 +262,12 @@ class ProductCreateView(OwnerProfileRequiredMixin, CreateView):
     success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             try:
                 return super().form_valid(form)
             except IntegrityError:
                 messages.error(self.request, _('Ein Element mit diesem Titel existiert bereits.'))
                 return self.form_invalid(form)
-        else:
-            raise Http404(_("Sie dürfen kein Galerieelement erstellen."))
 
 class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Product
@@ -326,10 +314,9 @@ class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'contact/review/review_create.html'
-    success_url = reverse_lazy('contact:review_list')
+    success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             form.instance.rating = form.cleaned_data['rating']
             try:
@@ -337,21 +324,19 @@ class ReviewCreateView(OwnerProfileRequiredMixin, CreateView):
             except IntegrityError:
                 messages.error(self.request, _('Eine Bewertung von diesem Benutzer für denselben Friseur existiert bereits.'))
                 return self.form_invalid(form)
-        else:
-            raise Http404(_("Sie dürfen keine Bewertung erstellen."))
 
 class ReviewUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewCreateForm
     template_name = 'contact/review/review_update.html'
-    success_url = reverse_lazy('contact:review_list')
+    success_url = reverse_lazy('contact:management')
 
 
 
 class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Review
     template_name = 'contact/review/review_delete.html'
-    success_url = reverse_lazy('contact:review_management')
+    success_url = reverse_lazy('contact:management')
 
 
     def get_object(self, queryset=None):
@@ -387,12 +372,9 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
             form.instance.user = self.request.user
             self.submitted = True
             return super().form_valid(form)
-        else:
-            raise Http404(_("Sie müssen angemeldet sein, um einen Termin zu erstellen."))
 
     
     def form_invalid(self, form):
@@ -451,77 +433,55 @@ class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
         return context
 
 
-def pricing_view(request):
-    categories = Category.objects.prefetch_related('service_category').all()
-    services = Service.objects.all()
-    return render(request, 'contact/prices/pricing.html', {'categories': categories, 'services': services})
+class CategoryCreateView(OwnerProfileRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'contact/prices/category_create.html'
+    success_url = reverse_lazy('contact:management')
 
+class CategoryUpdateView(OwnerProfileRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'contact/prices/category_update.html'
+    success_url = reverse_lazy('contact:management')
 
-def create_service_category(request):
-    if request.method == 'POST':
-        form = ServiceForm(request.POST)
-        if form.is_valid():
-            service_name = form.cleaned_data['name']
-            price = form.cleaned_data['price']
-            category = form.cleaned_data['category']
-            new_category_name = form.cleaned_data['new_category_name']
-            
-            # Determine the category for the service
-            if category:
-                category_obj = category
-            elif new_category_name:
-                existing_category = Category.objects.filter(name=new_category_name).first()
-                if existing_category:
-                    category_obj = existing_category
-                else:
-                    category_obj = Category.objects.create(name=new_category_name)
-
-            # Create the service with the determined category
-            Service.objects.create(name=service_name, category=category_obj, price=price)
-            return redirect('contact:management')
-    else:
-        form = ServiceForm()
-    
-    return render(request, 'contact/prices/service_create.html', {'form': form})
-
-def update_service(request, service_id):
-    service = Service.objects.get(pk=service_id)
-    if request.method == 'POST':
-        form = ServiceForm(request.POST, instance=service)
-        if form.is_valid():
-            form.save()
-            return redirect('contact:management')
-    else:
-        form = ServiceForm(instance=service)
-    
-    return render(request, 'contact/prices/service_update.html', {'form': form, 'service': service})
-
-def delete_service(request, service_id):
-    service = Service.objects.get(pk=service_id)
-    if request.method == 'POST':
-        service.delete()
-        return redirect('contact:management')
-    else:
-        return render(request, 'contact/prices/service_delete.html', {'service': service})
+class CategoryDeleteView(OwnerProfileRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'contact/prices/category_delete.html'
+    success_url = reverse_lazy('contact:management')
 
 
 
 class ServiceCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Service
-    fields = ['name', 'price', 'category']
-    template_name = 'prices/service_create.html'
+    form_class = ServiceForm
+    template_name = 'contact/prices/service_create.html'
     success_url = reverse_lazy('contact:management')
 
 class ServiceUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Service
-    fields = ['name', 'price', 'category']
-    template_name = 'prices/service_update.html'
+    form_class = ServiceForm
+    template_name = 'contact/prices/service_update.html'
     success_url = reverse_lazy('contact:management')
 
 class ServiceDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Service
-    template_name = 'prices/service_delete.html'
+    template_name = 'contact/prices/service_delete.html'
     success_url = reverse_lazy('contact:management')
+    
+    
+def pricing_view(request):
+    categories = Category.objects.prefetch_related('service_category').all()
+    services = Service.objects.all()
+    return render(request, 'contact/prices/pricing.html', {'categories': categories, 'services': services})
+    
+      
+class ServiceManagementView(OwnerProfileRequiredMixin, ListView):
+    model = Service
+    template_name = 'contact/prices/service_management.html'
+    
+    def get_queryset(self):
+        return Service.objects.all()
 
 # Visitor Views
 
@@ -614,9 +574,9 @@ class VisitorReviewListView(ListView):
     template_name = 'contact/review/visitor_review_list.html'
 
     def get_queryset(self):
-        email = self.request.POST.get('email', '')
+        email = self.request.POST.get('email', 'name')
         if email:
-            return Review.objects.filter(email=email)
+            return Review.objects.filter(email=email, name=self.request.POST.get('name', ''))
         else:
             return Review.objects.none()
 
@@ -628,6 +588,7 @@ def management_view(request):
     barber_list = Barber.objects.all()
     review_list = Review.objects.all()
     gallery_item_list = GalleryItem.objects.all()
+    product_list = Product.objects.all()
     category_list = Category.objects.all()
     service_list = Service.objects.all()
     service_form = ServiceForm()
@@ -638,6 +599,7 @@ def management_view(request):
         'review_list': review_list,
         'gallery_item_list': gallery_item_list,
         'category_list': category_list,
+        'product_list': product_list,
         'service_list': service_list,
         'service_form': service_form,
     }

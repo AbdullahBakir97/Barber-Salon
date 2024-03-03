@@ -6,6 +6,21 @@
 {% block body %}
 
 
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/management.jpg' %}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h2 class="mb-0 bread">Management Suite</h2>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span>Management <i class="ion-ios-arrow-round-forward"></i></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
@@ -245,8 +260,8 @@
     <div class="row my-5">
         {% for barber in barber_list %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ barber.image.url }}" class="card-img-top" alt="{{ barber.name }}">
+                <div class="card h-100">
+                    <img src="{{ barber.image.url }}" class="card-img-top barber-image" alt="{{ barber.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ barber.name }}</h5>
                         <p class="card-text">{{ barber.expertise }}</p>
@@ -307,8 +322,8 @@
     <div class="row">
         {% for object in gallery_item_list %}
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card">
-                    <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}">
+                <div class="card h-100">
+                    <img src="{{ object.image.url }}" class="card-img-top gallery-image" alt="{{ object.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ object.name }}</h5>
                         <p class="card-text">{{ object.description }}</p>
@@ -348,6 +363,69 @@
         </div>
     {% endif %}
 </div>
+
+
+<div class="container my-5 py-5">
+    <h2>Produkt Artikel</h2>
+  
+    <!-- Create Link -->
+    <a href="{% url 'contact:product_create' %}" class="btn btn-primary mb-3">Neuen Artikel hinzufügen</a>
+  
+    <!-- List Product Items as Cards -->
+    <div class="row">
+      {% for object in product_list %}
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="card h-100">
+            <img src="{{ object.image.url }}" class="card-img-top product-image" alt="{{ object.name }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ object.name }}</h5>
+              <p class="card-text">{{ object.description }}</p>
+              <p class="card-text">Price: {{ object.price }}</p>
+              <!-- Add other fields as needed -->
+            </div>
+            <div class="btn-group" role="group">
+              <a href="{% url 'contact:product_update' pk=object.pk %}" class="btn btn-primary">Bearbeiten</a>
+              <a href="{% url 'contact:product_delete' pk=object.pk %}" class="btn btn-danger">Löschen</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  
+    <!-- Update and Delete Forms (hidden by default) -->
+    {% if update_form or delete_form %}
+      <div class="container my-5 py-5">
+        <!-- Update Product Item Form (hidden by default) -->
+        {% if update_form %}
+          <h3>Produkt Artikel bearbeiten</h3>
+          <form method="post" action="{% url 'contact:product_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Aktualisieren</button>
+          </form>
+        {% endif %}
+  
+        <!-- Delete Product Item Form (hidden by default) -->
+        {% if delete_form %}
+          <h3>Produkt Artikel löschen</h3>
+          <form method="post" action="{% url 'contact:product_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Löschen</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+<style>
+
+.gallery-image, .product-image, .barber-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+</style>
 
 <div class="container my-5 py-5">
     <div class="row p-3">
@@ -402,40 +480,60 @@
 </div>
 
 
-<section class="ftco-section ftco-pricing">
-    <div class="container">
-        <div class="row justify-content-center pb-3">
-            <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Preisgestaltung</span> <!-- Pricing -->
-                <h2 class="mb-4">Unsere Preise</h2> <!-- Our Prices -->
-                <p>Weit weit weg, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien</p> <!-- Far far away, behind the word mountains, far from the countries Vokalia and Consonantia -->
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->
+            <div class="row my-1 py-1">
+                <form method="post" action="{% url 'contact:service_create' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
+                </form>
+                <form method="post" action="{% url 'contact:category_create' %}">
+                    {% csrf_token %}
+                    {{ category_form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
+                </form>
             </div>
         </div>
-        <div class="row">
-            {% for category in category_list %}
-                <div class="col-md-4 ftco-animate">
-                    <div class="pricing-entry pb-5 text-center">
-                        <div>
-                            <h3 class="mb-4">{{ category.name }}</h3>
-                        </div>
-                        <ul>
-                            {% for service in category.service_category.all %}
-                                <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
-                                    <div class="btn-group" role="group">
-                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
-                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p> <!-- Get Offer -->
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     </div>
-</section>
+    <div class="row">
+        {% for category in category_list %}
+        <div class="col-md-4 ftco-animate">
+            <div class="pricing-entry pb-5 text-center">
+                <div>
+                    <h3 class="mb-4">{{ category.name }}</h3>
+                    <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit Category -->
+                    <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete Category -->
+                </div>
+                <div class="scrollable-list">
+                    <ul>
+                        {% for service in category.service_category.all %}
+                        <li>
+                            <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
+                                <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p> <!-- Get Offer -->
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .scrollable-list {
+        max-height: 400px; /* Adjust the height as needed */
+        overflow-y: auto; /* Add vertical scrollbar */
+    }
+</style>
+
 
 <!-- Update Service Form (hidden by default) -->
 {% if update_form %}

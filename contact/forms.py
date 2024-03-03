@@ -101,6 +101,19 @@ class BarberForm(forms.ModelForm):
         return image
     
 
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'name': _('Name'),
+        }
+
 class GalleryItemForm(forms.ModelForm):
     class Meta:
         model = GalleryItem
@@ -276,24 +289,7 @@ class AppointmentForm(forms.ModelForm):
     
     
 class ServiceForm(forms.ModelForm):
-    new_category_name = forms.CharField(required=False, label=_('New Category Name'), widget=forms.TextInput(attrs={'class': 'form-control'}))
 
-    class Meta:
-        model = Service
-        fields = ['name', 'price', 'category']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
-        }
-        labels = {
-            'name': _('Name'),
-            'price': _('Price'),
-            'category': _('Category'),
-        }
-
-    class ServiceForm(forms.ModelForm):
-        new_category_name = forms.CharField(required=False, label=_('New Category Name'), widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Service
@@ -312,28 +308,8 @@ class ServiceForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         category = cleaned_data.get('category')
-        new_category_name = cleaned_data.get('new_category_name')
 
-        if not self.is_category_selected(category) and not self.is_new_category_provided(new_category_name):
-            raise forms.ValidationError(_('Please select an existing category or provide a new category name.'))
+        if not category:
+            raise forms.ValidationError(_('Please select a category.'))
 
         return cleaned_data
-
-    def is_category_selected(self, category):
-        return category is not None
-
-    def is_new_category_provided(self, new_category_name):
-        return bool(new_category_name)
-
-    def create_or_get_category(self):
-        category = self.cleaned_data.get('category')
-        new_category_name = self.cleaned_data.get('new_category_name')
-
-        if category:
-            return category
-
-        if new_category_name:
-            new_category, _ = Category.objects.get_or_create(name=new_category_name)
-            return new_category
-
-        return None

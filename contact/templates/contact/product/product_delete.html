@@ -8,7 +8,7 @@
 
 {% block body %}
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/bg-1.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
@@ -33,7 +33,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="POST" class="appointment-form" action="{% url 'contact:item_delete' pk=object.pk %}">
+                <form method="POST" class="appointment-form" action="{% url 'contact:product_delete' pk=object.pk %}">
                     {% csrf_token %}
                     <p>Sind Sie sicher, dass Sie dieses Galerieelement löschen möchten?</p>
                     <div class="form-group">
