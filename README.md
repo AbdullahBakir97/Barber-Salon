@@ -63,7 +63,7 @@ Elevate your salon's reputation with real-time review updates.
 ## 👤 Owner Management Suite
 
 Centralized control for salon owners, enhanced with HTMX for seamless and dynamic management of appointments, barbers, gallery items, reviews, and more.
-- Handle appointments, barbers, gallery items, and reviews from a unified dashboard.
+- Handle appointments, barbers, gallery items, products, and reviews from a unified dashboard.
 - Empower your business with comprehensive owner oversight and control.
 
 ## 💰 Pricing Management
