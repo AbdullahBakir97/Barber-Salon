@@ -23,6 +23,7 @@ The Salon Management System provides a comprehensive set of APIs to interact wit
 - **Barber Management**: Retrieve, create, update, and delete barber profiles.
 - **Review Management**: Access and manage customer reviews for barbers.
 - **Gallery Management**: Retrieve, upload, update, and delete visual content for showcasing salon work.
+- **Products Management**: Manage salon products including creating, updating, and deleting entries.
 - **Appointment Management**: Schedule, modify, and cancel appointments for customers.
 - **Message Handling**: Receive and process messages from customers for inquiries and feedback.
 - **Service and Category Management**: View, create, update, and delete service categories and offerings.
@@ -45,6 +46,12 @@ Enhance your barber management experience.
 Showcase your work with ease.
 - Keep your gallery up-to-date with the latest items, presenting your portfolio in the best light.
 - Effortlessly manage and curate your visual content to captivate your audience.
+
+## 🛒 Products Management 
+
+Efficiently manage your salon’s product inventory.
+- Display and update the list of available products for purchase.
+- Streamline the process of adding, editing, and removing products from your inventory.
 
 ## 🌟 Transform Reviews
 
@@ -72,6 +79,7 @@ Take control with administrative features.
 - **Barber Profiles:** Manage barber information, expertise, and experience.
 - **Review Administration:** Monitor and respond to customer reviews to maintain a positive online reputation.
 - **Gallery Curation:** Curate your salon's portfolio with visually appealing images of your work.
+- **Products Management:** Efficiently manage your salon’s product inventory.
 - **Appointment Scheduling:** Efficiently schedule, modify, and cancel appointments to optimize salon operations.
 - **Price Management:** Set and update service prices to ensure profitability and competitiveness.
 - **User Profiles:** Administer user profiles for enhanced security and customization.
@@ -92,6 +100,7 @@ Efficient navigation for seamless user experience.
 - **/barbers/**: Control barber information.
 - **/reviews/**: Handle customer reviews.
 - **/items/**: Manage visual content.
+- **/products/**: Manage salon products.
 - **/appointments/**: Schedule and manage appointments.
 - **/prices/**: Set and update service prices.
 - **/management/**: Management Suite Centralized control for salon owners
