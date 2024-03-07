@@ -195,16 +195,7 @@
                                 <h2>{{ barber.name }}</h2>
                                 <span class="position">{{ barber.expertise }}</span>
                                 <!-- Durchschnittliche Bewertung mit Sternen anzeigen -->
-                                <div class="star-rating">
-                                    {% for _ in "12345" %}
-                                        {% if forloop.counter <= barber.avg_rate %}
-                                            <span>&#9733;</span>
-                                        {% else %}
-                                            <span>&#9734;</span>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <p class="avg-rating">{{ barber.avg_rate }}</p>
+                                
                             </a>
                         </div>
                     {% endfor %}
