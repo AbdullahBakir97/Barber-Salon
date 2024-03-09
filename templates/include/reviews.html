@@ -12,7 +12,9 @@
                 {% endif %}
                 <div class="pos ml-3">
                     <p class="name">{{ review.customer_name }}</p>
+                    {% if review.barber %}
                     <span class="position">Friseur: {{ review.barber.name }}</span>
+                    {% endif %}
                     <div class="star-rating">
                         {% for _ in "12345" %}
                             {% if forloop.counter <= review.rating %}
