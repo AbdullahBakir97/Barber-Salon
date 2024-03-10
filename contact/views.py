@@ -9,11 +9,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
 from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category, Product
 from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, ProductForm, CategoryForm
-from django.http import Http404, HttpResponseRedirect, JsonResponse
-from django.db import IntegrityError
+from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponseServerError
+from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib import messages
 import logging
+from project import settings
 from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
@@ -123,34 +124,35 @@ class OwnerDetailView(OwnerProfileRequiredMixin, DetailView):
     
 def contact_view(request):
     template_name = 'contact/contact.html'
-    owner = Owner.objects.first()  
+    owner = Owner.objects.first()
     message_form = MessageForm()
+
     if request.method == 'POST':
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
-            # Get form data
             name = message_form.cleaned_data['name']
             email = message_form.cleaned_data['email']
             phone = message_form.cleaned_data['phone']
             message = message_form.cleaned_data['message']
-            
-            
-            Message.objects.create(name=name, email=email, phone=phone, message=message)
-            
-            
-            # Send email
-            send_mail(
-                f'Message from {name}',
-                f'Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}',  
-                owner.email,
-                [email],
-                fail_silently=False,
-            )
 
-            
-            return redirect('contact:contact')  
-    else:
-        message_form = MessageForm() 
+            Message.objects.create(name=name, email=email, phone=phone, message=message)
+
+            try:
+                send_mail(
+                    f'Nachricht von {name}',
+                    f'Name: {name}\nE-Mail: {email}\nTelefon: {phone}\nNachricht: {message}',
+                    email,
+                    [settings.EMAIL_HOST_USER,email],
+                    fail_silently=False,
+                )
+                # Set a success message
+                messages.success(request, 'Ihre Nachricht wurde erfolgreich gesendet!')
+                return redirect('contact:contact')  # Redirect to the same page
+            except Exception as e:
+                # Log the error for troubleshooting
+                logger.error(f'Error sending email: {e}')
+                # Return a server error response
+                return HttpResponseServerError("Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.")
 
     context = {
         'owner': owner,
@@ -158,8 +160,7 @@ def contact_view(request):
     }
     return render(request, 'contact/contact.html', context)
 
-def contact_success(request):
-    return render(request, 'contact.html')
+
 
 # Barber
 class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
@@ -282,13 +283,24 @@ class ProductCreateView(OwnerProfileRequiredMixin, CreateView):
     template_name = 'contact/product/product_create.html'
     success_url = reverse_lazy('contact:management')
 
+    @transaction.atomic
     def form_valid(self, form):
-            form.instance.user = self.request.user
-            try:
-                return super().form_valid(form)
-            except IntegrityError:
-                messages.error(self.request, _('Ein Element mit diesem Titel existiert bereits.'))
-                return self.form_invalid(form)
+        form.instance.user = self.request.user
+        try:
+            with transaction.atomic():
+                response = super().form_valid(form)
+                # Create a corresponding service instance
+                service = Service.objects.create(
+                    name=form.instance.name,
+                    price=form.instance.price,
+                    category=Category.objects.get(name='Products')  # Assuming 'Products' is the category name for products
+                )
+                form.instance.service = service
+                form.instance.save()
+                return response
+        except IntegrityError:
+            form.add_error(None, 'Ein Element mit diesem Titel existiert bereits.')
+            return self.form_invalid(form)
 
 class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Product
@@ -296,21 +308,35 @@ class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/product/product_update.html'
     success_url = reverse_lazy('contact:management')
 
-
+    def save_form(self, form):
+        # Override save_form to automatically update associated service instance
+        instance = form.save(commit=False)
+        service = instance.service
+        if service:
+            service.name = instance.name
+            service.price = instance.price
+            service.save()
+        return super().save_form(form)
 
 class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
-    model = ProductForm
+    model = Product
     template_name = 'contact/product/product_delete.html'
     success_url = reverse_lazy('contact:management')
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(Product, pk=self.kwargs['pk'])
-
     def delete(self, request, *args, **kwargs):
-        item = self.get_object()
-        item.delete()
-        return HttpResponseRedirect(self.get_success_url())
-
+        try:
+            product = self.get_object()
+            service = product.service
+            if service:
+                service.delete()
+            return super().delete(request, *args, **kwargs)
+        except Service.DoesNotExist:
+            pass  # No service found for this product
+        except Exception as e:
+            # Log the error
+            logger.error(f"Error deleting product and associated service: {e}")
+            # Handle the error gracefully
+            raise Http404(_("Error deleting product and associated service. Please try again."))
 
 class ProductListView(OwnerProfileRequiredMixin, ListView):
     model = Product
@@ -320,7 +346,6 @@ class ProductListView(OwnerProfileRequiredMixin, ListView):
     def get_queryset(self):
         return Product.objects.all()
     
-    
 class ProductManagementView(OwnerProfileRequiredMixin, ListView):
     model = Product
     template_name = 'contact/product/product_management.html'
@@ -328,6 +353,60 @@ class ProductManagementView(OwnerProfileRequiredMixin, ListView):
     
     def get_queryset(self):
         return Product.objects.all()
+    
+    
+class CategoryCreateView(OwnerProfileRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'contact/prices/category_create.html'
+    success_url = reverse_lazy('contact:management')
+
+class CategoryUpdateView(OwnerProfileRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'contact/prices/category_update.html'
+    success_url = reverse_lazy('contact:management')
+
+class CategoryDeleteView(OwnerProfileRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'contact/prices/category_delete.html'
+    success_url = reverse_lazy('contact:management')
+
+
+
+class ServiceCreateView(OwnerProfileRequiredMixin, CreateView):
+    model = Service
+    form_class = ServiceForm
+    template_name = 'contact/prices/service_create.html'
+    success_url = reverse_lazy('contact:management')
+
+class ServiceUpdateView(OwnerProfileRequiredMixin, UpdateView):
+    model = Service
+    form_class = ServiceForm
+    template_name = 'contact/prices/service_update.html'
+    success_url = reverse_lazy('contact:management')
+
+class ServiceDeleteView(OwnerProfileRequiredMixin, DeleteView):
+    model = Service
+    template_name = 'contact/prices/service_delete.html'
+    success_url = reverse_lazy('contact:management')
+    
+    
+def pricing_view(request):
+    if request.method == 'POST':
+        # If a product is edited or deleted, redirect to the pricing view
+        return redirect('pricing_view')
+    categories = Category.objects.prefetch_related('service_category').all()
+    services = Service.objects.exclude(product_service__isnull=True)
+    return render(request, 'contact/prices/pricing.html', {'categories': categories, 'services': services})
+    
+      
+class ServiceManagementView(OwnerProfileRequiredMixin, ListView):
+    model = Service
+    template_name = 'contact/prices/service_management.html'
+    
+    def get_queryset(self):
+        return Service.objects.all()
 
 
 # Review
@@ -454,55 +533,7 @@ class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
         return context
 
 
-class CategoryCreateView(OwnerProfileRequiredMixin, CreateView):
-    model = Category
-    form_class = CategoryForm
-    template_name = 'contact/prices/category_create.html'
-    success_url = reverse_lazy('contact:management')
 
-class CategoryUpdateView(OwnerProfileRequiredMixin, UpdateView):
-    model = Category
-    form_class = CategoryForm
-    template_name = 'contact/prices/category_update.html'
-    success_url = reverse_lazy('contact:management')
-
-class CategoryDeleteView(OwnerProfileRequiredMixin, DeleteView):
-    model = Category
-    template_name = 'contact/prices/category_delete.html'
-    success_url = reverse_lazy('contact:management')
-
-
-
-class ServiceCreateView(OwnerProfileRequiredMixin, CreateView):
-    model = Service
-    form_class = ServiceForm
-    template_name = 'contact/prices/service_create.html'
-    success_url = reverse_lazy('contact:management')
-
-class ServiceUpdateView(OwnerProfileRequiredMixin, UpdateView):
-    model = Service
-    form_class = ServiceForm
-    template_name = 'contact/prices/service_update.html'
-    success_url = reverse_lazy('contact:management')
-
-class ServiceDeleteView(OwnerProfileRequiredMixin, DeleteView):
-    model = Service
-    template_name = 'contact/prices/service_delete.html'
-    success_url = reverse_lazy('contact:management')
-    
-    
-def pricing_view(request):
-    categories = Category.objects.prefetch_related('service_category').all()
-    services = Service.objects.all()
-    return render(request, 'contact/prices/pricing.html', {'categories': categories, 'services': services})
-    
-      
-class ServiceManagementView(OwnerProfileRequiredMixin, ListView):
-    model = Service
-    template_name = 'contact/prices/service_management.html'
-    
-    def get_queryset(self):
-        return Service.objects.all()
 
 # Visitor Views
 

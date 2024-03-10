@@ -143,6 +143,7 @@ class Product(models.Model):
     image = models.ImageField(_('Foto'),upload_to='product_images/')
     description = models.TextField(_('Beschriebeung'),)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='product_category')
+    service = models.OneToOneField(Service, on_delete=models.CASCADE, null=True, blank=True, related_name='product_service')
     price = models.DecimalField(_('Preis'),max_digits=10, decimal_places=2)
     slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
     

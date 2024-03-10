@@ -3,6 +3,17 @@
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .success-message {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #dff0d8;
+      border: 1px solid #d6e9c6;
+      border-radius: 4px;
+      color: #3c763d;
+      text-align: center;
+    }
+  </style>
 {% endblock css %}
 
 {% block body %}
@@ -22,6 +33,21 @@
     <!-- Contact Section -->
     <section class="contact-section">
         <div class="container my-5">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div id="popup-message" class="alert alert-success" style="display: none;">
+                            <section class="success-message">
+                                <div class="container">
+                                    <h2> {{message.name}} Ihre Nachricht wurde erfolgreich gesendet!</h2>
+                                    <p>Wir haben Ihre Nachricht erhalten und werden uns so schnell wie möglich bei Ihnen melden.</p>
+                                    <p>Vielen Dank, dass Sie uns kontaktiert haben!</p>
+                                </div>
+                            </section>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             <div class="row justify-content-center pb-3">
                 <div class="col-md-10 heading-section text-center ftco-animate">
                     <span class="subheading">Kontaktieren Sie uns</span>
@@ -53,16 +79,30 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="owner-info">
-                        <h3>{{ owner.name }}</h3>
+                        <h1 class="logo">
+                            <a href="#"><span class=""></span>{{salon_data.owner.name}}</a>
+                        </h1>
                         <p class="icon icon-map-marker"> Adresse: {{ owner.address }}</p>
                         <p class="icon icon-envelope"> E-Mail: {{ owner.email }}</p>
                         <p class="icon icon-phone"> Telefon: {{ owner.phone }}</p>
                         <p class="icon icon-clock-o"> {{ owner.work_days }} </p>
                         <p class="icon icon-link"> Webseite: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
+                        <img src="{{salon_data.owner.logo.url}}" alt="{{salon_data.owner.name }}">
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
+    <script>
+        // Show the popup message when the page loads
+        window.onload = function() {
+            var popup = document.getElementById('popup-message');
+            if (popup) {
+                popup.style.display = 'block';
+            }
+        };
+    </script>
 {% endblock body %}
 
