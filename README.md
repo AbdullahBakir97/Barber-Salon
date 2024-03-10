@@ -59,6 +59,12 @@ Elevate your salon's reputation with real-time review updates.
 - Implement AJAX to seamlessly load and update reviews without page reloads.
 - Respond promptly to customer feedback, demonstrating your commitment to customer satisfaction.
 
+## 💰 Pricing Management
+
+Set and manage service prices with ease.
+- Define service categories and assign services to each category.
+- Update service prices effortlessly to reflect changes in your pricing strategy.
+
 
 ## 👤 Owner Management Suite
 
@@ -66,11 +72,6 @@ Centralized control for salon owners, enhanced with HTMX for seamless and dynami
 - Handle appointments, barbers, gallery items, products, and reviews from a unified dashboard.
 - Empower your business with comprehensive owner oversight and control.
 
-## 💰 Pricing Management
-
-Set and manage service prices with ease.
-- Define service categories and assign services to each category.
-- Update service prices effortlessly to reflect changes in your pricing strategy.
 
 ## 🛠️ Administrative Tools
 
