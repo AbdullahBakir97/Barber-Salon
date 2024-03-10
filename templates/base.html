@@ -89,9 +89,10 @@
           <div class="form-group">
             <label for="id_barber">Friseur</label>
             <select name="barber" class="form-control" id="id_barber">
-              {% for barber in barbers %}
-                <option value="{{ barber.id }}">{{ barber.name }}</option>
-              {% endfor %}
+                <option value="" selected>Wählen Sie einen Friseur</option>
+                {% for barber in barbers %}
+                    <option value="{{ barber.id }}">{{ barber.name }}</option>
+                {% endfor %}
             </select>
           </div>
           <div class="form-group">
@@ -108,7 +109,7 @@
           </div>
           <div class="form-group">
             <label for="id_rating">Bewertung</label>
-            <div class="star-rating" onclick="updateRating()">
+            <div class="star-rating">
               <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
               <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
               <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
@@ -116,7 +117,7 @@
               <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
             </div>
             <!-- Hidden input field to store the selected star rating -->
-            <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
+            <input type="hidden" name="rating" id="ratingInput" value="">
           </div>
           <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
@@ -124,6 +125,7 @@
     </div>
   </div>
 </div>
+
 <section class="testimony-section bg-light">
   <div class="container">
     <div class="row ftco-animate justify-content-center">
@@ -150,21 +152,24 @@
 </section>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
 <script>
-  // Function to update the hidden input field with the selected star rating
-  function updateRating() {
-    const ratingInput = document.getElementById('ratingInput');
-    const stars = document.querySelectorAll('.star-rating input:checked');
-    
-    if (stars.length > 0) {
-      ratingInput.value = stars[0].value;
-    }
-  }
 
   $(document).ready(function() {
+    // Function to update the hidden input field with the selected star rating
+    function updateRating() {
+      const ratingInput = document.getElementById('ratingInput');
+      const stars = document.querySelectorAll('.star-rating input:checked');
+      
+      if (stars.length > 0) {
+        ratingInput.value = stars[0].value;
+      }
+    }
+
     // Submit review form via AJAX
     $(document).on('submit', '#reviewForm', function(event){
       event.preventDefault();
+      console.log('Submitting review form...');
       var formData = new FormData(this);
       
       $.ajax({
@@ -176,28 +181,39 @@
         contentType: false,
         cache: false,
         success: function(response){
-          // Append the new review HTML to the existing reviews
-          $('#all-reviews').html(response.html);
-          $('#reviewModal').modal('hide'); // Close modal after successful submission
-          $('#reviewForm')[0].reset(); // Reset the form fields
+          console.log('Review form submitted successfully.');
+          if (response.html) {
+            $('#all-reviews').html(response.html);
+          } else {
+            console.error('Unexpected response format:', response);
+          }
+          $('#reviewModal').modal('hide');
+          $('#reviewForm')[0].reset();
         },
         error: function(xhr, status, error) {
-          console.error(xhr.responseText); // Log error message to console
+          console.error('Error submitting review form:', xhr.responseText);
+          if (xhr.status === 400) {
+            alert('Please fill in all required fields.');
+          } else {
+            alert('An error occurred. Please try again later.');
+          }
         }
       });
-    });
+    });    
   });
 </script>
 
 
-  <style>
-    .star-rating span { font-size: 20px; color: #ffca48; }
-    .star-rating input { display: none; }
-    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label,
-    .star-rating input:checked ~ label { color: #ffca08; }
-  </style>
+
+<style>
+  .star-rating span { font-size: 20px; color: #ffca48; }
+  .star-rating input { display: none; }
+  .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+  .star-rating label:hover,
+  .star-rating label:hover ~ label,
+  .star-rating input:checked ~ label { color: #ffca08; }
+</style>
+
 
 		
 

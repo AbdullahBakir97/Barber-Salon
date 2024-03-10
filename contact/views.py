@@ -19,6 +19,27 @@ from django.core.mail import send_mail
 logger = logging.getLogger(__name__)
 
 
+def my_view(request):
+    # Configure logging
+    logging.basicConfig(level=logging.DEBUG)  # Set logging level to DEBUG
+    logger = logging.getLogger(__name__)  # Get logger instance for the current module
+
+    logger.debug('Processing my_view function...')
+
+    try:
+        # Code that may raise an exception
+        result = perform_some_task()
+        logger.debug(f'Result: {result}')
+    except Exception as e:
+        logger.error(f'An error occurred: {e}')
+
+    logger.debug('Exiting my_view function...')
+
+# Define the function that performs some task (placeholder)
+def perform_some_task():
+    # Placeholder code
+    return "Task result"
+
 # Owner
 
 class OwnerProfileRequiredMixin(LoginRequiredMixin):
@@ -70,15 +91,15 @@ class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/owner/owner_update.html'
     success_url = reverse_lazy('contact:owner_detail')
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     obj = self.get_object()
-    #     owner_profile = obj.owner
-    #     if (
-    #         request.user != owner_profile.user
-    #         or Owner.objects.filter(user=request.user).exclude(pk=obj.pk).exists()
-    #     ):
-    #         raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
-    #     return super().dispatch(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        owner_profile = obj.owner
+        if (
+            request.user != owner_profile.user
+            or Owner.objects.filter(user=request.user).exclude(pk=obj.pk).exists()
+        ):
+            raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
+        return super().dispatch(request, *args, **kwargs)
         
         
 class OwnerDeleteView(OwnerProfileRequiredMixin, DeleteView):
@@ -518,6 +539,8 @@ class VisitorReviewCreateView(CreateView):
             return self.form_invalid(form)
 
 def create_visitor_review(request):
+    logger.debug('Processing create_visitor_review view function...')
+
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -526,24 +549,29 @@ def create_visitor_review(request):
             if existing_review:
                 error_message = _('Duplicate review for this barber with the same name.')
                 messages.error(request, error_message)
+                logger.error(error_message)
                 return JsonResponse({'error': error_message}, status=400)
+
             try:
                 new_review = form.save()
                 messages.success(request, _('Bewertung erfolgreich hinzugefügt.'))
                 review_data = Review.objects.all()
                 review_html = render_to_string('include/reviews.html', {'review_data': review_data}, request=request)
-                return JsonResponse({'html': review_html})
+                logger.debug('Exiting create_visitor_review view function...')
+                return JsonResponse({'html': review_html}, status=200)
             except IntegrityError as e:
                 error_message = _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
                 messages.error(request, error_message)
+                logger.error(f'IntegrityError: {e}')
                 return JsonResponse({'error': error_message}, status=500)
         else:
             error_message = _('Form validation failed.')
+            logger.error(error_message)
             return JsonResponse({'error': error_message}, status=400)
     else:
         error_message = _('Invalid request method.')
+        logger.error(error_message)
         return JsonResponse({'error': error_message}, status=405)
-
 @require_POST
 def submit_review(request):
     form = ReviewCreateForm(request.POST, request.FILES)

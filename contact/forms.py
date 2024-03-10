@@ -202,6 +202,7 @@ class ReviewCreateForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
+        self.fields['barber'].required = False
         
     
     def clean_image(self):
