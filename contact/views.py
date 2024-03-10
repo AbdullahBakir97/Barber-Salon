@@ -16,6 +16,7 @@ from django.contrib import messages
 import logging
 from project import settings
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 logger = logging.getLogger(__name__)
 
@@ -451,10 +452,27 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
 class ReviewListView(ListView):
     model = Review
     template_name = 'contact/review/review_list.html'
-    context_object_name = 'object_list'
+    context_object_name = 'review_data'
+    paginate_by = 5 
     
     def get_queryset(self):
         return Review.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = self.get_queryset()
+        paginator = Paginator(reviews, self.paginate_by)
+
+        page = self.request.GET.get('page')
+        try:
+            object_list = paginator.page(page)
+        except PageNotAnInteger:
+            object_list = paginator.page(1)
+        except EmptyPage:
+            object_list = paginator.page(paginator.num_pages)
+
+        context['object_list'] = object_list
+        return context
     
 class ReviewManagementView(OwnerProfileRequiredMixin, ListView):
     model = Review
