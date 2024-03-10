@@ -117,7 +117,7 @@
               <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
             </div>
             <!-- Hidden input field to store the selected star rating -->
-            <input type="hidden" name="rating" id="ratingInput" value="">
+            <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
           </div>
           <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
