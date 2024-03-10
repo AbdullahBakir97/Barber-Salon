@@ -3,7 +3,6 @@
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <!-- Add the following link for star rating -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
   <style>
     .star-rating span { font-size: 20px; color: #ffca08; }
@@ -21,31 +20,31 @@
 {% block body %}
 
 <div class="container my-5 py-5">
-  <div class="row  p-3">
-    <div class="col-md-10 heading-section  ftco-animate">
-        <h2 class="">Review Management</h2>
-        <div class="row my-1">
-          <form method="post" action="{% url 'contact:review_create' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary mt-5">Add Review</button>
-          </form>
-        </div>
+  <div class="row p-3">
+    <div class="col-md-10 heading-section ftco-animate">
+      <h2 class="">Verwaltung von Bewertungen</h2>
+      <div class="row my-1">
+        <form method="post" action="{% url 'contact:review_create' %}">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary mt-5">Bewertung hinzufügen</button>
+        </form>
+      </div>
     </div>
 
-  <!-- List Reviews as Table -->
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th>Customer Name</th>
-        <th>Barber</th>
-        <th>Rating</th>
-        <th>Comment</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for review in object_list %}
+    <!-- List Reviews as Table -->
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Kundenname</th>
+          <th>Friseur</th>
+          <th>Bewertung</th>
+          <th>Kommentar</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for review in object_list %}
         <tr>
           <td>{{ review.customer_name }}</td>
           <td>{{ review.barber.name }}</td>
@@ -62,13 +61,14 @@
           </td>
           <td>{{ review.comment }}</td>
           <td class="action-links">
-            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Edit</a>
-            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Bearbeiten</a>
+            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Löschen</a>
           </td>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% endblock body %}

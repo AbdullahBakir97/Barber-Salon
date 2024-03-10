@@ -6,8 +6,7 @@
 {% endblock css %}
 
 {% block body %}
-      
-<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/center2.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight justify-content-center align-items-center">
@@ -36,11 +35,12 @@
             <div class="col-md-3 text-center d-flex align-items-stretch">
                 <div class="text-about py-5 px-4">
                     <h1 class="logo">
-                        <a href="#"><span class="flaticon-scissors-in-a-hair-salon-badge"></span>Haircare</a>
+                        <img src="{{salon_data.owner.logo.url}}" alt="{{salon_data.owner.name }}">
+                        <a href="#"><span class=""></span>{{salon_data.owner.name}}</a>
                     </h1>
                     <h2>Willkommen in unserem Salon</h2>
-                    <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt ihn mit der nötigen Regelialia. Es ist ein paradisisches Land, in dem geröstete Teile von Sätzen in deinen Mund fliegen. Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien, leben die Blindtexte.</p>
-                    <p class="mt-3"><a href="#" class="btn btn-primary btn-outline-primary">Mehr lesen</a></p>
+                    <p>Unser Salon ist ein Ort der Schönheit, des Stils und des Vertrauens. Hier dreht sich alles um die Kunst der Männerpflege und des traditionellen Handwerks. Entdecken Sie unsere einzigartige Atmosphäre und erleben Sie die Perfektion in jedem Detail. Treten Sie ein und lassen Sie sich von unseren erfahrenen Barbieren verwöhnen.</p>
+                    <p class="mt-3"><a href="#service" class="btn btn-primary btn-outline-primary">Mehr lesen</a></p>
                 </div>
             </div>
 
@@ -48,13 +48,13 @@
     </div>
 </section>
 
-<section class="services-section ftco-section">
+<section id=service class="services-section ftco-section">
     <div class="container">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
                 <span class="subheading">Dienstleistungen</span>
                 <h2 class="mb-4">Dienstleistungen Menü</h2>
-                <p>Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien</p>
+                <p>Willkommen in unserem umfangreichen Dienstleistungsmenü, das darauf ausgerichtet ist, Ihnen ein unvergleichliches Erlebnis zu bieten. Tauchen Sie ein in die Welt der Schönheit und des Wohlbefindens.</p>
             </div>
         </div>
         <div class="row no-gutters d-flex">
@@ -63,7 +63,7 @@
                     <div class="icon"><span class="flaticon-male-hair-of-head-and-face-shapes"></span></div>
                     <div class="media-body">
                         <h3 class="heading mb-3">Haarschnitt &amp; Styling</h3>
-                        <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt.</p>
+                        <p>Unsere erfahrenen Stylisten stehen bereit, um Ihnen einen Haarschnitt und ein Styling zu bieten, das Ihren persönlichen Stil und Ihre Persönlichkeit unterstreicht.</p>
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     <div class="icon"><span class="flaticon-beard"></span></div>
                     <div class="media-body">
                         <h3 class="heading mb-3">Bart</h3>
-                        <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt.</p>
+                        <p>Unsere Bartexperten sind hier, um sicherzustellen, dass Ihr Bart gepflegt und gestaltet wird, um Ihrem Look das gewisse Etwas zu verleihen.</p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <div class="icon"><span class="flaticon-healthy-lifestyle-logo"></span></div>
                     <div class="media-body">
                         <h3 class="heading mb-3">Körperbehandlung</h3>
-                        <p>Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt.</p>
+                        <p>Genießen Sie eine entspannende und revitalisierende Körperbehandlung, um Ihren Geist zu beruhigen und Ihre Sinne zu erfrischen.</p>
                     </div>
                 </div>
             </div>
@@ -95,13 +95,13 @@
             <div class="col-md-10 heading-section text-center ftco-animate">
                 <span class="subheading">Buchung</span>
                 <h2 class="mb-4">Vereinbaren Sie einen Termin</h2>
-                <p>Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien</p>
+                <p>Willkommen bei unserem Buchungsservice. Füllen Sie das Formular unten aus, um einen Termin zu vereinbaren, oder rufen Sie uns direkt an.</p>
             </div>
         </div>
         <h3 class="vr">Rufen Sie uns an: {{owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="POST" class="appointment-form" action="{% url 'home' %}">
+                <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
                     {% csrf_token %}
                     {% if form.errors and view.submitted %}
                         {% for field in form %}
@@ -148,13 +148,13 @@
                                 <label for="id_service_type">Dienstleistungsart</label>
                                 <div class="select-wrap">
                                     <div class="icon">
-                                        <span class="fas fa-chevron-down"></span>
+                                        <span class="fas fa-chevron-down"></span>   
                                     </div>
                                     {{ form.service_type }}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="id_phone">Ihr Telefon</label>
                                 {{ form.phone }}
@@ -182,7 +182,7 @@
             <div class="col-md-10 heading-section text-center ftco-animate">
                 <span class="subheading">Künstlerischer Leiter</span>
                 <h2 class="mb-4">Friseur</h2>
-                <p>Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien</p>
+                <p>Entdecken Sie unsere talentierten Friseure, die Ihnen dabei helfen, Ihren perfekten Look zu kreieren.</p>
             </div>
         </div>
         <div class="row">
@@ -195,16 +195,7 @@
                                 <h2>{{ barber.name }}</h2>
                                 <span class="position">{{ barber.expertise }}</span>
                                 <!-- Durchschnittliche Bewertung mit Sternen anzeigen -->
-                                <div class="star-rating">
-                                    {% for _ in "12345" %}
-                                        {% if forloop.counter <= barber.avg_rate %}
-                                            <span>&#9733;</span>
-                                        {% else %}
-                                            <span>&#9734;</span>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <p class="avg-rating">{{ barber.avg_rate }}</p>
+                                
                             </a>
                         </div>
                     {% endfor %}
@@ -223,14 +214,14 @@
             <div class="col-md-6 text-center heading-section ftco-animate">
                 <span class="subheading">Galerie</span>
                 <h2 class="mb-4">Unsere Galerie</h2>
-                <p>Getrennt leben sie in. Ein kleiner Fluss namens Duden fließt an ihrem Platz vorbei und versorgt ihn mit der nötigen Regelialia.</p>
+                <p>Entdecken Sie unsere vielfältige Galerie, die eine Auswahl an inspirierenden Bildern und Momenten aus unserem Salon präsentiert. Tauchen Sie ein in unsere Welt des Stils, der Schönheit und des Handwerks und lassen Sie sich von den einzigartigen Kreationen unserer talentierten Fachleute begeistern.</p>
             </div>
         </div>
         <div class="row no-gutters">
             {% for gallery_item in gallery_items %}
             <div class="col-md-6 col-lg-3 ftco-animate gallery-item">
                 <div class="project">
-                    <img src="{{ gallery_item.image.url }}" class="img-fluid fixed-size-img" alt="{{ gallery_item.title }}">
+                    <img src="{{ gallery_item.image.url }}" class="img-fluid gallery-img" alt="{{ gallery_item.title }}">
 
                     <div class="text">
                         <span>{{ gallery_item.category }}</span>
@@ -249,21 +240,57 @@
     </div>
 </section>
 
+
+
+<section id="gallery" class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
+    <div class="container-fluid my-5">
+        <div class="row no-gutters justify-content-center mb-5 pb-2">
+            <div class="col-md-6 text-center heading-section ftco-animate">
+                <span class="subheading">Produkt</span>
+                <h2 class="mb-4">Unsere Produkte</h2>
+                <p>Erkunden Sie unsere exklusive Auswahl an hochwertigen Produkten, die sorgfältig ausgewählt und speziell für unsere Kunden zusammengestellt wurden. Lassen Sie sich von unserer vielfältigen Produktpalette inspirieren und finden Sie das perfekte Produkt für Ihre Bedürfnisse.</p>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            {% for product in products %}
+                <div class="col-md-6 col-lg-3 ftco-animate product">
+                    <div class="project">
+                        <img src="{{ product.image.url }}" class="img-fluid product-img" alt="{{ object.title }}">
+
+                        <div class="text">
+                            <span>{{ product.category }}</span>
+                            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }} / <span class="price">€{{ product.price }}</span></a></h3>
+                            <p>{{ product.description }}</p>
+                            <!-- Andere Felder hinzufügen, wenn benötigt -->
+                        </div>
+
+                        <a href="{{ product.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
+                            <span class="icon-expand"></span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
 <style>
-    .fixed-size-img {
+    .product-img, .gallery-img {
         height: 500px; 
         width: 500px;
         object-fit: fill;
     }
 </style>
 
-<section id=price class="ftco-section ftco-pricing">
+
+
+<section class="ftco-section ftco-pricing">
     <div class="container">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Preise</span>
+                <span class="subheading">Preisgestaltung</span>
                 <h2 class="mb-4">Unsere Preise</h2>
-                <p>Weit weit weg, hinter den Wortbergen, fern von den Ländern Vokalien und Konsonantien</p>
+                <p>Entdecken Sie unsere umfassende Preisgestaltung und wählen Sie aus einer Vielzahl von Dienstleistungen, die speziell auf Ihre Bedürfnisse zugeschnitten sind. Unsere Preise spiegeln unser Engagement für Qualität und Kundenzufriedenheit wider, während wir Ihnen ein unvergessliches Erlebnis bieten.</p>
             </div>
         </div>
         <div class="row">
@@ -273,7 +300,7 @@
                         <div>
                             <h3 class="mb-4">{{ category.name }}</h3>
                         </div>
-                        <ul>
+                        <ul class="scrollable-list">
                             {% for service in category.service_category.all %}
                                 <li>
                                     <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
@@ -287,6 +314,13 @@
         </div>
     </div>
 </section>
+
+<style>
+.scrollable-list {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+</style>
 
   
 {% endblock body %}

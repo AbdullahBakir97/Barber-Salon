@@ -1,25 +1,74 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block body %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">Edit Service</div>
-        <div class="card-body">
-          <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Update</button>
-          </form>
-        </div>
+{% block body %}
+
+<section class="ftco-section ftco-booking bg-light">
+  <div class="container ftco-relative">
+      <div class="row justify-content-center pb-3">
+          <div class="col-md-10 heading-section text-center ftco-animate">
+              <span class="subheading">Service aktualisieren</span>
+              <h2 class="mb-4">Service-Details bearbeiten</h2>
+          </div>
       </div>
-    </div>
+      <div class="row justify-content-center">
+          <div class="col-md-8 ftco-animate">
+              <form method="POST" class="appointment-form" action="{% url 'contact:service_update' pk=service.pk %}">
+                  {% csrf_token %}
+                  {{ form.non_field_errors }}
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="id_name">Service Name</label>
+                              {{ form.name }}
+                              {{ form.name.errors }}
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <div class="form-group">
+                              <label for="id_price">Preis</label>
+                              {{ form.price }}
+                              {{ form.price.errors }}
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="id_category">Kategorie auswählen</label>
+                            {% if form.category.value %}
+                                {{ form.category }}
+                            {% else %}
+                                {% comment %} If no category is selected, display the select input {% endcomment %}
+                                {{ form.category }}
+                                {{ form.category.errors }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="id_new_category_name">Oder neue Kategorie erstellen</label>
+                            {% if form.new_category_name.value %}
+                                {{ form.new_category_name }}
+                            {% else %}
+                                {% comment %} If no new category name is provided, display the text input {% endcomment %}
+                                {{ form.new_category_name }}
+                                {{ form.new_category_name.errors }}
+                            {% endif %}
+                        </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <button type="submit" class="btn btn-primary">Service aktualisieren</button>
+                  </div>
+              </form>
+          </div>
+      </div>
   </div>
-</div>
-{% endblock %}
+</section>
+
+{% endblock body %}

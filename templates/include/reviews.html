@@ -12,7 +12,9 @@
                 {% endif %}
                 <div class="pos ml-3">
                     <p class="name">{{ review.customer_name }}</p>
-                    <span class="position">barber: {{ review.barber.name }}</span>
+                    {% if review.barber %}
+                    <span class="position">Friseur: {{ review.barber.name }}</span>
+                    {% endif %}
                     <div class="star-rating">
                         {% for _ in "12345" %}
                             {% if forloop.counter <= review.rating %}
@@ -26,5 +28,23 @@
             </div>
         </div>
     </div>
-  {% endfor %}
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if review_data.has_previous %}
+            <a href="?page=1">&laquo; Erste</a>
+            <a href="?page={{ review_data.previous_page_number }}">Vorherige</a>
+        {% endif %}
+        
+        <span class="current">
+            Seite {{ review_data.number }} von {{ review_data.paginator.num_pages }}.
+        </span>
+        
+        {% if review_data.has_next %}
+            <a href="?page={{ review_data.next_page_number }}">Nächste</a>
+            <a href="?page={{ review_data.paginator.num_pages }}">Letzte &raquo;</a>
+        {% endif %}
+    </span>
 </div>

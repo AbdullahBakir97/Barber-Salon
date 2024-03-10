@@ -6,17 +6,32 @@
 {% block body %}
 
 
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/management.jpg' %}');" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h2 class="mb-0 bread">Management Suite</h2>
+                <p class="breadcrumbs">
+                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span>Management <i class="ion-ios-arrow-round-forward"></i></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
-            <h2 class="">Appointment Management</h2>
+            <h2 class="">Terminverwaltung</h2> <!-- Appointment Management -->
         </div>
     </div>
 
     <!-- Appointment List -->
     <div class="row">
         <div class="col-md-6">
-            <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#create-appointment-modal">Create Appointment</button>
+            <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
         </div>
     </div>
     
@@ -25,13 +40,13 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Barber</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Service</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Message</th>
+                    <th>Barbier</th> <!-- Barber -->
+                    <th>Datum</th> <!-- Date -->
+                    <th>Zeit</th> <!-- Time -->
+                    <th>Dienstleistung</th> <!-- Service -->
+                    <th>Telefon</th> <!-- Phone -->
+                    <th>E-Mail</th> <!-- Email -->
+                    <th>Nachricht</th> <!-- Message -->
                     <th></th>
                     <th></th>
                 </tr>
@@ -48,10 +63,10 @@
                     <td>{{ appointment.email }}</td>
                     <td>{{ appointment.message }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML">Edit</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML">Bearbeiten</button> <!-- Edit -->
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML">Delete</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML">Löschen</button> <!-- Delete -->
                     </td>
                 </tr>
                 {% endfor %}
@@ -64,7 +79,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create Appointment</h5>
+                    <h5 class="modal-title">Termin erstellen</h5> <!-- Create Appointment -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -76,31 +91,31 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_name">Your Name</label>
+                                    <label for="id_name">Ihr Name</label> <!-- Your Name -->
                                     <input type="text" name="name" id="id_name" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_email">Your Email</label>
+                                    <label for="id_email">Ihre E-Mail</label> <!-- Your Email -->
                                     <input type="email" name="email" id="id_email" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_date">Preferred Date</label>
+                                    <label for="id_date">Bevorzugtes Datum</label> <!-- Preferred Date -->
                                     <input type="date" name="date" id="id_date" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_time">Preferred Time</label>
+                                    <label for="id_time">Bevorzugte Zeit</label> <!-- Preferred Time -->
                                     <input type="time" name="time" id="id_time" class="form-control">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_barber">Select Barber</label>
+                                    <label for="id_barber">Barbier auswählen</label> <!-- Select Barber -->
                                     <select name="barber" id="id_barber" class="form-control">
                                         {% for barber in barber_list  %}
                                         <option value="{{ barber.id }}">{{ barber.name }}</option>
@@ -110,7 +125,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_service_type">Service Type</label>
+                                    <label for="id_service_type">Art der Dienstleistung</label> <!-- Service Type -->
                                     <select name="service_type" id="id_service_type" class="form-control">
                                         {% for service in service_list  %}
                                         <option value="{{ service.id }}">{{ service.name }}</option>
@@ -120,19 +135,19 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="id_phone">Your Phone</label>
+                                    <label for="id_phone">Ihr Telefon</label> <!-- Your Phone -->
                                     <input type="tel" name="phone" id="id_phone" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="id_message">Additional Message</label>
+                                    <label for="id_message">Zusätzliche Nachricht</label> <!-- Additional Message -->
                                     <textarea name="message" id="id_message" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Make an Appointment</button>
+                            <button type="submit" class="btn btn-primary">Termin vereinbaren</button> <!-- Make an Appointment -->
                         </div>
                     </form>
                 </div>
@@ -145,7 +160,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update Appointment</h5>
+                    <h5 class="modal-title">Termin aktualisieren</h5> <!-- Update Appointment -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -154,23 +169,23 @@
                     <form id="update-appointment-form" method="post" hx-post hx-target="#appointment-{{ appointment.pk }}" hx-swap="outerHTML">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="update_name">Your Name</label>
+                            <label for="update_name">Ihr Name</label> <!-- Your Name -->
                             <input type="text" name="name" id="update_name" class="form-control" value="{{ appointment.name }}">
                         </div>
                         <div class="form-group">
-                            <label for="update_email">Your Email</label>
+                            <label for="update_email">Ihre E-Mail</label> <!-- Your Email -->
                             <input type="email" name="email" id="update_email" class="form-control" value="{{ appointment.email }}">
                         </div>
                         <div class="form-group">
-                            <label for="update_date">Preferred Date</label>
+                            <label for="update_date">Bevorzugtes Datum</label> <!-- Preferred Date -->
                             <input type="date" name="date" id="update_date" class="form-control" value="{{ appointment.date }}">
                         </div>
                         <div class="form-group">
-                            <label for="update_time">Preferred Time</label>
+                            <label for="update_time">Bevorzugte Zeit</label> <!-- Preferred Time -->
                             <input type="time" name="time" id="update_time" class="form-control" value="{{ appointment.time }}">
                         </div>
                         <div class="form-group">
-                            <label for="update_barber">Select Barber</label>
+                            <label for="update_barber">Barbier auswählen</label> <!-- Select Barber -->
                             <select name="barber" id="update_barber" class="form-control">
                                 {% for barber in barber_list %}
                                 <option value="{{ barber.id }}" {% if barber.id == appointment.barber.id %} selected {% endif %}>{{ barber.name }}</option>
@@ -178,7 +193,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="update_service_type">Service Type</label>
+                            <label for="update_service_type">Art der Dienstleistung</label> <!-- Service Type -->
                             <select name="service_type" id="update_service_type" class="form-control">
                                 {% for service in service_list %}
                                 <option value="{{ service.id }}" {% if service.id == appointment.service_type.id %} selected {% endif %}>{{ service.name }}</option>
@@ -186,15 +201,15 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="update_phone">Your Phone</label>
+                            <label for="update_phone">Ihr Telefon</label> <!-- Your Phone -->
                             <input type="tel" name="phone" id="update_phone" class="form-control" value="{{ appointment.phone }}">
                         </div>
                         <div class="form-group">
-                            <label for="update_message">Additional Message</label>
+                            <label for="update_message">Zusätzliche Nachricht</label> <!-- Additional Message -->
                             <textarea name="message" id="update_message" class="form-control">{{ appointment.message }}</textarea>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Update Appointment</button>
+                            <button type="submit" class="btn btn-primary">Termin aktualisieren</button> <!-- Update Appointment -->
                         </div>
                     </form>
                 </div>
@@ -207,19 +222,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="delete-appointment-modal-label">Delete Appointment</h5>
+                    <h5 class="modal-title" id="delete-appointment-modal-label">Termin löschen</h5> <!-- Delete Appointment -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete the appointment for <span id="delete-appointment-name"></span> with <span id="delete-appointment-barber"></span>?</p>
+                    <p>Sind Sie sicher, dass Sie den Termin für <span id="delete-appointment-name"></span> mit <span id="delete-appointment-barber"></span> löschen möchten?</p> <!-- Are you sure you want to delete the appointment for... -->
                 </div>
                 <div class="modal-footer">
                     <form id="delete-appointment-form" method="post" hx-post hx-target=".appointment-list">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button> <!-- Cancel -->
                     </form>
                 </div>
             </div>
@@ -232,7 +247,7 @@
 <div class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
-            <h2 class="">Barbers Management</h2>
+            <h2 class="">Friseurverwaltung</h2> <!-- Barbers Management -->
         </div>
     </div>
 
@@ -240,20 +255,20 @@
     <form method="post" action="{% url 'contact:barber_create' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Erstellen</button> <!-- Create -->
     </form>
     <div class="row my-5">
         {% for barber in barber_list %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ barber.image.url }}" class="card-img-top" alt="{{ barber.name }}">
+                <div class="card h-100">
+                    <img src="{{ barber.image.url }}" class="card-img-top barber-image" alt="{{ barber.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ barber.name }}</h5>
                         <p class="card-text">{{ barber.expertise }}</p>
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Edit</a>
-                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
+                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
                     </div>
                 </div>
             </div>
@@ -262,7 +277,7 @@
 
     <!-- Barber Appointments -->
     {% if barber_appointments %}
-        <h3>{{ barber.name }}'s Appointments</h3>
+        <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
         <ul>
             {% for appointment in barber_appointments %}
                 <li>
@@ -274,21 +289,21 @@
 
     <!-- Update Barber Form (hidden by default) -->
     {% if update_form %}
-        <h3>Edit Barber</h3>
+        <h3>Friseur bearbeiten</h3> <!-- Edit Barber -->
         <form method="post" action="{% url 'contact:barber_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
         </form>
     {% endif %}
 
     <!-- Delete Barber Form (hidden by default) -->
     {% if delete_form %}
-        <h3>Delete Barber</h3>
+        <h3>Friseur löschen</h3> <!-- Delete Barber -->
         <form method="post" action="{% url 'contact:barber_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
         </form>
     {% endif %}
 </div>
@@ -296,27 +311,27 @@
 <div class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
-            <h2 class="">Gallery Management</h2>
+            <h2 class="">Galerieverwaltung</h2> <!-- Gallery Management -->
         </div>
     </div>
 
     <!-- Create Link -->
-    <a href="{% url 'contact:item_create' %}" class="btn btn-primary mb-3">Add New Item</a>
+    <a href="{% url 'contact:item_create' %}" class="btn btn-primary mb-3">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
 
     <!-- List Gallery Items as Cards -->
     <div class="row">
         {% for object in gallery_item_list %}
             <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card">
-                    <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}">
+                <div class="card h-100">
+                    <img src="{{ object.image.url }}" class="card-img-top gallery-image" alt="{{ object.name }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ object.name }}</h5>
                         <p class="card-text">{{ object.description }}</p>
                         <!-- Add other fields as needed -->
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary">Edit</a>
-                        <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
+                        <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
                     </div>
                 </div>
             </div>
@@ -328,36 +343,99 @@
         <div class="container my-5 py-5">
             <!-- Update Gallery Item Form (hidden by default) -->
             {% if update_form %}
-                <h3>Edit Gallery Item</h3>
+                <h3>Galerieartikel bearbeiten</h3> <!-- Edit Gallery Item -->
                 <form method="post" action="{% url 'contact:item_update' pk=update_form.instance.pk %}">
                     {% csrf_token %}
                     {{ update_form.as_p }}
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
                 </form>
             {% endif %}
 
             <!-- Delete Gallery Item Form (hidden by default) -->
             {% if delete_form %}
-                <h3>Delete Gallery Item</h3>
+                <h3>Galerieartikel löschen</h3> <!-- Delete Gallery Item -->
                 <form method="post" action="{% url 'contact:item_delete' pk=delete_form.instance.pk %}">
                     {% csrf_token %}
                     {{ delete_form.as_p }}
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
                 </form>
             {% endif %}
         </div>
     {% endif %}
 </div>
 
+
+<div class="container my-5 py-5">
+    <h2>Produkt Artikel</h2>
+  
+    <!-- Create Link -->
+    <a href="{% url 'contact:product_create' %}" class="btn btn-primary mb-3">Neuen Artikel hinzufügen</a>
+  
+    <!-- List Product Items as Cards -->
+    <div class="row">
+      {% for object in product_list %}
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="card h-100">
+            <img src="{{ object.image.url }}" class="card-img-top product-image" alt="{{ object.name }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ object.name }}</h5>
+              <p class="card-text">{{ object.description }}</p>
+              <p class="card-text">Price: {{ object.price }}</p>
+              <!-- Add other fields as needed -->
+            </div>
+            <div class="btn-group" role="group">
+              <a href="{% url 'contact:product_update' pk=object.pk %}" class="btn btn-primary">Bearbeiten</a>
+              <a href="{% url 'contact:product_delete' pk=object.pk %}" class="btn btn-danger">Löschen</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  
+    <!-- Update and Delete Forms (hidden by default) -->
+    {% if update_form or delete_form %}
+      <div class="container my-5 py-5">
+        <!-- Update Product Item Form (hidden by default) -->
+        {% if update_form %}
+          <h3>Produkt Artikel bearbeiten</h3>
+          <form method="post" action="{% url 'contact:product_update' pk=update_form.instance.pk %}">
+            {% csrf_token %}
+            {{ update_form.as_p }}
+            <button type="submit" class="btn btn-primary">Aktualisieren</button>
+          </form>
+        {% endif %}
+  
+        <!-- Delete Product Item Form (hidden by default) -->
+        {% if delete_form %}
+          <h3>Produkt Artikel löschen</h3>
+          <form method="post" action="{% url 'contact:product_delete' pk=delete_form.instance.pk %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Löschen</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+<style>
+
+.gallery-image, .product-image, .barber-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+</style>
+
 <div class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
-            <h2 class="">Review Management</h2>
+            <h2 class="">Bewertungsverwaltung</h2> <!-- Review Management -->
             <div class="row my-1">
                 <form method="post" action="{% url 'contact:review_create' %}">
                   {% csrf_token %}
                   {{ form.as_p }}
-                  <button type="submit" class="btn btn-primary mt-5">Add Review</button>
+                  <button type="submit" class="btn btn-primary mt-5">Bewertung hinzufügen</button> <!-- Add Review -->
                 </form>
               </div>
         </div>
@@ -367,11 +445,11 @@
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th>Customer Name</th>
-                <th>Barber</th>
-                <th>Rating</th>
-                <th>Comment</th>
-                <th>Action</th>
+                <th>Kundenname</th> <!-- Customer Name -->
+                <th>Friseur</th> <!-- Barber -->
+                <th>Bewertung</th> <!-- Rating -->
+                <th>Kommentar</th> <!-- Comment -->
+                <th>Aktion</th> <!-- Action -->
             </tr>
         </thead>
         <tbody>
@@ -392,8 +470,8 @@
                     </td>
                     <td>{{ review.comment }}</td>
                     <td class="action-links">
-                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Edit</a>
-                        <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Delete</a>
+                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Bearbeiten</a> <!-- Edit -->
+                        <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Löschen</a> <!-- Delete -->
                     </td>
                 </tr>
             {% endfor %}
@@ -402,49 +480,69 @@
 </div>
 
 
-<section class="ftco-section ftco-pricing">
-    <div class="container">
-        <div class="row justify-content-center pb-3">
-            <div class="col-md-10 heading-section text-center ftco-animate">
-                <span class="subheading">Pricing</span>
-                <h2 class="mb-4">Our Prices</h2>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->
+            <div class="row my-1 py-1">
+                <form method="post" action="{% url 'contact:service_create' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
+                </form>
+                <form method="post" action="{% url 'contact:category_create' %}">
+                    {% csrf_token %}
+                    {{ category_form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
+                </form>
             </div>
         </div>
-        <div class="row">
-            {% for category in category_list %}
-                <div class="col-md-4 ftco-animate">
-                    <div class="pricing-entry pb-5 text-center">
-                        <div>
-                            <h3 class="mb-4">{{ category.name }}</h3>
-                        </div>
-                        <ul>
-                            {% for service in category.service_category.all %}
-                                <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
-                                    <div class="btn-group" role="group">
-                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Edit</a>
-                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Get Offer</a></p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     </div>
-</section>
+    <div class="row">
+        {% for category in category_list %}
+        <div class="col-md-4 ftco-animate">
+            <div class="pricing-entry pb-5 text-center">
+                <div>
+                    <h3 class="mb-4">{{ category.name }}</h3>
+                    <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit Category -->
+                    <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete Category -->
+                </div>
+                <div class="scrollable-list">
+                    <ul>
+                        {% for service in category.service_category.all %}
+                        <li>
+                            <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
+                                <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p> <!-- Get Offer -->
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .scrollable-list {
+        max-height: 400px; /* Adjust the height as needed */
+        overflow-y: auto; /* Add vertical scrollbar */
+    }
+</style>
+
 
 <!-- Update Service Form (hidden by default) -->
 {% if update_form %}
     <div class="container my-5 py-5">
-        <h3>Edit Service</h3>
+        <h3>Dienstleistung bearbeiten</h3> <!-- Edit Service -->
         <form method="post" action="{% url 'contact:service_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
         </form>
     </div>
 {% endif %}
@@ -452,14 +550,13 @@
 <!-- Delete Service Form (hidden by default) -->
 {% if delete_form %}
     <div class="container my-5 py-5">
-        <h3>Delete Service</h3>
+        <h3>Dienstleistung löschen</h3> <!-- Delete Service -->
         <form method="post" action="{% url 'contact:service_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
         </form>
     </div>
 {% endif %}
-
 
 {% endblock body %}

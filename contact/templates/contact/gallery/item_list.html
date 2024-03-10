@@ -12,8 +12,8 @@
 	<div class="container">
 	  <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
 		<div class="col-md-9 ftco-animate pb-5 text-center">
-		  <h2 class="mb-0 bread">Gallery</h2>
-		  <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Home <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Gallery <i class="ion-ios-arrow-round-forward"></i></span></p>
+		  <h2 class="mb-0 bread">Galerie</h2>
+		  <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'contact:item_list' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span> <span>Galerie <i class="ion-ios-arrow-round-forward"></i></span></p>
 		</div>
 	  </div>
 	</div>
@@ -31,7 +31,7 @@
                             <span>{{ object.category }}</span>
                             <h3><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></h3>
                             <p>{{ object.description }}</p>
-                            <!-- Add other fields as needed -->
+                            <!-- Andere Felder hinzufügen, wenn benötigt -->
                         </div>
 
                         <a href="{{ object.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">

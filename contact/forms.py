@@ -1,5 +1,5 @@
 from django import forms
-from .models import Owner, Review, Appointment, Barber, GalleryItem, Service
+from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message , Product
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -8,7 +8,7 @@ from PIL import Image
 class OwnerForm(forms.ModelForm):
     class Meta:
         model = Owner
-        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', 'social_media_links']
+        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', ]
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -18,7 +18,7 @@ class OwnerForm(forms.ModelForm):
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'about': forms.Textarea(attrs={'class': 'form-control'}),
-            'social_media_links': forms.JSONField(),
+            
         }
 
         labels = {
@@ -29,7 +29,7 @@ class OwnerForm(forms.ModelForm):
             'logo': _('Logo'),
             'website': _('Webseite'),
             'about': _('Über'),
-            'social_media_links': _('Social Links'),
+
         }
 
     def clean_email(self):
@@ -46,11 +46,15 @@ class OwnerForm(forms.ModelForm):
         else:
             return None
 
-class MessageForm(forms.Form):
+class MessageForm(forms.ModelForm):
     name = forms.CharField(label='Your Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='Your Email', widget=forms.EmailInput(attrs={'class': 'form-control'}))
     phone = forms.CharField(label='Your Phone', max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
     message = forms.CharField(label='Message', widget=forms.Textarea(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = Message  
+        fields = ['name', 'email', 'phone', 'message']
 
 
 class BarberForm(forms.ModelForm):
@@ -97,6 +101,19 @@ class BarberForm(forms.ModelForm):
         return image
     
 
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'name': _('Name'),
+        }
+
 class GalleryItemForm(forms.ModelForm):
     class Meta:
         model = GalleryItem
@@ -131,6 +148,32 @@ class GalleryItemForm(forms.ModelForm):
         return cleaned_data
 
 
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'image', 'description', 'category', 'price']
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'name': _('Name'),
+            'image': _('Bild'),
+            'description': _('Beschreibung'),
+            'category': _('Kategorie'),
+            'price': _('Price'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+
+
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
         model = Review
@@ -159,6 +202,7 @@ class ReviewCreateForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
+        self.fields['barber'].required = False
         
     
     def clean_image(self):
@@ -246,6 +290,8 @@ class AppointmentForm(forms.ModelForm):
     
     
 class ServiceForm(forms.ModelForm):
+
+
     class Meta:
         model = Service
         fields = ['name', 'price', 'category']
@@ -259,3 +305,12 @@ class ServiceForm(forms.ModelForm):
             'price': _('Price'),
             'category': _('Category'),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        category = cleaned_data.get('category')
+
+        if not category:
+            raise forms.ValidationError(_('Please select a category.'))
+
+        return cleaned_data
