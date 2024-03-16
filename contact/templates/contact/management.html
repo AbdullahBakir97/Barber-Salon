@@ -408,7 +408,7 @@
         <!-- Delete Product Item Form (hidden by default) -->
         {% if delete_form %}
           <h3>Produkt Artikel löschen</h3>
-          <form method="post" action="{% url 'contact:product_delete' pk=delete_form.instance.pk %}">
+          <form method="post" action="{% url 'contact:product_delete' pk=object.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
             <button type="submit" class="btn btn-danger">Löschen</button>

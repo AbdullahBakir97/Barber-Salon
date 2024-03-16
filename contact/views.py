@@ -13,6 +13,7 @@ from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpRespons
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 import logging
 from project import settings
 from django.core.mail import send_mail
@@ -148,7 +149,7 @@ def contact_view(request):
                 )
                 # Set a success message
                 messages.success(request, 'Ihre Nachricht wurde erfolgreich gesendet!')
-                return redirect('contact:contact')  # Redirect to the same page
+                return redirect('contact:contact')
             except Exception as e:
                 # Log the error for troubleshooting
                 logger.error(f'Error sending email: {e}')
@@ -289,12 +290,14 @@ class ProductCreateView(OwnerProfileRequiredMixin, CreateView):
         form.instance.user = self.request.user
         try:
             with transaction.atomic():
+                category = Category.objects.get(name='Products')  # Get the Products category
+                form.instance.category = category  # Set the category for the product
                 response = super().form_valid(form)
                 # Create a corresponding service instance
                 service = Service.objects.create(
                     name=form.instance.name,
                     price=form.instance.price,
-                    category=Category.objects.get(name='Products')  # Assuming 'Products' is the category name for products
+                    category=category  # Set the category for the service to Products
                 )
                 form.instance.service = service
                 form.instance.save()
@@ -309,15 +312,15 @@ class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/product/product_update.html'
     success_url = reverse_lazy('contact:management')
 
-    def save_form(self, form):
-        # Override save_form to automatically update associated service instance
-        instance = form.save(commit=False)
-        service = instance.service
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Update associated service instance
+        service = self.object.service
         if service:
-            service.name = instance.name
-            service.price = instance.price
+            service.name = form.instance.name
+            service.price = form.instance.price
             service.save()
-        return super().save_form(form)
+        return response
 
 class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Product
@@ -325,19 +328,13 @@ class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
     success_url = reverse_lazy('contact:management')
 
     def delete(self, request, *args, **kwargs):
-        try:
-            product = self.get_object()
-            service = product.service
-            if service:
-                service.delete()
-            return super().delete(request, *args, **kwargs)
-        except Service.DoesNotExist:
-            pass  # No service found for this product
-        except Exception as e:
-            # Log the error
-            logger.error(f"Error deleting product and associated service: {e}")
-            # Handle the error gracefully
-            raise Http404(_("Error deleting product and associated service. Please try again."))
+        product = self.get_object()
+        service = product.service
+        if service:
+            # Delete the service, which will automatically clear any foreign key references to it
+            service.delete()
+        messages.success(self.request, _('Produkt wurde erfolgreich gelöscht.'))
+        return super().delete(request, *args, **kwargs)
 
 class ProductListView(OwnerProfileRequiredMixin, ListView):
     model = Product
@@ -471,7 +468,7 @@ class ReviewListView(ListView):
         except EmptyPage:
             object_list = paginator.page(paginator.num_pages)
 
-        context['object_list'] = object_list
+        context['review_data'] = object_list
         return context
     
 class ReviewManagementView(OwnerProfileRequiredMixin, ListView):
@@ -551,25 +548,47 @@ class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
         return context
 
 
-
-
 # Visitor Views
 
 class VisitorAppointmentCreateView(CreateView):
     model = Appointment
     form_class = AppointmentForm
     template_name = 'contact/appointment/visitor_appointment_create.html'
-    success_url = reverse_lazy('contact:visitor_appointment_list')
 
     def form_valid(self, form):
         try:
             self.object = form.save()
-            messages.success(self.request, _('Termin erfolgreich hinzugefügt.'))
-            return super().form_valid(form)
-        except IntegrityError:
-            messages.error(self.request, _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'))
-            return self.form_invalid(form)
+            return JsonResponse({'success': True})  # Return JSON response for AJAX request
+        except IntegrityError as e:
+            error_message = str(e)
+            return JsonResponse({'success': False, 'message': error_message}, status=400)
+        
 
+def visitor_appointment_create(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Ihre Termin wurde erfolgreich gesendet!')
+                return HttpResponseRedirect(reverse('settings:home') + '#appointments')
+            except IntegrityError as e:
+                error_message = str(e)
+                messages.error(request, 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.')
+        else:
+            # Collect all form errors into a list
+            form_errors = []
+            for field, errors in form.errors.items():
+                form_errors.extend(errors)
+
+            # Display all collected error messages
+            for error_message in form_errors:
+                messages.error(request, error_message)
+
+    else:
+        form = AppointmentForm()
+
+    return render(request, 'settings/home.html', {'form': form})
 
 class VisitorReviewCreateView(CreateView):
     model = Review
@@ -621,6 +640,7 @@ def create_visitor_review(request):
         error_message = _('Invalid request method.')
         logger.error(error_message)
         return JsonResponse({'error': error_message}, status=405)
+
 @require_POST
 def submit_review(request):
     form = ReviewCreateForm(request.POST, request.FILES)

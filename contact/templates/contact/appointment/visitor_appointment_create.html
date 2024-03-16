@@ -7,28 +7,49 @@
 
 {% block body %}
 
-<section class="ftco-section ftco-booking bg-light">
+<section id="appointments" class="ftco-section ftco-booking bg-light">
     <div class="container ftco-relative">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div id="popup-message" class="alert alert-success" style="display: none;">
+                        <section class="success-message">
+                            <div class="container">
+                                <h2>{{ message }}</h2>
+                                <p>Wir haben Ihre Termin erhalten und werden uns so schnell wie möglich bei Ihnen melden.</p>
+                                <p>Vielen Dank, dass Sie uns kontaktiert haben!</p>
+                            </div>
+                        </section>
+                    </div>
+                {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger">
+                        <strong>Fehler:</strong> {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
                 <span class="subheading">Buchung</span>
                 <h2 class="mb-4">Vereinbaren Sie einen Termin</h2>
-                <p>Weit weit weg, hinter den Wortbergen, fernab von den Ländern Vokalien und Konsonantien</p>
+                <p>Willkommen bei unserem Buchungsservice. Füllen Sie das Formular unten aus, um einen Termin zu vereinbaren, oder rufen Sie uns direkt an.</p>
             </div>
         </div>
-        <h3 class="vr">Rufen Sie uns an: 012-3456-7890</h3>
+        <h3 class="vr">Rufen Sie uns an: {{owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
                     {% csrf_token %}
-                    {% if form.errors and view.submitted %}
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
                     {% endif %}
                     <div class="row">
                         <div class="col-sm-6">
@@ -57,24 +78,20 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_barber">Wählen Sie einen Friseur</label>
+                                <label for="id_barber">Friseur auswählen</label>
                                 {{ form.barber }}
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_service_type">Serviceart</label>
-                                <div class="select-wrap">
-                                    <div class="icon">
-                                        <span class="fas fa-chevron-down"></span>
-                                    </div>
+                                <label for="id_service_type">Dienstleistungsart</label>
                                     {{ form.service_type }}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="id_phone">Ihre Telefonnummer</label>
+                                <label for="id_phone">Ihr Telefon</label>
                                 {{ form.phone }}
                             </div>
                         </div>
@@ -93,4 +110,20 @@
         </div>
     </div>
 </section>
+
+<script>
+    // Show the popup message when the page loads
+    window.onload = function() {
+        var popup = document.getElementById('popup-message');
+        if (popup) {
+            popup.style.display = 'block';
+        }
+    };
+
+    // Function to display error message
+    function displayError() {
+        var errorMessage = '<div class="alert alert-danger" role="alert">Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.</div>';
+        document.getElementById('message').innerHTML = errorMessage;
+    }
+</script>
 {% endblock body %}

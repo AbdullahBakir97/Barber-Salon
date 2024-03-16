@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db.models import Avg, Count
 from django.core.validators import MinValueValidator, MaxValueValidator
+import datetime
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -17,6 +18,8 @@ class Owner(models.Model):
     logo = models.ImageField(_('Logo'),upload_to='owner_logos/')
     website = models.URLField(_('Webseite'),blank=True, null=True)
     work_days = models.CharField(_('Arbeits Tage'),max_length=255, default='Montag-Freitag')
+    opening_time = models.TimeField(_('Öffnungszeit'), default=datetime.time(9, 0))
+    closing_time = models.TimeField(_('Schließungszeit'), default=datetime.time(20, 0))
     about = models.TextField(_('Über'),blank=True, null=True)
     social_media_links = models.JSONField(_('Social Links'),blank=True, null=True)
     slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
@@ -165,7 +168,7 @@ class Appointment(models.Model):
     phone = models.CharField(_('Telefon'),max_length=15)
     email = models.EmailField(_('Email'),default='no-reply@example.com')
     message = models.TextField(_('Nachricht'),max_length=200, null=True)
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:

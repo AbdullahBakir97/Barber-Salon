@@ -6,15 +6,21 @@ from django.utils import timezone
 from PIL import Image
 
 class OwnerForm(forms.ModelForm):
+    work_days = forms.CharField(label=_('Arbeits Tage'), widget=forms.TextInput(attrs={'class': 'form-control'}))
+    opening_time = forms.TimeField(label=_('Öffnungszeit'), widget=forms.TimeInput(attrs={'class': 'form-control', 'autofocus': True}))
+    closing_time = forms.TimeField(label=_('Schließungszeit'), widget=forms.TimeInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Owner
-        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about', ]
+        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about','work_days', 'opening_time', 'closing_time']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control'}),
+            'work_days': forms.TextInput(attrs={'class': 'form-control'}),
+            'opening_time': forms.TimeInput(attrs={'class': 'form-control', 'autofocus': True}),
+            'closing_time': forms.TimeInput(attrs={'class': 'form-control'}),
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'about': forms.Textarea(attrs={'class': 'form-control'}),
@@ -29,11 +35,14 @@ class OwnerForm(forms.ModelForm):
             'logo': _('Logo'),
             'website': _('Webseite'),
             'about': _('Über'),
+            'work_days': _('Arbeits Tage'),
+            'opening_time': _('Öffnungszeit'),
+            'closing_time': _('Schließungszeit'),
 
         }
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data.get['email']
         if Owner.objects.filter(email=email).exists():
             raise ValidationError(_('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
         return email
@@ -85,20 +94,20 @@ class BarberForm(forms.ModelForm):
             raise ValidationError(_('Die Berufserfahrung darf nicht negativ sein.'))
         return experience_years
     
-    def clean_image(self):
-        image = self.cleaned_data.get('image', False)
-        if image:
-            # Check if the file is an image
-            try:
-                Image.open(image)
-            except Exception as e:
-                raise ValidationError(_('Invalid image file. Please upload a valid image.'))
+    # def clean_image(self):
+    #     image = self.cleaned_data.get('image', False)
+    #     if image:
+    #         # Check if the file is an image
+    #         try:
+    #             Image.open(image)
+    #         except Exception as e:
+    #             raise ValidationError(_('Invalid image file. Please upload a valid image.'))
 
-            # Check the file size
-            if image.size > 5 * 1024 * 1024:  # 5 MB
-                raise ValidationError(_('File size must be no more than 5 MB.'))
+    #         # Check the file size
+    #         if image.size > 5 * 1024 * 1024:  # 5 MB
+    #             raise ValidationError(_('File size must be no more than 5 MB.'))
 
-        return image
+    #     return image
     
 
 class CategoryForm(forms.ModelForm):
@@ -172,6 +181,10 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
+        products_category, _ = Category.objects.get_or_create(name='Products')
+        self.fields['category'].queryset = Category.objects.filter(name='Products')
+        self.fields['category'].initial = products_category
+        self.fields['category'].widget.attrs['disabled'] = True
 
 
 class ReviewCreateForm(forms.ModelForm):
@@ -266,10 +279,10 @@ class AppointmentForm(forms.ModelForm):
                 'invalid': _('Bitte geben Sie eine gültige E-Mail-Adresse ein.'),
             },
             'date': {
-                'invalid': _('Bitte geben Sie ein gültiges Datum ein.'),
+                'required': _('Bitte geben Sie Datum ein.'),
             },
             'time': {
-                'invalid': _('Bitte geben Sie eine gültige Uhrzeit ein.'),
+                'required': _('Bitte geben Sie Uhrzeit ein.'),
             },
             'service_type': {
                 'required': _('Bitte wählen Sie eine Dienstleistungsart aus.'),
@@ -281,13 +294,68 @@ class AppointmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        date = cleaned_data.get('date')
+        time = cleaned_data.get('time')
+        barber = cleaned_data.get('barber')
+
+        # Check if an appointment with the same name, date, time, and barber already exists
+        if Appointment.objects.filter(name=name, date=date, time=time, barber=barber).exists():
+            raise forms.ValidationError("Es gibt bereits einen Termin für Sie zu diesem Datum und dieser Uhrzeit mit dem ausgewählten Friseur.")
+
+        # Check if there is already an appointment with the same date and time
+        if Appointment.objects.filter(date=date, time=time, barber=barber).exists():
+            raise forms.ValidationError("Doppelter Termin gefunden. Bitte wählen Sie eine andere Uhrzeit oder einen anderen Friseur.")
+
+        return cleaned_data
 
     def clean_date(self):
-        date = self.cleaned_data['date']
+        cleaned_data = self.cleaned_data
+        date = cleaned_data.get('date')
+        
+        if date is None:
+            raise ValidationError(_('Datum ist erforderlich.'))
+        
         if date < timezone.now().date():
             raise ValidationError(_('Das Datum darf nicht in der Vergangenheit liegen.'))
+        
+        if date > timezone.now().date() + timezone.timedelta(days=365):
+             raise ValidationError(_('Das Datum darf nicht mehr als ein Jahr in der Zukunft liegen.'))
+         
         return date
     
+    def clean_time(self):
+        cleaned_data = self.cleaned_data
+        time = cleaned_data.get('time')
+        date = cleaned_data.get('date')
+        
+        if time is None:
+            raise ValidationError(_('Uhrzeit ist erforderlich.'))
+        
+        if date is None:
+            raise ValidationError(_('Datum ist erforderlich.'))
+
+        owner = Owner.objects.first()  # Get the owner instance
+        if owner:
+            work_days = owner.work_days
+            opening_time = owner.opening_time
+            closing_time = owner.closing_time
+
+            # Get the day of the week (0 = Monday, 6 = Sunday)
+            day_of_week = date.weekday()
+
+            # Check if it's Sunday (day_of_week == 6)
+            if day_of_week == 6:
+                raise ValidationError(_('Am Sonntag sind wir geschlossen.'))
+
+            # Check if the time is between opening and closing time
+            if time < opening_time or time > closing_time:
+                raise ValidationError(_('Wir sind von {} von {} bis {} Uhr geöffnet.'.format(work_days, opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M'))))
+
+        return time
     
 class ServiceForm(forms.ModelForm):
 

@@ -3,10 +3,23 @@
 {% block css %}
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <style>
+    /* Add any additional CSS styles here */
+    .scrollable-list {
+        max-height: 300px; /* Adjust the height as needed */
+        overflow-y: auto;
+    }
+
+    .product-img, .gallery-img {
+        height: 500px; 
+        width: 500px;
+        object-fit: fill;
+    }
+    </style>
 {% endblock css %}
 
 {% block body %}
-<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/center2.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap js-fullheight" style="background-image: url('{% static 'images/center.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight justify-content-center align-items-center">
@@ -98,20 +111,25 @@
                 <p>Willkommen bei unserem Buchungsservice. Füllen Sie das Formular unten aus, um einen Termin zu vereinbaren, oder rufen Sie uns direkt an.</p>
             </div>
         </div>
-        <h3 class="vr">Rufen Sie uns an: {{owner.phone}}</h3>
+        <h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
+                <form id="appointment-form" class="appointment-form" method="POST" action="{% url 'home' %}">
                     {% csrf_token %}
-                    {% if form.errors and view.submitted %}
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ error }}
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ message }}
                                 </div>
-                            {% endfor %}
+                            {% elif message.tags == 'error' %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
+                    <div id="message"></div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -147,9 +165,6 @@
                             <div class="form-group">
                                 <label for="id_service_type">Dienstleistungsart</label>
                                 <div class="select-wrap">
-                                    <div class="icon">
-                                        <span class="fas fa-chevron-down"></span>   
-                                    </div>
                                     {{ form.service_type }}
                                 </div>
                             </div>
@@ -168,13 +183,63 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Termin vereinbaren</button>
+                        <button id="appointment-button" type="submit" class="btn btn-primary">Termin vereinbaren</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </section>
+<script src="https://unpkg.com/htmx.org@1.7.1"></script>
+<script>
+    // Function to display success message
+    function displayMessage(message, className) {
+        var messageHTML = '<div class="alert ' + className + '" role="alert">' + message + '</div>';
+        document.getElementById('message').innerHTML = messageHTML;
+    }
+
+    // Function to scroll to appointments section
+    function scrollToAppointments() {
+        var appointmentsSection = document.getElementById('appointments');
+        if (appointmentsSection) {
+            appointmentsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Show the message and scroll to appointments when the page loads
+    window.onload = function() {
+        var popup = document.getElementById('popup-message');
+        if (popup) {
+            popup.style.display = 'block';
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        displayMessage('{{ message }}', 'alert-success');
+                    {% elif message.tags == 'error' %}
+                        displayMessage('{{ message }}', 'alert-danger');
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        }
+
+        // Add event listener to the button
+        document.getElementById('appointment-button').addEventListener('click', function() {
+            scrollToAppointments();
+        });
+
+        // Check if session flag is set to scroll to appointments
+        var scrollToAppointmentsFlag = '{{ request.session.scroll_to_appointments }}';
+        if (scrollToAppointmentsFlag === 'True') {
+            scrollToAppointments();
+            // Clear the session flag after scrolling
+            {% if request.session.scroll_to_appointments %}
+                delete {{ request.session.scroll_to_appointments }};
+            {% endif %}
+        }
+    };
+</script>
+
+
 
 <section id=barber class="ftco-section ftco-team">
     <div class="container-fluid px-md-5">
