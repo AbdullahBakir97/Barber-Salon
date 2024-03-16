@@ -11,8 +11,7 @@ See it in action: [Live Demo](https://hair-salon-ni23.onrender.com/)
 
 
 <p align="center">
-    <img src="https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/e6071e9c-14cc-4069-b43b-2e4255f541a8.png" alt="photo_2024-02-25_05-34-09" style="display: inline-block;">
-    <img src="https://github.com/AbdullahBakir97/Barber-Salon/assets/127149804/75c1d364-11f6-4295-ba43-d5146b660d01.png" alt="2024-03-02" style="display: inline-block;">
+
 </p>
 
 
@@ -132,4 +131,4 @@ Gain valuable insights into salon performance.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
 - **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness...
 
-## Please ⭐ the repo to support our project . 
+## Please ⭐ the repo to support our project .
