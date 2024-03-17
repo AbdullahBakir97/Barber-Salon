@@ -223,18 +223,23 @@
         }
 
         // Add event listener to the button
-        document.getElementById('appointment-button').addEventListener('click', function() {
+        document.getElementById('appointment-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            sessionStorage.setItem('buttonClicked', 'true'); // Set a flag indicating the button has been clicked
+            sessionStorage.setItem('formSubmitted', 'true'); 
             scrollToAppointments();
         });
 
-        // Check if session flag is set to scroll to appointments
-        var scrollToAppointmentsFlag = '{{ request.session.scroll_to_appointments }}';
-        if (scrollToAppointmentsFlag === 'True') {
+        // Check if the button has been clicked
+        if (sessionStorage.getItem('buttonClicked') === 'true') {
             scrollToAppointments();
-            // Clear the session flag after scrolling
-            {% if request.session.scroll_to_appointments %}
-                delete {{ request.session.scroll_to_appointments }};
-            {% endif %}
+            sessionStorage.removeItem('buttonClicked'); // Remove the flag after scrolling
+        }
+
+        // Check if the form has been submitted
+        if (sessionStorage.getItem('formSubmitted') === 'true') {
+            scrollToAppointments(); // Scroll to appointments section if form has been submitted
+            sessionStorage.removeItem('formSubmitted'); // Remove the flag after scrolling
         }
     };
 </script>
