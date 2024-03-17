@@ -373,7 +373,7 @@
                         <ul class="scrollable-list">
                             {% for service in category.service_category.all %}
                                 <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                                 </li>
                             {% endfor %}
                         </ul>
