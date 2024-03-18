@@ -40,7 +40,7 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    path('accounts/', include('accounts.urls'), namespace='accounts'),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('',home_view, name='home'),
