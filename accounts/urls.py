@@ -4,6 +4,8 @@ from django.contrib.auth.views import (
 )
 from .views import CustomUserLoginView , CustomUserLogoutView , CustomUserSignUpView ,  UserProfileUpdateView , OwnerProfileUpdateView
 
+app_name = 'accounts'
+
 urlpatterns = [
     path('login/', CustomUserLoginView.as_view(), name='account_login'),
     path('logout/', CustomUserLogoutView.as_view(), name='account_logout'),
