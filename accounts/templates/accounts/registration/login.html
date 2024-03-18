@@ -52,8 +52,8 @@
               </div>
             </form>
             <div class="form-group">
-              <a href="{% url 'registration' %}">{{ _('Register') }}</a> |
-              <a href="{% url 'password_reset' %}">{{ _('Forgot Password') }}</a>
+              <a href="{% url 'accounts:account_signup' %}">{{ _('Register') }}</a> |
+              <a href="{% url 'accounts:account_password_reset' %}">{{ _('Forgot Password') }}</a>
             </div>
           </div>
         </div>
