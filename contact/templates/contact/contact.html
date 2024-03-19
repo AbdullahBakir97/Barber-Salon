@@ -85,7 +85,7 @@
                         <p class="icon icon-map-marker"> Adresse: {{ owner.address }}</p>
                         <p class="icon icon-envelope"> E-Mail: {{ owner.email }}</p>
                         <p class="icon icon-phone"> Telefon: {{ owner.phone }}</p>
-                        <p class="icon icon-clock-o"> {{ owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
+                        <p class="icon icon-clock-o"> Öffnungszeiten: {{ owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
                         <p class="icon icon-link"> Webseite: <a href="{{ owner.website }}" target="_blank">{{ owner.website }}</a></p>
                         <img src="{{salon_data.owner.logo.url}}" alt="{{salon_data.owner.name }}">
                     </div>
