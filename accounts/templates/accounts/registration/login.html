@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
    <style>
@@ -52,8 +52,7 @@
               </div>
             </form>
             <div class="form-group">
-              <a href="{% url 'registration' %}">{{ _('Register') }}</a> |
-              <a href="{% url 'password_reset' %}">{{ _('Forgot Password') }}</a>
+              <a href="{% url 'accounts:account_reset_password' %}">{{ _('Forgot Password') }}</a>
             </div>
           </div>
         </div>

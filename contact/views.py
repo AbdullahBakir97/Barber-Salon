@@ -14,6 +14,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from accounts.models import OwnerProfile
 import logging
 from project import settings
 from django.core.mail import send_mail
@@ -53,9 +54,9 @@ class OwnerProfileRequiredMixin(LoginRequiredMixin):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         
-        # owner_profile = request.user.owner_user_profile
-        # if not owner_profile:
-        #     raise Http404(_("Sie dürfen diese Seite nicht anzeigen."))
+        owner_profile = request.user.owner_user_profile
+        if not owner_profile:
+            raise Http404(_("Sie dürfen diese Seite nicht anzeigen."))
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -95,13 +96,11 @@ class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
     success_url = reverse_lazy('contact:owner_detail')
 
     def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        owner_profile = obj.owner
-        if (
-            request.user != owner_profile.user
-            or Owner.objects.filter(user=request.user).exclude(pk=obj.pk).exists()
-        ):
+        owner = self.get_object()
+        owner_profile = owner.owner_profile
+        if owner_profile and request.user != owner_profile.user:
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
+        
         return super().dispatch(request, *args, **kwargs)
         
         
@@ -111,8 +110,9 @@ class OwnerDeleteView(OwnerProfileRequiredMixin, DeleteView):
     success_url = reverse_lazy('contact:management')
 
     def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if request.user != obj.user:
+        owner = self.get_object()
+        owner_profile = owner.owner_profile
+        if owner_profile and request.user != owner_profile.user:
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht löschen."))
         return super().dispatch(request, *args, **kwargs)
 

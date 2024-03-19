@@ -12,7 +12,7 @@ from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm, Cu
 from .models import CustomUser, UserProfile, OwnerProfile
 
 class CustomUserLoginView(LoginView):
-    template_name = 'login.html'
+    template_name = 'accounts/registration/login.html'
 
 class CustomUserLogoutView(LogoutView):
     template_name = 'accounts/logout.html'

@@ -4,9 +4,9 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
    <style>
-    /* Add any additional CSS styles here */
+    .star-rating span { font-size: 20px; color: #ffca48; }
     .scrollable-list {
-        max-height: 300px; /* Adjust the height as needed */
+        max-height: 300px;
         overflow-y: auto;
     }
 
@@ -183,6 +183,7 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <input type="hidden" id="formSubmitted" name="formSubmitted" value="false">
                         <button id="appointment-button" type="submit" class="btn btn-primary">Termin vereinbaren</button>
                     </div>
                 </form>
@@ -211,33 +212,34 @@
         var popup = document.getElementById('popup-message');
         if (popup) {
             popup.style.display = 'block';
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                        displayMessage('{{ message }}', 'alert-success');
-                    {% elif message.tags == 'error' %}
-                        displayMessage('{{ message }}', 'alert-danger');
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+            var messageContainer = document.getElementById('message');
+            if (messageContainer && messageContainer.innerHTML.trim() !== '') {
+                scrollToAppointments();
+            }
         }
 
         // Add event listener to the button
-        document.getElementById('appointment-button').addEventListener('click', function() {
-            scrollToAppointments();
+        document.getElementById('appointment-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            var form = document.getElementById('appointment-form');
+            if (form.checkValidity()) {
+                // Submit the form
+                form.submit();
+            }
         });
 
-        // Check if session flag is set to scroll to appointments
-        var scrollToAppointmentsFlag = '{{ request.session.scroll_to_appointments }}';
-        if (scrollToAppointmentsFlag === 'True') {
+        // Check if the page has been reloaded due to form submission
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('submitted')) {
+            var message = urlParams.get('message');
+            displayMessage(message, 'alert-success');
             scrollToAppointments();
-            // Clear the session flag after scrolling
-            {% if request.session.scroll_to_appointments %}
-                delete {{ request.session.scroll_to_appointments }};
-            {% endif %}
         }
     };
 </script>
+
+
+
 
 
 
@@ -269,9 +271,7 @@
         </div>
     </div>
 </section>
-<style>
-    .star-rating span { font-size: 20px; color: #ffca48; }
-</style>
+
 
 <section id=gallery class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
     <div class="container-fluid my-5">
@@ -339,14 +339,6 @@
     </div>
 </section>
 
-<style>
-    .product-img, .gallery-img {
-        height: 500px; 
-        width: 500px;
-        object-fit: fill;
-    }
-</style>
-
 
 
 <section class="ftco-section ftco-pricing">
@@ -372,20 +364,13 @@
                                 </li>
                             {% endfor %}
                         </ul>
-                        <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p>
+                        <p class="button text-center"><a href="/#appointments" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
 </section>
-
-<style>
-.scrollable-list {
-    max-height: 300px; /* Adjust the height as needed */
-    overflow-y: auto;
-}
-</style>
 
   
 {% endblock body %}

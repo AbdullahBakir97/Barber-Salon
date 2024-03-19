@@ -18,7 +18,7 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" action="{% url 'contact:owner_update' pk=owner.pk %} enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="id_name">Ihr Name</label>

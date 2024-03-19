@@ -42,10 +42,11 @@ class OwnerForm(forms.ModelForm):
         }
 
     def clean_email(self):
-        email = self.cleaned_data.get['email']
+        email = self.cleaned_data.get('email')
         if Owner.objects.filter(email=email).exists():
             raise ValidationError(_('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
         return email
+
 
     def value_from_datadict(self, data, files, name):
         if name in data:
