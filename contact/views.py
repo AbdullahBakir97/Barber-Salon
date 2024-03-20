@@ -450,7 +450,7 @@ class ReviewListView(ListView):
     model = Review
     template_name = 'contact/review/review_list.html'
     context_object_name = 'review_data'
-    paginate_by = 5 
+    paginate_by = 2
     
     def get_queryset(self):
         return Review.objects.all()
