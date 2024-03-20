@@ -472,7 +472,7 @@ class ReviewListView(ListView):
         return context
         
     def render_to_response(self, context, **response_kwargs):
-        if self.request.is_ajax():
+        if self.request.is_ajax:
             return JsonResponse({
                 'html': self.render_reviews(context['review_data']),
                 'has_next': context['review_data'].has_next(),
