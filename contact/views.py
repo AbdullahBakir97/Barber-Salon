@@ -470,6 +470,21 @@ class ReviewListView(ListView):
 
         context['review_data'] = object_list
         return context
+        
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.is_ajax():
+            return JsonResponse({
+                'html': self.render_reviews(context['review_data']),
+                'has_next': context['review_data'].has_next(),
+                'has_previous': context['review_data'].has_previous(),
+                'next_page_number': context['review_data'].next_page_number() if context['review_data'].has_next() else None,
+                'previous_page_number': context['review_data'].previous_page_number() if context['review_data'].has_previous() else None,
+            })
+        else:
+            return super().render_to_response(context, **response_kwargs)
+
+    def render_reviews(self, review_data):
+        return self.render_to_string('reviews.html', {'review_data': review_data})
     
 class ReviewManagementView(OwnerProfileRequiredMixin, ListView):
     model = Review
