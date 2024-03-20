@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'django_filters',
     'drf_yasg',
+    'crispy_forms',
     "phonenumber_field",
     'faker',
     
