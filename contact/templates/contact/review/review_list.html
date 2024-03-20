@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -10,7 +11,6 @@
 {% endblock css %}
 
 {% block body %}
-
 <section class="testimony-section bg-light">
   <div class="container my-5 py-5">
     <div class="row ftco-animate justify-content-center">
@@ -24,7 +24,7 @@
             <h2 class="mb-0">Zufriedene Kunden</h2>
           </div>
           <div class="carousel-testimony owl-carousel ftco-animate">
-            {% for review in object_list %}
+            {% for review in page_obj %}
             <div class="item">
               <div class="testimony-wrap pb-4">
                 <div class="text">
@@ -53,10 +53,21 @@
             </div>
             {% endfor %}
           </div>
+          <!-- Pagination -->
+          <div class="pagination justify-content-center mt-4">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-primary" href="?page=1">&laquo; Erste</a>
+            <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">Vorherige</a>
+            {% endif %}
+            <span class="current">Seite {{ page_obj.number }} von {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+            <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">Nächste</a>
+            <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">Letzte &raquo;</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-
 {% endblock body %}
