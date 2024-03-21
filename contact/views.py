@@ -446,6 +446,32 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class ReviewListView(ListView):
+    model = Review
+    template_name = 'contact/review/review_list.html'
+    context_object_name = 'review_data'
+    paginate_by = 2
+    
+    def get_queryset(self):
+        return Review.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = self.get_queryset()
+        paginator = Paginator(reviews, self.paginate_by)
+
+        page = self.request.GET.get('page')
+        try:
+            object_list = paginator.page(page)
+        except PageNotAnInteger:
+            object_list = paginator.page(1)
+        except EmptyPage:
+            object_list = paginator.page(paginator.num_pages)
+
+        context['review_data'] = object_list
+        return context
+    
+    
 def review_list(request):
     review_data = Review.objects.all()
     paginator = Paginator(review_data, 5)

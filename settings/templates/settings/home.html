@@ -221,19 +221,23 @@
         // Add event listener to the button
         document.getElementById('appointment-button').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the default form submission behavior
-            var form = document.getElementById('appointment-form');
-            if (form.checkValidity()) {
-                // Submit the form
-                form.submit();
-            }
+
+
+            sessionStorage.setItem('buttonClicked', 'true'); // Set a flag indicating the button has been clicked
+            sessionStorage.setItem('formSubmitted', 'true'); 
+            scrollToAppointments();
         });
 
-        // Check if the page has been reloaded due to form submission
-        var urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('submitted')) {
-            var message = urlParams.get('message');
-            displayMessage(message, 'alert-success');
+        // Check if the button has been clicked
+        if (sessionStorage.getItem('buttonClicked') === 'true') {
             scrollToAppointments();
+            sessionStorage.removeItem('buttonClicked'); // Remove the flag after scrolling
+        }
+
+        // Check if the form has been submitted
+        if (sessionStorage.getItem('formSubmitted') === 'true') {
+            scrollToAppointments(); // Scroll to appointments section if form has been submitted
+            sessionStorage.removeItem('formSubmitted'); // Remove the flag after scrolling
         }
     };
 </script>
@@ -360,7 +364,7 @@
                         <ul class="scrollable-list">
                             {% for service in category.service_category.all %}
                                 <li>
-                                    <p><span class="price">{{ service.name }}</span> <span class="per">/${{ service.price }}</span></p>
+                                    <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                                 </li>
                             {% endfor %}
                         </ul>
