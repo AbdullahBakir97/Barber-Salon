@@ -102,6 +102,7 @@
     </div>
 </section>
 
+
 <section id="appointments" class="ftco-section ftco-booking bg-light">
     <div class="container ftco-relative">
         <div class="row justify-content-center pb-3">
@@ -192,54 +193,39 @@
     </div>
 </section>
 <script src="https://unpkg.com/htmx.org@1.7.1"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Function to display success message
-    function displayMessage(message, className) {
-        var messageHTML = '<div class="alert ' + className + '" role="alert">' + message + '</div>';
-        document.getElementById('message').innerHTML = messageHTML;
-    }
-
-    // Function to scroll to appointments section
-    function scrollToAppointments() {
-        var appointmentsSection = document.getElementById('appointments');
-        if (appointmentsSection) {
-            appointmentsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-
-    // Show the message and scroll to appointments when the page loads
-    window.onload = function() {
-        var popup = document.getElementById('popup-message');
-        if (popup) {
-            popup.style.display = 'block';
-            var messageContainer = document.getElementById('message');
-            if (messageContainer && messageContainer.innerHTML.trim() !== '') {
-                scrollToAppointments();
-            }
-        }
-
-        // Add event listener to the button
-        document.getElementById('appointment-button').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-
-
-            sessionStorage.setItem('buttonClicked', 'true'); // Set a flag indicating the button has been clicked
-            sessionStorage.setItem('formSubmitted', 'true'); 
-            scrollToAppointments();
+    $(document).ready(function() {
+        $('#appointment-form').on('submit', function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '/',
+                type: 'POST',
+                data: formData,
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function(response) {
+                    if (response.result === 'success') {
+                        // Display success message
+                        alert(response.message);
+                        // Scroll to appointments section
+                        window.location.href ='/'#appointments;
+                    } else {
+                        // Display error messages
+                        alert(response.message);
+                        // Handle form errors
+                        if (response.errors) {
+                            // Display form errors
+                            console.log(response.errors);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.');
+                }
+            });
         });
-
-        // Check if the button has been clicked
-        if (sessionStorage.getItem('buttonClicked') === 'true') {
-            scrollToAppointments();
-            sessionStorage.removeItem('buttonClicked'); // Remove the flag after scrolling
-        }
-
-        // Check if the form has been submitted
-        if (sessionStorage.getItem('formSubmitted') === 'true') {
-            scrollToAppointments(); // Scroll to appointments section if form has been submitted
-            sessionStorage.removeItem('formSubmitted'); // Remove the flag after scrolling
-        }
-    };
+    });
 </script>
 
 

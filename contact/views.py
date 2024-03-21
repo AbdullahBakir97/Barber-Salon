@@ -579,27 +579,44 @@ class VisitorAppointmentCreateView(CreateView):
             return JsonResponse({'success': False, 'message': error_message}, status=400)
         
 
+# def visitor_appointment_create(request):
+#     if request.method == 'POST':
+#         form = AppointmentForm(request.POST)
+#         if form.is_valid():
+#             try:
+#                 form.save()
+#                 messages.success(request, 'Ihre Termin wurde erfolgreich gesendet!')
+#                 return HttpResponseRedirect(reverse('settings:home') + '#appointments')
+#             except IntegrityError as e:
+#                 error_message = str(e)
+#                 messages.error(request, 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.')
+#         else:
+#             # Collect all form errors into a list
+#             form_errors = []
+#             for field, errors in form.errors.items():
+#                 form_errors.extend(errors)
+
+#             # Display all collected error messages
+#             for error_message in form_errors:
+#                 messages.error(request, error_message)
+
+#     else:
+#         form = AppointmentForm()
+
+#     return render(request, 'settings/home.html', {'form': form})
+
 def visitor_appointment_create(request):
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
             try:
                 form.save()
-                messages.success(request, 'Ihre Termin wurde erfolgreich gesendet!')
-                return HttpResponseRedirect(reverse('settings:home') + '#appointments')
+                return JsonResponse({'result': 'success', 'message': 'Ihre Termin wurde erfolgreich gesendet!'})
             except IntegrityError as e:
-                error_message = str(e)
-                messages.error(request, 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.')
+                return JsonResponse({'result': 'error', 'message': 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.'})
         else:
-            # Collect all form errors into a list
-            form_errors = []
-            for field, errors in form.errors.items():
-                form_errors.extend(errors)
-
-            # Display all collected error messages
-            for error_message in form_errors:
-                messages.error(request, error_message)
-
+            form_errors = form.errors.as_json()
+            return JsonResponse({'result': 'error', 'errors': form_errors})
     else:
         form = AppointmentForm()
 
