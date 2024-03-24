@@ -1,13 +1,18 @@
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Haircare - Free Bootstrap 4 Template by Colorlib</title>
+    <title>KHARSA STYLE BARBERSHOP</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Barlow+Condensed:500,600,700&display=swap" rel="stylesheet">
+
+    <!--FAVICON start-->
+    <link rel="shortcut icon" href="media/barbershop.png" type="image/x-icon">
+    <!--FAVICON start-->
 
     <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
@@ -109,7 +114,7 @@
           </div>
           <div class="form-group">
             <label for="id_rating">Bewertung</label>
-            <div class="star-rating">
+            <div class="star-rating" onclick="updateRating()">
               <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
               <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
               <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
@@ -117,7 +122,7 @@
               <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
             </div>
             <!-- Hidden input field to store the selected star rating -->
-            <input type="hidden" name="rating" id="ratingInput" value="">
+            <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
           </div>
           <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
@@ -126,11 +131,11 @@
   </div>
 </div>
 
-<section class="testimony-section bg-light">
+<section id="reviews-section" class="testimony-section bg-light">
   <div class="container">
     <div class="row ftco-animate justify-content-center">
       <div class="col-md-6 col-lg-5 d-flex">
-        <div class="testimony-img" style="background-image: url({% static 'images/reviews.jpeg' %});"></div>
+        <div class="testimony-img" style="background-image: url({% static 'images/review.jpg' %});"></div>
       </div>
       <div class="col-md-6 col-lg-7 py-5 pl-md-5">
         <div class="row">
@@ -139,7 +144,6 @@
           </div>
         </div>
         <div class="py-md-5" id="all-reviews">
-          
           <div class="heading-section ftco-animate">
             <span class="subheading">Testimonium</span>
             <h2 class="mb-0">Zufriedene Kunden</h2>
@@ -154,18 +158,17 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script>
+  // Function to update the hidden input field with the selected star rating
+  function updateRating() {
+    const ratingInput = document.getElementById('ratingInput');
+    const stars = document.querySelectorAll('.star-rating input:checked');
+      
+    if (stars.length > 0) {
+        ratingInput.value = stars[0].value;
+    }
+  }
 
   $(document).ready(function() {
-    // Function to update the hidden input field with the selected star rating
-    function updateRating() {
-      const ratingInput = document.getElementById('ratingInput');
-      const stars = document.querySelectorAll('.star-rating input:checked');
-      
-      if (stars.length > 0) {
-        ratingInput.value = stars[0].value;
-      }
-    }
-
     // Submit review form via AJAX
     $(document).on('submit', '#reviewForm', function(event){
       event.preventDefault();
@@ -182,6 +185,7 @@
         cache: false,
         success: function(response){
           console.log('Review form submitted successfully.');
+          console.log('Response:', response);
           if (response.html) {
             $('#all-reviews').html(response.html);
           } else {
@@ -262,7 +266,7 @@
             	<div class="block-23 mb-3">
 	              <ul>
 	                <li><span class="icon icon-map-marker"></span><span class="text">{{salon_data.owner.address}}</span></li>
-                  <li><span class="icon icon-clock-o"></span><span class="text">{{salon_data.owner.work_days}}</span></li>
+                <li><span class="icon icon-clock-o"></span><span class="text">{{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</span></li>
 	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">{{salon_data.owner.phone}}</span></a></li>
 	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">{{salon_data.owner.email}}</span></a></li>
                   <li><a href="{{ salon_data.owner.website }}"><span class="icon icon-link"></span><span class="text">{{ salon_data.owner.website }}</span></a></li>

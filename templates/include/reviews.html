@@ -1,50 +1,61 @@
 <div class="carousel-testimony owl-carousel ftco-animate">
     {% for review in review_data %}
     <div class="item">
-        <div class="testimony-wrap pb-4">
-            <div class="text">
-                <p class="mb-4">{{ review.comment }}</p>
-            </div>
-            <div class="d-flex">
-                {% if review.image %}
-                <div class="user-img" style="background-image: url({{ review.image.url }})">
-                </div>
-                {% endif %}
-                <div class="pos ml-3">
-                    <p class="name">{{ review.customer_name }}</p>
-                    {% if review.barber %}
-                    <span class="position">Friseur: {{ review.barber.name }}</span>
-                    {% endif %}
-                    <div class="star-rating">
-                        {% for _ in "12345" %}
-                            {% if forloop.counter <= review.rating %}
-                                <span class="fa fa-star"></span>
-                            {% else %}
-                                <span class="fa fa-star-o"></span>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+      <div class="testimony-wrap pb-4">
+        <div class="text">
+          <p class="mb-4">{{ review.comment }}</p>
         </div>
+        <div class="d-flex">
+          {% if review.image %}
+          <div class="user-img" style="background-image: url({{ review.image.url }})">
+          </div>
+          {% endif %}
+          <div class="pos ml-3">
+            <p class="name">{{ review.customer_name }}</p>
+            <span class="position">{{ review.barber.name }}</span>
+            <div class="star-rating">
+              {% for _ in "12345" %}
+                  {% if forloop.counter <= review.rating %}
+                      <span class="fa fa-star"></span>
+                  {% else %}
+                      <span class="fa fa-star-o"></span>
+                  {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     {% endfor %}
+  </div>
+  <!-- Pagination -->
+  <div class="pagination justify-content-center mt-4">
+    {% if review_data.has_previous %}
+        <a class="btn btn-primary" href="?page=1#reviews-section">&laquo; Erste</a>
+        <a class="btn btn-primary" href="?page={{ review_data.previous_page_number }}#reviews-section">Vorherige</a>
+    {% else %}
+        <span class="btn btn-secondary disabled">&laquo; Erste</span>
+        <span class="btn btn-secondary disabled">Vorherige</span>
+    {% endif %}
+    
+    <span class="current mx-3">Seite {{ review_data.number }} von {{ review_data.paginator.num_pages }}</span>
+    
+    {% if review_data.has_next %}
+        <a class="btn btn-primary" href="?page={{ review_data.next_page_number }}#reviews-section">Nächste</a>
+        <a class="btn btn-primary" href="?page={{ review_data.paginator.num_pages }}#reviews-section">Letzte &raquo;</a>
+    {% else %}
+        <span class="btn btn-secondary disabled">Nächste</span>
+        <span class="btn btn-secondary disabled">Letzte &raquo;</span>
+    {% endif %}
 </div>
-
-<div class="pagination">
-    <span class="step-links">
-        {% if review_data.has_previous %}
-            <a href="?page=1">&laquo; Erste</a>
-            <a href="?page={{ review_data.previous_page_number }}">Vorherige</a>
-        {% endif %}
-        
-        <span class="current">
-            Seite {{ review_data.number }} von {{ review_data.paginator.num_pages }}.
-        </span>
-        
-        {% if review_data.has_next %}
-            <a href="?page={{ review_data.next_page_number }}">Nächste</a>
-            <a href="?page={{ review_data.paginator.num_pages }}">Letzte &raquo;</a>
-        {% endif %}
-    </span>
-</div>
+<script>
+    $(document).ready(function() {
+        // Check if the URL contains the '?page=' parameter
+        if (window.location.href.includes('?page=')) {
+            // Scroll to the reviews section
+            $('html, body').animate({
+                scrollTop: $('#reviews-section').offset().top
+            }, 'slow');
+        }
+    });
+</script>
