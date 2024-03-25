@@ -15,7 +15,7 @@ class CustomUserLoginView(LoginView):
     template_name = 'accounts/registration/login.html'
 
 class CustomUserLogoutView(LogoutView):
-    template_name = 'accounts/logout.html'
+    template_name = 'accounts/registration/logout.html'
     next_page = reverse_lazy('home')
 
 class CustomUserSignUpView(SuccessMessageMixin, CreateView):
