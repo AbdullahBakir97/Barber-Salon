@@ -112,116 +112,41 @@
                 <p>Willkommen bei unserem Buchungsservice. Füllen Sie das Formular unten aus, um einen Termin zu vereinbaren, oder rufen Sie uns direkt an.</p>
             </div>
         </div>
-        <h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
-        <div class="row justify-content-center">
-            <div class="col-md-8 ftco-animate">
-                <form id="appointment-form" class="appointment-form" method="POST" action="{% url 'home' %}">
-                    {% csrf_token %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            {% if message.tags == 'success' %}
-                                <div class="alert alert-success" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% elif message.tags == 'error' %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                    <div id="message"></div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_name">Ihr Name</label>
-                                {{ form.name }}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_email">Ihre E-Mail</label>
-                                {{ form.email }}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_date">Bevorzugtes Datum</label>
-                                {{ form.date }}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_time">Bevorzugte Zeit</label>
-                                {{ form.time }}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_barber">Friseur auswählen</label>
-                                {{ form.barber }}
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="id_service_type">Dienstleistungsart</label>
-                                <div class="select-wrap">
-                                    {{ form.service_type }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="id_phone">Ihr Telefon</label>
-                                {{ form.phone }}
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="id_message">Zusätzliche Nachricht</label>
-                                {{ form.message }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" id="formSubmitted" name="formSubmitted" value="false">
-                        <button id="appointment-button" type="submit" class="btn btn-primary">Termin vereinbaren</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {% include "include/appointments.html" %}
     </div>
 </section>
 <script src="https://unpkg.com/htmx.org@1.7.1"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
-        $('#appointment-form').on('submit', function(event) {
+        // Handle form submission using AJAX when form is submitted
+        $(document).on('submit', '#appointment-form', function(event) {
             event.preventDefault();
             var formData = $(this).serialize();
             $.ajax({
-                url: '/',
-                type: 'POST',
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
                 data: formData,
+                dataType: 'json',
                 headers: {'X-CSRFToken': '{{ csrf_token }}'},
                 success: function(response) {
                     if (response.result === 'success') {
                         // Display success message
-                        alert(response.message);
-                        // Scroll to appointments section
-                        window.location.href ='/'#appointments;
+                        $('#message').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
                     } else {
-                        // Display error messages
-                        alert(response.message);
-                        // Handle form errors
-                        if (response.errors) {
-                            // Display form errors
-                            console.log(response.errors);
-                        }
+                        // Display error message
+                        $('#message').html('<div class="alert alert-danger" role="alert">' + response.message + '</div>');
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.');
+                    // Display error message
+                    $('#message').html('<div class="alert alert-danger" role="alert">' + xhr.responseText + '</div>');
+                },
+                complete: function() {
+                    // Scroll to appointments section
+                    $('html, body').animate({
+                        scrollTop: $('#appointments').offset().top
+                    }, 'slow');
                 }
             });
         });
@@ -331,7 +256,7 @@
 
 
 
-<section class="ftco-section ftco-pricing">
+<section id=price class="ftco-section ftco-pricing">
     <div class="container">
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">

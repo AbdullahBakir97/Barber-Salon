@@ -1,0 +1,78 @@
+<h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-8 ftco-animate">
+                <form id="appointment-form" class="appointment-form" method="POST" action="{% url 'home' %}">
+                    {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% elif message.tags == 'error' %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div id="message"></div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_name">Ihr Name</label>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_email">Ihre E-Mail</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_date">Bevorzugtes Datum</label>
+                                {{ form.date }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_time">Bevorzugte Zeit</label>
+                                {{ form.time }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_barber">Friseur auswählen</label>
+                                {{ form.barber }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="id_service_type">Dienstleistungsart</label>
+                                <div class="select-wrap">
+                                    {{ form.service_type }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="id_phone">Ihr Telefon</label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_message">Zusätzliche Nachricht</label>
+                                {{ form.message }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="formSubmitted" name="formSubmitted" value="false">
+                        <button id="appointment-button" type="submit" class="btn btn-primary rounded-pill">Termin vereinbaren</button>
+                    </div>
+                </form>
+            </div>
+        </div>

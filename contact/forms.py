@@ -315,47 +315,34 @@ class AppointmentForm(forms.ModelForm):
 
     def clean_date(self):
         cleaned_data = self.cleaned_data
-        date = cleaned_data.get('date')
-        
+        date = cleaned_data.get('date')       
         if date is None:
-            raise ValidationError(_('Datum ist erforderlich.'))
-        
+            return date       
         if date < timezone.now().date():
-            raise ValidationError(_('Das Datum darf nicht in der Vergangenheit liegen.'))
-        
+            raise ValidationError(_('Das Datum darf nicht in der Vergangenheit liegen.'))        
         if date > timezone.now().date() + timezone.timedelta(days=365):
-             raise ValidationError(_('Das Datum darf nicht mehr als ein Jahr in der Zukunft liegen.'))
-         
+             raise ValidationError(_('Das Datum darf nicht mehr als ein Jahr in der Zukunft liegen.'))         
         return date
     
     def clean_time(self):
         cleaned_data = self.cleaned_data
         time = cleaned_data.get('time')
-        date = cleaned_data.get('date')
-        
-        if time is None:
-            raise ValidationError(_('Uhrzeit ist erforderlich.'))
-        
-        if date is None:
-            raise ValidationError(_('Datum ist erforderlich.'))
-
+        date = cleaned_data.get('date')       
+        if time is None or date is None:
+            return time
         owner = Owner.objects.first()  # Get the owner instance
         if owner:
             work_days = owner.work_days
             opening_time = owner.opening_time
             closing_time = owner.closing_time
-
             # Get the day of the week (0 = Monday, 6 = Sunday)
             day_of_week = date.weekday()
-
             # Check if it's Sunday (day_of_week == 6)
             if day_of_week == 6:
                 raise ValidationError(_('Am Sonntag sind wir geschlossen.'))
-
             # Check if the time is between opening and closing time
             if time < opening_time or time > closing_time:
                 raise ValidationError(_('Wir sind von {} von {} bis {} Uhr geöffnet.'.format(work_days, opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M'))))
-
         return time
     
 class ServiceForm(forms.ModelForm):

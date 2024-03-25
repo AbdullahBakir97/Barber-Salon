@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.http import Http404 , HttpResponseRedirect, JsonResponse, HttpResponseServerError
+from django.http import Http404 , HttpResponseRedirect, JsonResponse, HttpResponseServerError, HttpResponse
 from django.db import IntegrityError
 from django.views.generic.edit import FormView
 from django.utils.translation import gettext as _
@@ -28,17 +28,23 @@ class HomeView(FormView):
         try:
             form.save()
             messages.success(self.request, 'Ihre Termin wurde erfolgreich gesendet!')
+            return JsonResponse({'result': 'success', 'message': 'Ihre Termin wurde erfolgreich gesendet!'})
         except IntegrityError as e:
             messages.error(self.request, 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.')
-        return HttpResponseRedirect(reverse('home') + '#appointments')
+            return JsonResponse({'result': 'error', 'message': 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.'}, status=400)
 
     def form_invalid(self, form):
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, error)
-        # Set a flag to scroll to appointments section
-        self.request.session['scroll_to_appointments'] = True
-        return super().form_invalid(form)
+        errors = "\n".join([f" {errors[0]}" for field, errors in form.errors.items()])  
+        # Construct error messages as plain text
+        error_message = f"Bitte überprüfen Sie Ihre Eingaben.\n{errors}"
+        return HttpResponse(error_message, status=400, content_type="text/plain")
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 home_view = HomeView.as_view()
 
