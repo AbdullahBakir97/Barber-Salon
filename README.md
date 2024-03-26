@@ -1,4 +1,4 @@
-## Salon Management System ✨✂️
+### Salon Management System ✨✂️
   
   <img src="https://techstack-generator.vercel.app/python-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/django-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="40" height="40" /> <img src="https://techstack-generator.vercel.app/mysql-icon.svg" alt="icon" width="40" height="40" /> </a> <a  target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="40" height="40"/> </a> <a href="https://developer.apple.com/swift/" target="_blank" rel="noreferrer">
   <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" /> 
