@@ -29,25 +29,25 @@
     {% endfor %}
   </div>
   <!-- Pagination -->
-  <div class="pagination justify-content-center mt-4">
-    {% if review_data.has_previous %}
-        <a class="btn btn-primary rounded-pill mr-1" href="?page=1#reviews-section">&laquo; Erste</a>
-        <a class="btn btn-primary rounded-pill mr-1" href="?page={{ review_data.previous_page_number }}#reviews-section">Vorherige</a>
-    {% else %}
-        <span class="btn btn-secondary disabled rounded-pill mr-1">&laquo; Erste</span>
-        <span class="btn btn-secondary disabled rounded-pill mr-1">Vorherige</span>
-    {% endif %}
-    
-    <span class="current mx-1 mt-1">Seite {{ review_data.number }} von {{ review_data.paginator.num_pages }}</span>
-    
-    {% if review_data.has_next %}
-        <a class="btn btn-primary rounded-pill mx-1" href="?page={{ review_data.next_page_number }}#reviews-section">Nächste</a>
-        <a class="btn btn-primary rounded-pill mr-1" href="?page={{ review_data.paginator.num_pages }}#reviews-section">Letzte &raquo;</a>
-    {% else %}
-        <span class="btn btn-secondary disabled rounded-pill mx-1">Nächste</span>
-        <span class="btn btn-secondary disabled rounded-pill mr-1">Letzte &raquo;</span>
-    {% endif %}
-  </div>
+<div class="pagination justify-content-center mt-4">
+  {% if review_data.has_previous %}
+      <a class="btn btn-primary rounded-pill mr-1 btn-sm" href="?page=1#reviews-section">&laquo; Erste</a>
+      <a class="btn btn-primary rounded-pill mr-1 btn-sm" href="?page={{ review_data.previous_page_number }}#reviews-section">Vorherige</a>
+  {% else %}
+      <span class="btn btn-secondary disabled rounded-pill mr-1 btn-sm">&laquo; Erste</span>
+      <span class="btn btn-secondary disabled rounded-pill mr-1 btn-sm">Vorherige</span>
+  {% endif %}
+  
+  <span class="current mx-1 mt-1">Seite {{ review_data.number }} von {{ review_data.paginator.num_pages }}</span>
+  
+  {% if review_data.has_next %}
+      <a class="btn btn-primary rounded-pill mx-1 btn-sm" href="?page={{ review_data.next_page_number }}#reviews-section">Nächste</a>
+      <a class="btn btn-primary rounded-pill mr-1 btn-sm" href="?page={{ review_data.paginator.num_pages }}#reviews-section">Letzte &raquo;</a>
+  {% else %}
+      <span class="btn btn-secondary disabled rounded-pill mx-1 btn-sm">Nächste</span>
+      <span class="btn btn-secondary disabled rounded-pill mr-1 btn-sm">Letzte &raquo;</span>
+  {% endif %}
+</div>
 <script>
     $(document).ready(function() {
         // Check if the URL contains the '?page=' parameter
