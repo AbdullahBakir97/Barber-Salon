@@ -153,10 +153,6 @@ class GalleryItemForm(forms.ModelForm):
         category = cleaned_data.get('category')
         service = cleaned_data.get('service')
 
-        if category == 'A' and not service:
-            raise ValidationError(_('Bitte wählen Sie eine Dienstleistung für die Kategorie A aus.'))
-        return cleaned_data
-
 
 
 class ProductForm(forms.ModelForm):
