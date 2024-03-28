@@ -2,7 +2,7 @@ from .models import Review
 from django.core.paginator import Paginator
 
 def get_review_data(request):
-    all_reviews = Review.objects.all()
+    all_reviews = Review.objects.order_by('-id')
 
     # Pagination
     paginator = Paginator(all_reviews, 5)
