@@ -29,9 +29,21 @@
     {% endfor %}
   </div>
 
+  <style>
+    @media (max-width: 767px) {
+      .mobile-pagination {
+        text-align: center;
+      }
+      .mobile-pagination .btn {
+        font-size: 13px;
+        padding: 6px 0px;
+        margin: 0px;
+      }
+    }
+  </style>
   
   <!-- Pagination -->
-  <div class="pagination justify-content-center mt-4">
+  <div class="pagination justify-content-center mt-4 mobile-pagination">
     {% if review_data.has_previous %}
         <a class="btn btn-primary rounded-pill mr-1" href="?page=1#reviews-section">&laquo; Erste</a>
         <a class="btn btn-primary rounded-pill mr-1" href="?page={{ review_data.previous_page_number }}#reviews-section">Vorherige</a>
