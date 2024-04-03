@@ -14,7 +14,6 @@
     <link rel="shortcut icon" href="media/barbershop.png" type="image/x-icon">
     <!--FAVICON start-->
 
-    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
 	
     
@@ -88,42 +87,67 @@
         <!-- Review Form -->
         <form method="POST" id="reviewForm" class="review-form" action="{% url 'contact:visitor_review_create' %}" enctype="multipart/form-data">
           {% csrf_token %}
-          <div class="form-group">
-            <label for="id_image">Foto</label>
-            <input type="file" name="image" class="form-control-file" id="id_image">
-          </div>
-          <div class="form-group">
-            <label for="id_barber">Friseur</label>
-            <select name="barber" class="form-control" id="id_barber">
-                <option value="" selected>Wählen Sie einen Friseur</option>
-                {% for barber in barbers %}
-                    <option value="{{ barber.id }}">{{ barber.name }}</option>
+          <div id="modal-messages">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
                 {% endfor %}
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="id_customer_name">Kundenname</label>
-            <input type="text" name="customer_name" class="form-control" id="id_customer_name">
-          </div>
-          <div class="form-group">
-            <label for="id_email">Email</label>
-            <input type="email" name="email" class="form-control" id="id_email" required>
-          </div>
-          <div class="form-group">
-            <label for="id_comment">Kommentar</label>
-            <textarea name="comment" class="form-control" id="id_comment"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="id_rating">Bewertung</label>
-            <div class="star-rating" onclick="updateRating()">
-              <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
-              <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
-              <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
-              <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">&#9733;</label>
-              <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="id_image">Foto</label>
+                <input type="file" name="image" class="form-control-file" id="id_image">
+              </div>
             </div>
-            <!-- Hidden input field to store the selected star rating -->
-            <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="id_barber">Friseur</label>
+                <select name="barber" class="form-control" id="id_barber">
+                  <option value="" selected>Friseur auswählen</option>
+                  {% for barber in barber_list  %}
+                    <option value="{{ barber.id }}">{{ barber.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="id_customer_name">Kundenname</label>
+                <input type="text" name="customer_name" class="form-control" id="id_customer_name">
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" name="email" class="form-control" id="id_email" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="id_comment">Kommentar</label>
+                <textarea name="comment" class="form-control" id="id_comment"></textarea>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="id_rating">Bewertung</label>
+                <div class="star-rating" onclick="updateRating()">
+                  <input type="radio" name="rating" value="5" id="star-5"><label for="star-5">&#9733;</label>
+                  <input type="radio" name="rating" value="4" id="star-4"><label for="star-4">&#9733;</label>
+                  <input type="radio" name="rating" value="3" id="star-3"><label for="star-3">&#9733;</label>
+                  <input type="radio" name="rating" value="2" id="star-2"><label for="star-2">&#9733;</label>
+                  <input type="radio" name="rating" value="1" id="star-1"><label for="star-1">&#9733;</label>
+                </div>
+                <!-- Hidden input field to store the selected star rating -->
+                <input type="hidden" name="rating" id="ratingInput" value="{{ form.initial.rating }}">
+              </div>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
@@ -144,6 +168,17 @@
               <button type="button" class="btn btn-primary rounded-pill mt-3" data-toggle="modal" data-target="#reviewModal">Bewertung Einfügen</button>
           </div>
         </div>
+        <div id="review-messages">
+          {% if messages %}
+              {% for message in messages %}
+                  {% if message.tags == 'success' %}
+                      <div class="alert alert-success" role="alert">
+                          {{ message }}
+                      </div>
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+        </div>
         <div class="py-md-5" id="all-reviews">
           <div class="heading-section ftco-animate">
             <span class="subheading">Testimonium</span>
@@ -159,17 +194,17 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script>
-  // Function to update the hidden input field with the selected star rating
-  function updateRating() {
-    const ratingInput = document.getElementById('ratingInput');
-    const stars = document.querySelectorAll('.star-rating input:checked');
-      
-    if (stars.length > 0) {
-        ratingInput.value = stars[0].value;
-    }
-  }
-
   $(document).ready(function() {
+    // Function to update the hidden input field with the selected star rating
+    function updateRating() {
+      const ratingInput = document.getElementById('ratingInput');
+      const stars = document.querySelectorAll('.star-rating input:checked');
+      
+      if (stars.length > 0) {
+        ratingInput.value = stars[0].value;
+      }
+    }
+
     // Submit review form via AJAX
     $(document).on('submit', '#reviewForm', function(event){
       event.preventDefault();
@@ -187,21 +222,19 @@
         success: function(response){
           console.log('Review form submitted successfully.');
           console.log('Response:', response);
-          if (response.html) {
-            $('#all-reviews').html(response.html);
+          if (response.success) {
+            $('#reviewModal').modal('hide');
+            $('#reviewForm')[0].reset();
+            // Show success message in the reviews section
+            $('#all-reviews').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
           } else {
-            console.error('Unexpected response format:', response);
+            // Show error message in the modal
+            $('#reviewModal .modal-body').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
           }
-          $('#reviewModal').modal('hide');
-          $('#reviewForm')[0].reset();
         },
         error: function(xhr, status, error) {
           console.error('Error submitting review form:', xhr.responseText);
-          if (xhr.status === 400) {
-            alert('Please fill in all required fields.');
-          } else {
-            alert('An error occurred. Please try again later.');
-          }
+          alert('An error occurred. Please try again later.');
         }
       });
     });    

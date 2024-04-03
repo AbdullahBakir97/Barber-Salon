@@ -210,10 +210,34 @@ class ReviewCreateForm(forms.ModelForm):
             
         }
         
+        error_messages = {
+        'customer_name': {
+            'required': _('Bitte geben Sie Ihren Namen ein.'),
+        },
+        'barber': {
+            'required': _('Bitte wählen Sie einen Friseur aus.'),
+        },
+        'email': {
+            'required': _('Bitte geben Sie Ihre E-Mail-Adresse ein.'),
+            'invalid': _('Bitte geben Sie eine gültige E-Mail-Adresse ein.'),
+        },
+    }
+        
     def __init__(self, *args, **kwargs):
         super(ReviewCreateForm, self).__init__(*args, **kwargs)
         self.fields['barber'].required = False
         
+    def clean(self):
+        cleaned_data = super().clean()
+        customer_name = cleaned_data.get('customer_name')
+        email = cleaned_data.get('email')
+        barber = cleaned_data.get('barber')
+
+        # Check if there is already a review with the same name, email, and barber
+        if Review.objects.filter(customer_name=customer_name, email=email, barber=barber).exists():
+            raise ValidationError(_('Es existiert bereits eine Bewertung mit demselben Namen, derselben E-Mail und demselben Friseur.'))
+
+        return cleaned_data
     
     def clean_image(self):
         image = self.cleaned_data.get('image', False)

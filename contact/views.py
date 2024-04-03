@@ -639,39 +639,21 @@ class VisitorReviewCreateView(CreateView):
             return self.form_invalid(form)
 
 def create_visitor_review(request):
-    logger.debug('Processing create_visitor_review view function...')
-
     if request.method == 'POST':
         form = ReviewCreateForm(request.POST, request.FILES)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            existing_review = Review.objects.filter(email=email, barber=form.instance.barber, customer_name=form.instance.customer_name).first()
-            if existing_review:
-                error_message = _('Duplicate review for this barber with the same name.')
-                messages.error(request, error_message)
-                logger.error(error_message)
-                return JsonResponse({'error': error_message}, status=400)
-
-            try:
-                new_review = form.save()
-                messages.success(request, _('Bewertung erfolgreich hinzugefügt.'))
-                review_data = Review.objects.all()
-                review_html = render_to_string('include/reviews.html', {'review_data': review_data}, request=request)
-                logger.debug('Exiting create_visitor_review view function...')
-                return JsonResponse({'html': review_html}, status=200)
-            except IntegrityError as e:
-                error_message = _('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
-                messages.error(request, error_message)
-                logger.error(f'IntegrityError: {e}')
-                return JsonResponse({'error': error_message}, status=500)
+            # Process the review form data and save to the database
+            review = form.save()
+            reviews_html = render_to_string('include/reviews.html', {'review_data': Review.objects.all()})
+            return JsonResponse({'success': True, 'message': 'Review submitted successfully.', 'reviews_html': reviews_html})
+            # Here, you can customize the success response as needed
         else:
-            error_message = _('Form validation failed.')
-            logger.error(error_message)
-            return JsonResponse({'error': error_message}, status=400)
+            # Return form errors in case of validation failure
+            errors = ''.join([f'<p>{error}</p>' for field, error in form.errors.items()])
+            return JsonResponse({'success': False, 'errors': errors})
     else:
-        error_message = _('Invalid request method.')
-        logger.error(error_message)
-        return JsonResponse({'error': error_message}, status=405)
+        # Handle GET request or other HTTP methods
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @require_POST
 def submit_review(request):
