@@ -40,6 +40,12 @@
         margin: 0px;
       }
     }
+    .star-rating span { font-size: 20px; color: #ffca48; }
+    .star-rating input { display: none; }
+    .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #ffca08; }
   </style>
   
   <!-- Pagination -->

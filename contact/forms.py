@@ -221,6 +221,12 @@ class ReviewCreateForm(forms.ModelForm):
             'required': _('Bitte geben Sie Ihre E-Mail-Adresse ein.'),
             'invalid': _('Bitte geben Sie eine gültige E-Mail-Adresse ein.'),
         },
+        'comment':{
+            'required': _('Bitte geben Sie einen Kommentar ein.'),
+        },
+        'rating': {
+            'required': _('Bitte geben Sie eine Bewertung ein.'),
+        },
     }
         
     def __init__(self, *args, **kwargs):

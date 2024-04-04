@@ -87,17 +87,16 @@
         <!-- Review Form -->
         <form method="POST" id="reviewForm" class="review-form" action="{% url 'contact:visitor_review_create' %}" enctype="multipart/form-data">
           {% csrf_token %}
-          <div id="modal-messages">
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        </div>
+          {% if messages %}
+              {% for message in messages %}
+                  {% if message.tags == 'error' %}
+                      <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                      </div>
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+        <div id="modal-messages"></div>
         <div class="row">
             <div class="col-md-12">
               <div class="form-group">
@@ -149,7 +148,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
+          <button type="submit" class="btn btn-primary rounded-pill mt-3" id="submitReviewBtn">Bewertung Einfügen</button>
         </form>
       </div>
     </div>
@@ -168,8 +167,7 @@
               <button type="button" class="btn btn-primary rounded-pill mt-3" data-toggle="modal" data-target="#reviewModal">Bewertung Einfügen</button>
           </div>
         </div>
-        <div id="review-messages">
-          {% if messages %}
+        {% if messages %}
               {% for message in messages %}
                   {% if message.tags == 'success' %}
                       <div class="alert alert-success" role="alert">
@@ -177,8 +175,8 @@
                       </div>
                   {% endif %}
               {% endfor %}
-          {% endif %}
-        </div>
+        {% endif %}
+        <div id="review-messages" style="margin-top: 10px;"></div>
         <div class="py-md-5" id="all-reviews">
           <div class="heading-section ftco-animate">
             <span class="subheading">Testimonium</span>
@@ -192,21 +190,20 @@
 </section>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
 <script>
-  $(document).ready(function() {
-    // Function to update the hidden input field with the selected star rating
-    function updateRating() {
-      const ratingInput = document.getElementById('ratingInput');
-      const stars = document.querySelectorAll('.star-rating input:checked');
+  // Function to update the hidden input field with the selected star rating
+  function updateRating() {
+    const ratingInput = document.getElementById('ratingInput');
+    const stars = document.querySelectorAll('.star-rating input:checked');
       
-      if (stars.length > 0) {
-        ratingInput.value = stars[0].value;
-      }
+    if (stars.length > 0) {
+      ratingInput.value = stars[0].value;
     }
+  }
 
+  $(document).ready(function() {
     // Submit review form via AJAX
-    $(document).on('submit', '#reviewForm', function(event){
+    $('#reviewForm').on('submit', function(event){
       event.preventDefault();
       console.log('Submitting review form...');
       var formData = new FormData(this);
@@ -216,6 +213,7 @@
         url: $(this).attr('action'),
         data: formData,
         dataType: 'json',
+        headers: {'X-CSRFToken': '{{ csrf_token }}'},
         processData: false,
         contentType: false,
         cache: false,
@@ -223,19 +221,19 @@
           console.log('Review form submitted successfully.');
           console.log('Response:', response);
           if (response.success) {
+            $('#all-reviews').html(response.reviews_html);
             $('#reviewModal').modal('hide');
             $('#reviewForm')[0].reset();
-            // Show success message in the reviews section
-            $('#all-reviews').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
-          } else {
+            $('#review-messages').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
+        } else if (response.errors) {
             // Show error message in the modal
-            $('#reviewModal .modal-body').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
-          }
-        },
-        error: function(xhr, status, error) {
+            $('#modal-messages').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
+        }
+      },
+      error: function(xhr, status, error) {
           console.error('Error submitting review form:', xhr.responseText);
           alert('An error occurred. Please try again later.');
-        }
+      }
       });
     });    
   });
@@ -243,20 +241,7 @@
 
 
 
-<style>
-  .star-rating span { font-size: 20px; color: #ffca48; }
-  .star-rating input { display: none; }
-  .star-rating label { font-size: 30px; padding: 5px; cursor: pointer; }
-  .star-rating label:hover,
-  .star-rating label:hover ~ label,
-  .star-rating input:checked ~ label { color: #ffca08; }
-</style>
 
-
-		
-
-
-		
 
     <footer class="ftco-footer ftco-section">
       <div class="container">
