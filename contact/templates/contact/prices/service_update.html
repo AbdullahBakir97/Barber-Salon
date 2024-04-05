@@ -49,18 +49,6 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="id_new_category_name">Oder neue Kategorie erstellen</label>
-                            {% if form.new_category_name.value %}
-                                {{ form.new_category_name }}
-                            {% else %}
-                                {% comment %} If no new category name is provided, display the text input {% endcomment %}
-                                {{ form.new_category_name }}
-                                {{ form.new_category_name.errors }}
-                            {% endif %}
-                        </div>
-                    </div>
                   </div>
                   <div class="form-group">
                       <button type="submit" class="btn btn-primary">Service aktualisieren</button>

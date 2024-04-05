@@ -13,13 +13,41 @@
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h2 class="mb-0 bread">Management Suite</h2>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span class="mr-2"><a href="/">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
                     <span>Management <i class="ion-ios-arrow-round-forward"></i></span>
                 </p>
             </div>
         </div>
     </div>
 </section>
+
+
+<div class="container py-5 my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            Eigentümerdetails
+          </div>
+          <div class="card-body">
+            <h1 class="logo"><strong></strong><a href="#"><span class=""></span>{{ salon_data.owner.name }}</a> <a href="{% url 'contact:owner_update' pk=salon_data.owner.pk %}" style="color: gold;">
+                <i class="fa fa-edit btn btn-primary rounded-pill"></i>
+            </a></h1>
+            <p class="icon icon-envelope"><strong> E-Mail: </strong> {{ salon_data.owner.email }}</p>
+            <p class="icon icon-phone"><strong> Telefon: </strong> {{ salon_data.owner.phone }}</p>
+            <p class="icon icon-map-marker"><strong> Adresse: </strong> {{ salon_data.owner.address }}</p>
+            <p class="icon icon-link"><strong> Webseite: </strong> <a href="{{ salon_data.owner.website }}">{{salon_data.owner.website }}</a></p>
+            <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
+            <p class="icon icon-clock-o"><strong> Öffnungszeiten: </strong> {{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
+            <p class="logo"><strong> Logo: </strong><br>
+            <img src="{{ salon_data.owner.logo.url }}" alt="{{ salon_data.owner.name }} Logo"></p>
+            <!-- Add display for other fields as needed -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <div class="container my-5 py-5">
     <div class="row p-3">
@@ -31,13 +59,19 @@
     <!-- Appointment List -->
     <div class="row">
         <div class="col-md-6">
-            <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
+            <button type="button" class="btn btn-primary rounded-pill mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
         </div>
     </div>
+
+    <style>
+        .rounded-thead {
+            border-radius: 20px; /* Adjust the radius as needed */
+        }
+    </style>
     
     <div class="appointment-list mt-3">
         <table class="table">
-            <thead class="thead-dark">
+            <thead class="thead-dark rounded-thead">
                 <tr>
                     <th>Name</th>
                     <th>Barbier</th> <!-- Barber -->
@@ -63,10 +97,10 @@
                     <td>{{ appointment.email }}</td>
                     <td>{{ appointment.message }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML">Bearbeiten</button> <!-- Edit -->
+                        <button type="button" class="btn btn-primary fa fa-edit rounded-pill" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML"></button> <!-- Edit -->
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML">Löschen</button> <!-- Delete -->
+                        <button type="button" class="btn btn-danger fa fa-trash rounded-pill" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML"></button> <!-- Delete -->
                     </td>
                 </tr>
                 {% endfor %}
@@ -136,7 +170,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="id_phone">Ihr Telefon</label> <!-- Your Phone -->
-                                    <input type="tel" name="phone" id="id_phone" class="form-control">
+                                    <input type="tel" name="phone" id="id_phone" class="form-control" maxlength="15">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -147,7 +181,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Termin vereinbaren</button> <!-- Make an Appointment -->
+                            <button type="submit" class="btn btn-primary rounded-pill">Termin vereinbaren</button> <!-- Make an Appointment -->
                         </div>
                     </form>
                 </div>
@@ -209,7 +243,7 @@
                             <textarea name="message" id="update_message" class="form-control">{{ appointment.message }}</textarea>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Termin aktualisieren</button> <!-- Update Appointment -->
+                            <button type="submit" class="btn btn-primary rounded-pill">Termin aktualisieren</button> <!-- Update Appointment -->
                         </div>
                     </form>
                 </div>
@@ -222,19 +256,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="delete-appointment-modal-label">Termin löschen</h5> <!-- Delete Appointment -->
+                    <h5 class="modal-title rounded-pill" id="delete-appointment-modal-label">Termin löschen</h5> <!-- Delete Appointment -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body rounded-pill">
                     <p>Sind Sie sicher, dass Sie den Termin für <span id="delete-appointment-name"></span> mit <span id="delete-appointment-barber"></span> löschen möchten?</p> <!-- Are you sure you want to delete the appointment for... -->
                 </div>
                 <div class="modal-footer">
                     <form id="delete-appointment-form" method="post" hx-post hx-target=".appointment-list">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button> <!-- Cancel -->
+                        <button type="submit" class="btn btn-danger rounded-pill">Löschen</button> <!-- Delete -->
+                        <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Abbrechen</button> <!-- Cancel -->
                     </form>
                 </div>
             </div>
@@ -255,7 +289,7 @@
     <form method="post" action="{% url 'contact:barber_create' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Erstellen</button> <!-- Create -->
+        <button type="submit" class="btn btn-primary rounded-pill">Erstellen</button> <!-- Create -->
     </form>
     <div class="row my-5">
         {% for barber in barber_list %}
@@ -267,25 +301,56 @@
                         <p class="card-text">{{ barber.expertise }}</p>
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
-                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 
+    <div class="row">
+        <div class="col-md-6">
+            <button type="button" class="btn btn-primary rounded-pill mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
+        </div>
+    </div>
     <!-- Barber Appointments -->
-    {% if barber_appointments %}
-        <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
-        <ul>
-            {% for appointment in barber_appointments %}
-                <li>
-                    {{ appointment.name }} - {{ appointment.date }} - {{ appointment.time }}
-                </li>
+    {% for barber in barber_list %}
+    <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Datum</th>
+                <th>Zeit</th>
+                <th>Dienstleistung</th>
+                <th>Telefon</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointment_list %}
+                {% if appointment.barber == barber %}
+                    <tr>
+                        <td>{{ appointment.name }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.service_type }}</td>
+                        <td>{{ appointment.phone }}</td>
+                        <td>
+                            <a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-primary fa fa-edit rounded-pill "></a>
+                        </td>
+                        <td>
+                            <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
-        </ul>
-    {% endif %}
+        </tbody>
+    </table>
+    {% endfor %}
+
 
     <!-- Update Barber Form (hidden by default) -->
     {% if update_form %}
@@ -293,7 +358,7 @@
         <form method="post" action="{% url 'contact:barber_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
+            <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button> <!-- Update -->
         </form>
     {% endif %}
 
@@ -303,7 +368,7 @@
         <form method="post" action="{% url 'contact:barber_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+            <button type="submit" class="btn btn-danger rounded-pill">Löschen</button> <!-- Delete -->
         </form>
     {% endif %}
 </div>
@@ -316,7 +381,7 @@
     </div>
 
     <!-- Create Link -->
-    <a href="{% url 'contact:item_create' %}" class="btn btn-primary mb-3">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
+    <a href="{% url 'contact:item_create' %}" class="btn btn-primary mb-3 rounded-pill">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
 
     <!-- List Gallery Items as Cards -->
     <div class="row">
@@ -330,8 +395,8 @@
                         <!-- Add other fields as needed -->
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
-                        <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                        <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
                     </div>
                 </div>
             </div>
@@ -347,7 +412,7 @@
                 <form method="post" action="{% url 'contact:item_update' pk=update_form.instance.pk %}">
                     {% csrf_token %}
                     {{ update_form.as_p }}
-                    <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
+                    <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button> <!-- Update -->
                 </form>
             {% endif %}
 
@@ -357,7 +422,7 @@
                 <form method="post" action="{% url 'contact:item_delete' pk=delete_form.instance.pk %}">
                     {% csrf_token %}
                     {{ delete_form.as_p }}
-                    <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+                    <button type="submit" class="btn btn-danger rounded-pill">Löschen</button> <!-- Delete -->
                 </form>
             {% endif %}
         </div>
@@ -369,7 +434,7 @@
     <h2>Produkt Artikel</h2>
   
     <!-- Create Link -->
-    <a href="{% url 'contact:product_create' %}" class="btn btn-primary mb-3">Neuen Artikel hinzufügen</a>
+    <a href="{% url 'contact:product_create' %}" class="btn btn-primary rounded-pill mb-3">Neuen Artikel hinzufügen</a>
   
     <!-- List Product Items as Cards -->
     <div class="row">
@@ -384,8 +449,8 @@
               <!-- Add other fields as needed -->
             </div>
             <div class="btn-group" role="group">
-              <a href="{% url 'contact:product_update' pk=object.pk %}" class="btn btn-primary">Bearbeiten</a>
-              <a href="{% url 'contact:product_delete' pk=object.pk %}" class="btn btn-danger">Löschen</a>
+              <a href="{% url 'contact:product_update' pk=object.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a>
+              <a href="{% url 'contact:product_delete' pk=object.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a>
             </div>
           </div>
         </div>
@@ -401,7 +466,7 @@
           <form method="post" action="{% url 'contact:product_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Aktualisieren</button>
+            <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button>
           </form>
         {% endif %}
   
@@ -411,7 +476,7 @@
           <form method="post" action="{% url 'contact:product_delete' pk=object.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Löschen</button>
+            <button type="submit" class="btn btn-danger rounded-pill">Löschen</button>
           </form>
         {% endif %}
       </div>
@@ -435,7 +500,7 @@
                 <form method="post" action="{% url 'contact:review_create' %}">
                   {% csrf_token %}
                   {{ form.as_p }}
-                  <button type="submit" class="btn btn-primary mt-5">Bewertung hinzufügen</button> <!-- Add Review -->
+                  <button type="submit" class="btn btn-primary rounded-pill mt-5">Bewertung hinzufügen</button> <!-- Add Review -->
                 </form>
               </div>
         </div>
@@ -449,7 +514,8 @@
                 <th>Friseur</th> <!-- Barber -->
                 <th>Bewertung</th> <!-- Rating -->
                 <th>Kommentar</th> <!-- Comment -->
-                <th>Aktion</th> <!-- Action -->
+                <th>Aktion</th>
+                <th></th> <!-- Action -->
             </tr>
         </thead>
         <tbody>
@@ -470,9 +536,10 @@
                     </td>
                     <td>{{ review.comment }}</td>
                     <td class="action-links">
-                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Bearbeiten</a> <!-- Edit -->
-                        <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Löschen</a> <!-- Delete -->
+                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit btn btn-primary rounded-pill"></i></a> <!-- Edit -->
+                        
                     </td>
+                    <td><a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash btn btn-danger rounded-pill"></i></a> <!-- Delete --></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -488,12 +555,12 @@
                 <form method="post" action="{% url 'contact:service_create' %}">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
+                    <button type="submit" class="btn btn-primary rounded-pill mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
                 </form>
                 <form method="post" action="{% url 'contact:category_create' %}">
                     {% csrf_token %}
                     {{ category_form.as_p }}
-                    <button type="submit" class="btn btn-primary mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
+                    <button type="submit" class="btn btn-primary rounded-pill mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
                 </form>
             </div>
         </div>
@@ -504,8 +571,8 @@
             <div class="pricing-entry pb-5 text-center">
                 <div>
                     <h3 class="mb-4">{{ category.name }}</h3>
-                    <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit Category -->
-                    <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete Category -->
+                    <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-primary fa fa-edit rounded-pill"></a> <!-- Edit Category -->
+                    <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete Category -->
                 </div>
                 <div class="scrollable-list">
                     <ul>
@@ -513,8 +580,8 @@
                         <li>
                             <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                             <div class="btn-group" role="group">
-                                <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
-                                <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                                <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                                <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
                             </div>
                         </li>
                         {% endfor %}
@@ -542,7 +609,7 @@
         <form method="post" action="{% url 'contact:service_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
+            <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button> <!-- Update -->
         </form>
     </div>
 {% endif %}
@@ -554,7 +621,7 @@
         <form method="post" action="{% url 'contact:service_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+            <button type="submit" class="btn btn-danger rounded-pill">Löschen</button> <!-- Delete -->
         </form>
     </div>
 {% endif %}

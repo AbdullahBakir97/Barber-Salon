@@ -511,8 +511,7 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
         self.submitted = False
         return self.render_to_response(self.get_context_data(form=form))
     
-    # def get_success_url(self):
-    #     return reverse('contact:appointment_list')
+
 
 class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment
@@ -520,8 +519,6 @@ class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/appointment/appointment_update.html'
     success_url = reverse_lazy('contact:management')
 
-    # def get_success_url(self):
-    #     return reverse('contact:appointment_list')
     
 
 
