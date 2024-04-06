@@ -15,8 +15,8 @@
   <form method="post" action="{% url 'contact:review_delete' pk=object.pk %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-danger">Löschen</button>
-    <a href="{% url 'contact:review_list' %}" class="btn btn-secondary">Abbrechen</a>
+    <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
+    <a href="{% url 'contact:review_list' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
   </form>
 </div>
 

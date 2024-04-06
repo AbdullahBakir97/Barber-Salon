@@ -2,6 +2,12 @@
 {% load static %} 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <style>
+       .barber-image {
+         height: 200px;
+         object-fit: cover;
+      }
+   </style>
 {% endblock css %}
 
 {% block body %}
@@ -12,7 +18,12 @@
    <form method="post" action="{% url 'contact:barber_update' pk=barber.pk %}">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Aktualisieren</button>
+      {% if form.image %}
+      <div>
+         <img src="{{ form.image.value.url }}" class="img-fluid barber-image">
+      </div>
+      {% endif %}
+      <button type="submit" class="btn btn-primary rounded-pill fa fa-edit mt-5"> Aktualisieren </button>
    </form>
 
 </div>

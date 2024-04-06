@@ -222,37 +222,6 @@
 
 
 
-<section id="gallery" class="ftco-section ftco-no-pt ftco-no-pb gallery-container">
-    <div class="container-fluid my-5">
-        <div class="row no-gutters justify-content-center mb-5 pb-2">
-            <div class="col-md-6 text-center heading-section ftco-animate">
-                <span class="subheading">Produkt</span>
-                <h2 class="mb-4">Unsere Produkte</h2>
-                <p>Erkunden Sie unsere exklusive Auswahl an hochwertigen Produkten, die sorgfältig ausgewählt und speziell für unsere Kunden zusammengestellt wurden. Lassen Sie sich von unserer vielfältigen Produktpalette inspirieren und finden Sie das perfekte Produkt für Ihre Bedürfnisse.</p>
-            </div>
-        </div>
-        <div class="row no-gutters">
-            {% for product in products %}
-                <div class="col-md-6 col-lg-3 ftco-animate product">
-                    <div class="project">
-                        <img src="{{ product.image.url }}" class="img-fluid product-img" alt="{{ object.title }}">
-
-                        <div class="text">
-                            <span>{{ product.category }}</span>
-                            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }} / <span class="price">€{{ product.price }}</span></a></h3>
-                            <p>{{ product.description }}</p>
-                            <!-- Andere Felder hinzufügen, wenn benötigt -->
-                        </div>
-
-                        <a href="{{ product.image.url }}" class="icon image-popup d-flex justify-content-center align-items-center">
-                            <span class="icon-expand"></span>
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
 
 
 

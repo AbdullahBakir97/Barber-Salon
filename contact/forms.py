@@ -1,5 +1,5 @@
 from django import forms
-from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message , Product
+from .models import Owner, Review, Appointment, Barber, GalleryItem, Service, Category , Message
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -155,33 +155,7 @@ class GalleryItemForm(forms.ModelForm):
 
 
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'image', 'description', 'category', 'price']
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'image': forms.FileInput(attrs={'class': 'form-control-file'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
-
-        labels = {
-            'name': _('Name'),
-            'image': _('Bild'),
-            'description': _('Beschreibung'),
-            'category': _('Kategorie'),
-            'price': _('Price'),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
-        products_category, _ = Category.objects.get_or_create(name='Products')
-        self.fields['category'].queryset = Category.objects.filter(name='Products')
-        self.fields['category'].initial = products_category
-        self.fields['category'].widget.attrs['disabled'] = True
 
 
 class ReviewCreateForm(forms.ModelForm):

@@ -3,18 +3,24 @@
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+   <style>
+    .item-img{
+        height: 200px;
+         object-fit: cover;
+    }
+   </style>
 {% endblock css %}
 
 {% block body %}
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/4.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h2 class="mb-0 bread">Galerie</h2>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span class="mr-2"><a href="{% url 'home' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
                     <span>Galerie <i class="ion-ios-arrow-round-forward"></i></span>
                 </p>
             </div>
@@ -48,8 +54,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_image">Bild</label>
-                                {{ form.image }}
+                                <label for="id_service">Dienstleistung</label>
+                                {{ form.service }}
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -60,8 +66,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="id_service">Dienstleistung</label>
-                                {{ form.service }}
+                                <label for="id_image">Bild</label>
+                                {{ form.image }}
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -70,9 +76,12 @@
                                 {{ form.description }}
                             </div>
                         </div>
+                        <div class="col-sm-6 mt-4">
+                            <img src="{{ form.image.value.url }}" class="img-fluid item-img">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Galerieartikel aktualisieren</button>
+                        <button type="submit" class="btn btn-primary rounded-pill"> Galerieartikel aktualisieren </button>
                     </div>
                 </form>
             </div>

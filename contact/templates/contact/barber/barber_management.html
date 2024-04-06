@@ -13,7 +13,7 @@
     <form method="post" action="{% url 'contact:barber_create' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Erstellen</button>
+        <button type="submit" class="btn btn-primary rounded-pill">Erstellen</button>
     </form>
     <!-- Liste der Friseure -->
     <div class="row my-5">
@@ -26,8 +26,8 @@
                         <p class="card-text">{{ barber.expertise }}</p>
                     </div>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary">Bearbeiten</a>
-                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger">Löschen</a>
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-primary rounded-pill fa fa-edit"></a>
+                        <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-danger rounded-pill fa fa-trash"></a>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
         <form method="post" action="{% url 'contact:barber_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Aktualisieren</button>
+            <button type="submit" class="btn btn-primary rounded-pill fa fa-edit"></button>
         </form>
     {% endif %}
 
@@ -62,7 +62,7 @@
         <form method="post" action="{% url 'contact:barber_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Löschen</button>
+            <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"></button>
         </form>
     {% endif %}
 </div>

@@ -27,7 +27,7 @@
         <form method="post" action="{% url 'contact:review_create' %}">
           {% csrf_token %}
           {{ form.as_p }}
-          <button type="submit" class="btn btn-primary mt-5">Bewertung hinzufügen</button>
+          <button type="submit" class="btn btn-primary rounded-pill mt-5">Bewertung hinzufügen</button>
         </form>
       </div>
     </div>
@@ -61,8 +61,8 @@
           </td>
           <td>{{ review.comment }}</td>
           <td class="action-links">
-            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit"></i> Bearbeiten</a>
-            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash"></i> Löschen</a>
+            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit rounded-pill"></i> </a>
+            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash rounded-pill"></i> </a>
           </td>
         </tr>
         {% endfor %}

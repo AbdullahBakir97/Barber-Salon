@@ -141,22 +141,6 @@ class GalleryItem(models.Model):
         return self.name
     
     
-class Product(models.Model):
-    name = models.CharField(_('Element'),max_length=255, default='Prodcut')
-    image = models.ImageField(_('Foto'),upload_to='product_images/')
-    description = models.TextField(_('Beschriebeung'),)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='product_category')
-    service = models.OneToOneField(Service, on_delete=models.CASCADE, null=True, blank=True, related_name='product_service')
-    price = models.DecimalField(_('Preis'),max_digits=10, decimal_places=2)
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
 
 
 class Appointment(models.Model):

@@ -7,8 +7,8 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView , DetailView, TemplateView
-from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category, Product
-from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, ProductForm, CategoryForm
+from .models import Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
+from .forms import OwnerForm, BarberForm, GalleryItemForm, ReviewCreateForm, AppointmentForm, MessageForm, ServiceForm, CategoryForm
 from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponseServerError
 from django.db import IntegrityError, transaction
 from django.db.models import Q
@@ -278,80 +278,6 @@ class GalleryItemManagementView(OwnerProfileRequiredMixin, ListView):
 
 
 
-# Product
-class ProductCreateView(OwnerProfileRequiredMixin, CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'contact/product/product_create.html'
-    success_url = reverse_lazy('contact:management')
-
-    @transaction.atomic
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        try:
-            with transaction.atomic():
-                category = Category.objects.get(name='Products')  # Get the Products category
-                form.instance.category = category  # Set the category for the product
-                response = super().form_valid(form)
-                # Create a corresponding service instance
-                service = Service.objects.create(
-                    name=form.instance.name,
-                    price=form.instance.price,
-                    category=category  # Set the category for the service to Products
-                )
-                form.instance.service = service
-                form.instance.save()
-                return response
-        except IntegrityError:
-            form.add_error(None, 'Ein Element mit diesem Titel existiert bereits.')
-            return self.form_invalid(form)
-
-class ProductUpdateView(OwnerProfileRequiredMixin, UpdateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'contact/product/product_update.html'
-    success_url = reverse_lazy('contact:management')
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Update associated service instance
-        service = self.object.service
-        if service:
-            service.name = form.instance.name
-            service.price = form.instance.price
-            service.save()
-        return response
-
-class ProductDeleteView(OwnerProfileRequiredMixin, DeleteView):
-    model = Product
-    template_name = 'contact/product/product_delete.html'
-    success_url = reverse_lazy('contact:management')
-
-    def delete(self, request, *args, **kwargs):
-        product = self.get_object()
-        service = product.service
-        if service:
-            # Delete the service, which will automatically clear any foreign key references to it
-            service.delete()
-        messages.success(self.request, _('Produkt wurde erfolgreich gelöscht.'))
-        return super().delete(request, *args, **kwargs)
-
-class ProductListView(OwnerProfileRequiredMixin, ListView):
-    model = Product
-    template_name = 'contact/product/product_list.html'
-    context_object_name = 'product_list'
-    
-    def get_queryset(self):
-        return Product.objects.all()
-    
-class ProductManagementView(OwnerProfileRequiredMixin, ListView):
-    model = Product
-    template_name = 'contact/product/product_management.html'
-    context_object_name = 'product_list'
-    
-    def get_queryset(self):
-        return Product.objects.all()
-    
     
 class CategoryCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Category
@@ -696,7 +622,6 @@ def management_view(request):
     barber_list = Barber.objects.all()
     review_list = Review.objects.all()
     gallery_item_list = GalleryItem.objects.all()
-    product_list = Product.objects.all()
     category_list = Category.objects.all()
     service_list = Service.objects.all()
     service_form = ServiceForm()
@@ -707,7 +632,6 @@ def management_view(request):
         'review_list': review_list,
         'gallery_item_list': gallery_item_list,
         'category_list': category_list,
-        'product_list': product_list,
         'service_list': service_list,
         'service_form': service_form,
     }

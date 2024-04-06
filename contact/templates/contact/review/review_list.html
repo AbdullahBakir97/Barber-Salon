@@ -55,13 +55,13 @@
           <!-- Pagination -->
           <div class="pagination justify-content-center mt-4">
             {% if page_obj.has_previous %}
-            <a class="btn btn-primary" href="?page=1">&laquo; Erste</a>
-            <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}">Vorherige</a>
+            <a class="btn btn-primary rounded-pill" href="?page=1">&laquo; Erste</a>
+            <a class="btn btn-primary rounded-pill" href="?page={{ page_obj.previous_page_number }}">Vorherige</a>
             {% endif %}
             <span class="current">Seite {{ page_obj.number }} von {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-            <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}">Nächste</a>
-            <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}">Letzte &raquo;</a>
+            <a class="btn btn-primary rounded-pill" href="?page={{ page_obj.next_page_number }}">Nächste</a>
+            <a class="btn btn-primary rounded-pill" href="?page={{ page_obj.paginator.num_pages }}">Letzte &raquo;</a>
             {% endif %}
           </div>
         </div>

@@ -21,7 +21,7 @@
               <form method="POST" action="{% url 'contact:service_delete' pk=service.pk %}">
                   {% csrf_token %}
                   <div class="form-group">
-                      <button type="submit" class="btn btn-danger">Service löschen</button>
+                      <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Service löschen </button>
                   </div>
               </form>
           </div>

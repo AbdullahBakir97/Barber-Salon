@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>KHARSA STYLE BARBERSHOP</title>
+    <title>KHARSA STYLE BARBERSHOP UG</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -286,7 +286,7 @@
 	                <li><span class="icon icon-map-marker"></span><span class="text">{{salon_data.owner.address}}</span></li>
                 <li><span class="icon icon-clock-o"></span><span class="text">{{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</span></li>
 	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">{{salon_data.owner.phone}}</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">{{salon_data.owner.email}}</span></a></li>
+	                <li><a href="{% url 'contact:contact' %}"><span class="icon icon-envelope"></span><span class="text">{{salon_data.owner.email}}</span></a></li>
                   <li><a href="{{ salon_data.owner.website }}"><span class="icon icon-link"></span><span class="text">{{ salon_data.owner.website }}</span></a></li>
 	              </ul>
 	            </div>

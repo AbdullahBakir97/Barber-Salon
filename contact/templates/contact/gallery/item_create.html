@@ -7,14 +7,14 @@
 
 {% block body %}
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/6.jpg' %}');" data-stellar-background-ratio="0.5">
+<section class="hero-wrap hero-wrap-2" style="background-image: url('{% static 'images/4.jpg' %}');" data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h2 class="mb-0 bread">Galerie</h2>
                 <p class="breadcrumbs">
-                    <span class="mr-2"><a href="index.html">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
+                    <span class="mr-2"><a href="{% url 'home' %}">Startseite <i class="ion-ios-arrow-round-forward"></i></a></span>
                     <span>Galerie <i class="ion-ios-arrow-round-forward"></i></span>
                 </p>
             </div>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Galerie-Element hinzufügen</button>
+                        <button type="submit" class="btn btn-primary rounded-pill">Galerie-Element hinzufügen</button>
                     </div>
                 </form>
             </div>

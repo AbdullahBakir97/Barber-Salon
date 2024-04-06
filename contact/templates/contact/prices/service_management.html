@@ -15,7 +15,7 @@
                 <form method="post" action="{% url 'contact:create_service_category' %}">
                   {% csrf_token %}
                   {{ form.as_p }}
-                  <button type="submit" class="btn btn-primary mt-5">Service hinzufügen</button> <!-- Add Review -->
+                  <button type="submit" class="btn btn-primary rounded-pill mt-5">Service hinzufügen</button> <!-- Add Review -->
                 </form>
               </div>
         </div>
@@ -32,8 +32,8 @@
                                 <li>
                                     <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
                                     <div class="btn-group" role="group">
-                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary">Bearbeiten</a> <!-- Edit -->
-                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger">Löschen</a> <!-- Delete -->
+                                        <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-primary rounded-pill fa fa-edit"></a> <!-- Edit -->
+                                        <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-danger rounded-pill fa fa-trash"></a> <!-- Delete -->
                                     </div>
                                 </li>
                             {% endfor %}
@@ -53,7 +53,7 @@
         <form method="post" action="{% url 'contact:service_update' pk=update_form.instance.pk %}">
             {% csrf_token %}
             {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary">Aktualisieren</button> <!-- Update -->
+            <button type="submit" class="btn btn-primary rounded-pill fa fa-edit"> Aktualisieren </button> <!-- Update -->
         </form>
     </div>
 {% endif %}
@@ -65,7 +65,7 @@
         <form method="post" action="{% url 'contact:service_delete' pk=delete_form.instance.pk %}">
             {% csrf_token %}
             {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger">Löschen</button> <!-- Delete -->
+            <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button> <!-- Delete -->
         </form>
     </div>
 {% endif %}

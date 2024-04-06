@@ -2,6 +2,13 @@
 {% load static %} 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <style>
+    /* Apply styles for scrollbars */
+    .scrollable-list {
+        max-height: 400px; /* Adjust the maximum height as needed */
+        overflow-y: auto;
+    }
+</style>
 {% endblock css %}
 {% block body %}
 
@@ -81,28 +88,33 @@
                     <th>Telefon</th> <!-- Phone -->
                     <th>E-Mail</th> <!-- Email -->
                     <th>Nachricht</th> <!-- Message -->
-                    <th></th>
+                    <th>Aktion</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for appointment in appointment_list %}
-                <tr>
-                    <td>{{ appointment.name }}</td>
-                    <td>{{ appointment.barber.name }}</td>
-                    <td>{{ appointment.date }}</td>
-                    <td>{{ appointment.time }}</td>
-                    <td>{{ appointment.service_type }}</td>
-                    <td>{{ appointment.phone }}</td>
-                    <td>{{ appointment.email }}</td>
-                    <td>{{ appointment.message }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary fa fa-edit rounded-pill" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML"></button> <!-- Edit -->
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger fa fa-trash rounded-pill" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML"></button> <!-- Delete -->
-                    </td>
-                </tr>
+                <div>
+                    <ul class="scrollable-list">
+                        <tr >
+                            <td>{{ appointment.name }}</td>
+                            <td>{{ appointment.barber.name }}</td>
+                            <td>{{ appointment.date }}</td>
+                            <td>{{ appointment.time }}</td>
+                            <td>{{ appointment.service_type }}</td>
+                            <td>{{ appointment.phone }}</td>
+                            <td>{{ appointment.email }}</td>
+                            <td>{{ appointment.message }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary fa fa-edit rounded-pill" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML"></button> <!-- Edit -->
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger fa fa-trash rounded-pill" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML"></button> <!-- Delete -->
+                            </td>
+                        </tr>
+                    </ul>
+                </div>
+                
                 {% endfor %}
             </tbody>
         </table>
@@ -293,7 +305,7 @@
     </form>
     <div class="row my-5">
         {% for barber in barber_list %}
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 scrollable-list">
                 <div class="card h-100">
                     <img src="{{ barber.image.url }}" class="card-img-top barber-image" alt="{{ barber.name }}">
                     <div class="card-body">
@@ -325,14 +337,14 @@
                 <th>Zeit</th>
                 <th>Dienstleistung</th>
                 <th>Telefon</th>
-                <th></th>
+                <th>Aktion</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             {% for appointment in appointment_list %}
                 {% if appointment.barber == barber %}
-                    <tr>
+                    <tr class="scrollable-list">
                         <td>{{ appointment.name }}</td>
                         <td>{{ appointment.date }}</td>
                         <td>{{ appointment.time }}</td>
@@ -386,7 +398,7 @@
     <!-- List Gallery Items as Cards -->
     <div class="row">
         {% for object in gallery_item_list %}
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-3 mb-4 scrollable-list">
                 <div class="card h-100">
                     <img src="{{ object.image.url }}" class="card-img-top gallery-image" alt="{{ object.name }}">
                     <div class="card-body">
@@ -429,63 +441,9 @@
     {% endif %}
 </div>
 
-
-<div class="container my-5 py-5">
-    <h2>Produkt Artikel</h2>
-  
-    <!-- Create Link -->
-    <a href="{% url 'contact:product_create' %}" class="btn btn-primary rounded-pill mb-3">Neuen Artikel hinzufügen</a>
-  
-    <!-- List Product Items as Cards -->
-    <div class="row">
-      {% for object in product_list %}
-        <div class="col-md-6 col-lg-3 mb-4">
-          <div class="card h-100">
-            <img src="{{ object.image.url }}" class="card-img-top product-image" alt="{{ object.name }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ object.name }}</h5>
-              <p class="card-text">{{ object.description }}</p>
-              <p class="card-text">Price: {{ object.price }}</p>
-              <!-- Add other fields as needed -->
-            </div>
-            <div class="btn-group" role="group">
-              <a href="{% url 'contact:product_update' pk=object.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a>
-              <a href="{% url 'contact:product_delete' pk=object.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  
-    <!-- Update and Delete Forms (hidden by default) -->
-    {% if update_form or delete_form %}
-      <div class="container my-5 py-5">
-        <!-- Update Product Item Form (hidden by default) -->
-        {% if update_form %}
-          <h3>Produkt Artikel bearbeiten</h3>
-          <form method="post" action="{% url 'contact:product_update' pk=update_form.instance.pk %}">
-            {% csrf_token %}
-            {{ update_form.as_p }}
-            <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button>
-          </form>
-        {% endif %}
-  
-        <!-- Delete Product Item Form (hidden by default) -->
-        {% if delete_form %}
-          <h3>Produkt Artikel löschen</h3>
-          <form method="post" action="{% url 'contact:product_delete' pk=object.pk %}">
-            {% csrf_token %}
-            {{ delete_form.as_p }}
-            <button type="submit" class="btn btn-danger rounded-pill">Löschen</button>
-          </form>
-        {% endif %}
-      </div>
-    {% endif %}
-  </div>
-
 <style>
 
-.gallery-image, .product-image, .barber-image {
+.gallery-image, .barber-image {
     height: 200px;
     object-fit: cover;
 }
@@ -520,7 +478,7 @@
         </thead>
         <tbody>
             {% for review in review_list %}
-                <tr>
+                <tr class="scrollable-list">
                     <td>{{ review.customer_name }}</td>
                     <td>{{ review.barber.name }}</td>
                     <td>
@@ -587,7 +545,6 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <p class="button text-center"><a href="{% url 'contact:appointment_create' %}" class="btn btn-primary px-4 py-3">Angebot erhalten</a></p> <!-- Get Offer -->
             </div>
         </div>
         {% endfor %}

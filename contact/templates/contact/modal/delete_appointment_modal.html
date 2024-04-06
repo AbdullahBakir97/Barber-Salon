@@ -13,8 +13,8 @@
             <div class="modal-footer">
                 <form id="delete-appointment-form-{{ appointment.pk }}" method="post" hx-post="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-target=".appointment-list">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Löschen</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger rounded-pill fa-fa-trash"> Löschen </button>
+                    <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Abbrechen</button>
                 </form>
             </div>
         </div>

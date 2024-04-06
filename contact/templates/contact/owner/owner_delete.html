@@ -14,9 +14,9 @@
           <p>Sind Sie sicher, dass Sie "{{ object.name }}" löschen möchten?</p>
           <form method="post" style="display: inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Löschen</button>
+            <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
           </form>
-          <a href="{% url 'owner_list' %}" class="btn btn-secondary">Abbrechen</a>
+          <a href="{% url 'owner_list' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
         </div>
       </div>
     </div>

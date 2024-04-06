@@ -19,7 +19,7 @@
                 <p>Weit, weit entfernt, hinter den Wortbergen, fernab der Länder Vokalien und Konsonantien</p>
             </div>
         </div>
-        <h3 class="vr">Rufen Sie uns an: 012-3456-7890</h3>
+        <h3 class="vr">{{salon.data.onwer.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% if form.instance.pk %}{% url 'contact:appointment_update' pk=form.instance.pk %}{% else %}{% url 'contact:appointment_create' %}{% endif %}">
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="{% if form.instance.pk %}Aktualisieren{% else %}Erstellen{% endif %} Termin" class="btn btn-primary">
+                        <input type="submit" value="{% if form.instance.pk %}Aktualisieren{% else %}Erstellen{% endif %} Termin" class="btn btn-primary rounded-pill">
                     </div>
                 </form>
             </div>

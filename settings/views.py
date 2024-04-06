@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.views.generic.edit import FormView
 from django.utils.translation import gettext as _
 from contact.forms import AppointmentForm
-from contact.models import Owner, GalleryItem, Barber, Review, Appointment, Service, Category, Product
+from contact.models import Owner, GalleryItem, Barber, Review, Appointment, Service, Category
 
 class HomeView(FormView):
     template_name = 'settings/home.html'
@@ -15,7 +15,6 @@ class HomeView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['gallery_items'] = GalleryItem.objects.all()
-        context['products'] = Product.objects.all()
         context['barbers'] = Barber.objects.all()
         context['categories'] = Category.objects.prefetch_related('service_category').all()
         context['services'] = Service.objects.all()

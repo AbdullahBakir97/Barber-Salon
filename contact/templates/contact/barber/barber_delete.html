@@ -9,12 +9,11 @@
 <div class="container my-5 py-5">
    <h2>Löschen Sie den Friseur</h2>
 
-   <p>Sind Sie sicher, dass Sie {{ barber.name }} löschen möchten?</p>
-
+   <p>Sind Sie sicher, dass Sie <strong>{{ barber.name }}</strong> löschen möchten?</p>
    <form method="post" action="{% url 'contact:barber_delete' pk=barber.pk %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Löschen</button>
-      <a href="{% url 'contact:management' %}" class="btn btn-secondary">Abbrechen</a>
+      <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
+      <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
    </form>
 
 </div>

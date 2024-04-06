@@ -3,7 +3,6 @@ from .views import (
     OwnerCreateView,    OwnerUpdateView, OwnerDeleteView, OwnerDetailView,
     BarberCreateView,   BarberUpdateView, BarberDeleteView, BarberListView, BarberManagementView,
     GalleryItemCreateView,  GalleryItemUpdateView, GalleryItemDeleteView, GalleryItemListView, GalleryItemManagementView,
-    ProductCreateView,  ProductUpdateView, ProductDeleteView, ProductListView, ProductManagementView,
     ReviewCreateView,   ReviewUpdateView ,ReviewDeleteView, ReviewListView, ReviewManagementView,
     AppointmentCreateView,  AppointmentUpdateView, AppointmentDeleteView, AppointmentListView, AppointmentManagementView,
     VisitorAppointmentCreateView,   VisitorReviewCreateView, VisitorAppointmentListView, VisitorReviewListView,visitor_appointment_create,
@@ -54,13 +53,6 @@ urlpatterns = [
     path('items/', GalleryItemListView.as_view(), name='item_list'),
     path('items/management', GalleryItemManagementView.as_view(), name='item_management'),
     
-    # Product Views
-    path('products/create/', ProductCreateView.as_view(), name='product_create'),
-    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product_update'),
-    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),
-    path('products/', ProductListView.as_view(), name='product_list'),
-    path('products/management/', ProductManagementView.as_view(), name='product_management'),
-
     # Review Views
     path('reviews/create/', ReviewCreateView.as_view(), name='review_create'),
     path('reviews/<int:pk>/update/', ReviewUpdateView.as_view(), name='review_update'),
