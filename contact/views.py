@@ -637,7 +637,7 @@ def management_view(request):
     category_list = Category.objects.all()
     service_list = Service.objects.all()
     service_form = ServiceForm()
-    massage_list = Massage.objects.all()
+    message_list = Message.objects.all()
     
     context = {
         'appointment_list': appointment_list,
@@ -647,7 +647,7 @@ def management_view(request):
         'category_list': category_list,
         'service_list': service_list,
         'service_form': service_form,
-        'massage_list': massage_list,
+        'message_list': message_list,
     }
     
     return render(request, 'contact/management.html', context)
