@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+<div class="container my-5 py-5">
+   <h2>Nachricht löschen</h2>
+
+   <p>Sind Sie sicher, dass Sie die Nachricht von <strong>{{ message.name }}</strong> löschen möchten?</p>
+   <form method="post" action="{% url 'contact:message_delete' slug=message.slug %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
+      <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
+   </form>
+
+</div>
+
+{% endblock body %}
