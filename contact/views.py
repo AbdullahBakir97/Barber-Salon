@@ -162,6 +162,18 @@ def contact_view(request):
     return render(request, 'contact/contact.html', context)
 
 
+class MessageDeleteView(OwnerProfileRequiredMixin, DeleteView):
+    model = Message
+    template_name = 'contact/message_delete.html'  # Specify your template name
+    success_url = reverse_lazy('contact:management')  # Specify your success URL
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(Message, slug=self.kwargs['slug'])
+
+    def delete(self, request, *args, **kwargs):
+        message = self.get_object()
+        message.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 # Barber
 class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
