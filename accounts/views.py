@@ -28,7 +28,7 @@ class CustomUserSignUpView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.object)
+        login(self.request, self.user)
         return response
 
     def get_success_url(self):

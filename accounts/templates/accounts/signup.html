@@ -28,21 +28,22 @@
           <div class="card-body">
             <form method="post" class="">
               {% csrf_token %}
-              {% if messages %}
-                  {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                        <div class="alert alert-success" role="alert">
-                            {{ message }}
-                        </div>
-                    {% elif message.tags == 'error' %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endif %}
+              {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                  {% for field, errors in form.errors.items %}
+                    <strong>{{ field|capfirst }}</strong>: {{ errors|join:", " }}
                   {% endfor %}
+                </div>
+              {% endif %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
               {% endif %}
               {{ form.as_p }}
-              
+              <!-- Add other form fields here -->
               <div class="form-group">
                 <button type="submit" class="btn btn-primary rounded-pill">{{ _('Signup') }}</button>
               </div>
