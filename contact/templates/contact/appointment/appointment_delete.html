@@ -11,7 +11,7 @@
     <p>Sind Sie sicher, dass Sie den Termin für {{ object.name }} mit {{ object.barber.name }} löschen möchten?</p>
     <form method="post" action="{% url 'contact:appointment_delete' pk=object.pk %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger rounded-pill fa fa-trash">Löschen</button>
+      <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
       <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
     </form>
   </div>

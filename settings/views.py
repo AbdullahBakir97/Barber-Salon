@@ -49,9 +49,9 @@ home_view = HomeView.as_view()
 
 
 def handl404(request, exception):
-    return render(request, '404.html', status=404)
+    return render(request, 'settings/404.html', status=404)
 
 def handl500(request):
-    return render(request, '500.html', status=500)
+    return render(request, 'settings/500.html', status=500)
 
 

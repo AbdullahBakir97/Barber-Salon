@@ -37,10 +37,6 @@
                         {{ form.address }}
                     </div>
                     <div class="form-group">
-                        <label for="id_logo">Ihr Logo</label>
-                        {{ form.logo }}
-                    </div>
-                    <div class="form-group">
                         <label for="id_website">Ihre Webseite</label>
                         {{ form.website }}
                     </div>
@@ -49,8 +45,24 @@
                         {{ form.about }}
                     </div>
                     <div class="form-group">
+                        <label for="id_work_days">Work Days</label>
+                        {{ form.work_days }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_opening_time">Opening Time</label>
+                        {{ form.opening_time }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_closing_time">Closing Time</label>
+                        {{ form.closing_time }}
+                    </div>
+                    <div class="form-group">
                         <label for="id_social_media_links">Links zu sozialen Medien</label>
                         <input type="text" name="social_media_links" id="id_social_media_links" value="{{ form.social_media_links.value }}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_logo">Ihr Logo</label>
+                        {{ form.logo }}
                     </div>
                     <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button>
                 </form>

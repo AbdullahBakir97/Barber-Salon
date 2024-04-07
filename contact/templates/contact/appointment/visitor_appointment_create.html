@@ -35,7 +35,7 @@
                 <p>Willkommen bei unserem Buchungsservice. Füllen Sie das Formular unten aus, um einen Termin zu vereinbaren, oder rufen Sie uns direkt an.</p>
             </div>
         </div>
-        <h3 class="vr">Rufen Sie uns an: {{owner.phone}}</h3>
+        <h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
                 <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">

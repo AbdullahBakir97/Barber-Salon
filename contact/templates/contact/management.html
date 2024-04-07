@@ -29,7 +29,7 @@
 </section>
 
 
-<div class="container py-5 my-5">
+<div id=owner_m class="container py-5 my-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
@@ -44,8 +44,8 @@
             <p class="icon icon-phone"><strong> Telefon: </strong> {{ salon_data.owner.phone }}</p>
             <p class="icon icon-map-marker"><strong> Adresse: </strong> {{ salon_data.owner.address }}</p>
             <p class="icon icon-link"><strong> Webseite: </strong> <a href="{{ salon_data.owner.website }}">{{salon_data.owner.website }}</a></p>
-            <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
             <p class="icon icon-clock-o"><strong> Öffnungszeiten: </strong> {{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
+            <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
             <p class="logo"><strong> Logo: </strong><br>
             <img src="{{ salon_data.owner.logo.url }}" alt="{{ salon_data.owner.name }} Logo"></p>
             <!-- Add display for other fields as needed -->
@@ -56,7 +56,7 @@
   </div>
 
 
-<div class="container my-5 py-5">
+<div id=appointment_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Terminverwaltung</h2> <!-- Appointment Management -->
@@ -202,14 +202,10 @@
         </div>
     </div>
     
-    
-
-    
-    
 </div>
 
 
-<div class="container my-5 py-5">
+<div id=barber_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Friseurverwaltung</h2> <!-- Barbers Management -->
@@ -248,7 +244,7 @@
     <!-- Barber Appointments -->
     {% for barber in barber_list %}
     <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
-    <table class="table">
+    <table id=barber_appointment_m class="table">
         <thead class="thead-dark">
             <tr>
                 <th>Name</th>
@@ -304,7 +300,7 @@
     {% endif %}
 </div>
 
-<div class="container my-5 py-5">
+<div id=item_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Galerieverwaltung</h2> <!-- Gallery Management -->
@@ -369,7 +365,7 @@
 
 </style>
 
-<div class="container my-5 py-5">
+<div id=review_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Bewertungsverwaltung</h2> <!-- Review Management -->
@@ -424,7 +420,7 @@
 </div>
 
 
-<div class="container my-5 py-5">
+<div id=price_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->

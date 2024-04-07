@@ -15,14 +15,17 @@
         </div>
 
         <div class="card-body">
-          <p><strong>Name:</strong> {{ object.name }}</p>
-          <p><strong>E-Mail:</strong> {{ object.email }}</p>
-          <p><strong>Telefon:</strong> {{ object.phone }}</p>
-          <p><strong>Adresse:</strong> {{ object.address }}</p>
-          <p><strong>Webseite:</strong> <a href="{{ object.website }}">{{ object.website }}</a></p>
-          <p><strong>Über:</strong> {{ object.about }}</p>
-          <p><strong>Logo:</strong><br>
-          <img src="{{ object.logo.url }}" alt="{{ object.name }} Logo" style="max-width: 200px;"></p>
+          <h1 class="logo"><strong></strong><a href="#"><span class=""></span>{{ salon_data.owner.name }}</a> <a href="{% url 'contact:owner_update' pk=salon_data.owner.pk %}" style="color: gold;">
+              <i class="fa fa-edit btn btn-primary rounded-pill"></i>
+          </a></h1>
+          <p class="icon icon-envelope"><strong> E-Mail: </strong> {{ salon_data.owner.email }}</p>
+          <p class="icon icon-phone"><strong> Telefon: </strong> {{ salon_data.owner.phone }}</p>
+          <p class="icon icon-map-marker"><strong> Adresse: </strong> {{ salon_data.owner.address }}</p>
+          <p class="icon icon-link"><strong> Webseite: </strong> <a href="{{ salon_data.owner.website }}">{{salon_data.owner.website }}</a></p>
+          <p class="icon icon-clock-o"><strong> Öffnungszeiten: </strong> {{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
+          <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
+          <p class="logo"><strong> Logo: </strong><br>
+          <img src="{{ salon_data.owner.logo.url }}" alt="{{ salon_data.owner.name }} Logo"></p>
           <!-- Add display for other fields as needed -->
         </div>
       </div>

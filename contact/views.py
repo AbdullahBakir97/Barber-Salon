@@ -65,7 +65,7 @@ class OwnerCreateView(LoginRequiredMixin, CreateView):
     model = Owner
     form_class = OwnerForm
     template_name = 'contact/owner/owner_create.html'
-    success_url = reverse_lazy('contact:owner_detail') 
+    success_url = reverse_lazy('contact:management')
 
     def form_valid(self, form):
         # Check if the user is authenticated
@@ -93,7 +93,7 @@ class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Owner
     form_class = OwnerForm
     template_name = 'contact/owner/owner_update.html'
-    success_url = reverse_lazy('contact:owner_detail')
+    success_url = reverse_lazy('contact:management')
 
     def dispatch(self, request, *args, **kwargs):
         owner = self.get_object()
