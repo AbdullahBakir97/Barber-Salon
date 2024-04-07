@@ -31,7 +31,7 @@ SECRET_KEY = DEBUG= os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -121,6 +121,12 @@ LOGGING = {
 }
 
 ROOT_URLCONF = 'project.urls'
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 TEMPLATES = [
     {
