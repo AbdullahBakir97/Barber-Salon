@@ -235,7 +235,7 @@
                     <td>{{ message.message }}</td>
                     <td>{{ message.timestamp }}</td>
                     <td>
-                         <a href="{% url 'contact:message_delete' pk=message.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
+                         <a href="{% url 'contact:message_delete' slug=message.slug %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
                     </td>
                     <td>
 
