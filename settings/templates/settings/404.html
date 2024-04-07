@@ -1,2 +1,12 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block css %}
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock css %}
+
+{% block body %}
+
 <h1>404 - Page Not Found</h1>
 <p>Sorry, the page you requested could not be found.</p>
+
+{% endblock body %}

@@ -154,7 +154,7 @@ def contact_view(request):
                 # Log the error for troubleshooting
                 logger.error(f'Error sending email: {e}')
                 # Return a server error response
-                return HttpResponseServerError("Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.")
+                return HttpResponseServerError("Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut: " + str(e))
 
     context = {
         'owner': owner,
@@ -445,7 +445,10 @@ class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/appointment/appointment_update.html'
     success_url = reverse_lazy('contact:management')
 
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointment'] = self.object  # Pass appointment object to template
+        return context
 
 
 class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
@@ -455,12 +458,10 @@ class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        success_url = self.get_success_url()
         self.object.delete()
-        return HttpResponseRedirect(success_url)
+        return HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self):
-        return self.success_url
+
 
 
 

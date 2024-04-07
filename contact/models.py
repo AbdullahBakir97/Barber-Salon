@@ -180,7 +180,7 @@ class Message(models.Model):
     phone = models.CharField(max_length=15)
     message = models.TextField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'),blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:

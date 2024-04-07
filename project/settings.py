@@ -20,13 +20,13 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEBUG= os.environ.get('DEBUG')
+DEBUG = os.environ.get('DEBUG')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = DEBUG= os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -228,18 +228,19 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SITE_ID = 1  # Make sure to set the correct site ID
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'optional' if you want optional email verification
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
 
 
-EMAIL_HOST = 'smtp.gmail.com'   # service
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.strato.de'   # service
+EMAIL_USE_TLS = False
+EMAIL_PORT = 465
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 ACCOUNT_UNIQUE_EMAIL = True

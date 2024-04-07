@@ -25,13 +25,14 @@ class CustomUserSignUpView(SuccessMessageMixin, CreateView):
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
     success_message = 'Account created successfully.'
-    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.User)
+        login(self.request, self.object)
         return response
 
+    def get_success_url(self):
+        return reverse_lazy('home')
 
 class UserProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = UserProfile

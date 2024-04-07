@@ -4,11 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from .models import UserProfile, OwnerProfile
 from django.contrib.auth.models import User
 
-from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.utils.translation import gettext_lazy as _
-from .models import UserProfile, OwnerProfile
-from django.contrib.auth.models import User
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -51,6 +46,7 @@ class OwnerProfileForm(forms.ModelForm):
         }
 
 class CustomUserCreationForm(UserCreationForm):
+    
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields

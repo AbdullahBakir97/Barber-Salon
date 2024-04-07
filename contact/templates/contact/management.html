@@ -106,10 +106,11 @@
                             <td>{{ appointment.email }}</td>
                             <td>{{ appointment.message }}</td>
                             <td>
-                                <button type="button" class="btn btn-primary fa fa-edit rounded-pill" data-toggle="modal" data-target="#update-appointment-modal" hx-get="{% url 'contact:appointment_update' pk=appointment.pk %}" hx-trigger="click" hx-target="#update-appointment-modal" hx-swap="outerHTML"></button> <!-- Edit -->
+                                <a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-primary fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                                
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger fa fa-trash rounded-pill" data-toggle="modal" data-target="#delete-appointment-modal" hx-get="{% url 'contact:appointment_delete' pk=appointment.pk %}" hx-trigger="click" hx-target="#delete-appointment-modal" hx-swap="outerHTML"></button> <!-- Delete -->
+                                <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-danger fa fa-trash rounded-pill"></a> 
                             </td>
                         </tr>
                     </ul>
@@ -201,91 +202,9 @@
         </div>
     </div>
     
-    <!-- Update Appointment Form (hidden by default) -->
-    <div id="update-appointment-modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Termin aktualisieren</h5> <!-- Update Appointment -->
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="update-appointment-form" method="post" hx-post hx-target="#appointment-{{ appointment.pk }}" hx-swap="outerHTML">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="update_name">Ihr Name</label> <!-- Your Name -->
-                            <input type="text" name="name" id="update_name" class="form-control" value="{{ appointment.name }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="update_email">Ihre E-Mail</label> <!-- Your Email -->
-                            <input type="email" name="email" id="update_email" class="form-control" value="{{ appointment.email }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="update_date">Bevorzugtes Datum</label> <!-- Preferred Date -->
-                            <input type="date" name="date" id="update_date" class="form-control" value="{{ appointment.date }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="update_time">Bevorzugte Zeit</label> <!-- Preferred Time -->
-                            <input type="time" name="time" id="update_time" class="form-control" value="{{ appointment.time }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="update_barber">Barbier auswählen</label> <!-- Select Barber -->
-                            <select name="barber" id="update_barber" class="form-control">
-                                {% for barber in barber_list %}
-                                <option value="{{ barber.id }}" {% if barber.id == appointment.barber.id %} selected {% endif %}>{{ barber.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="update_service_type">Art der Dienstleistung</label> <!-- Service Type -->
-                            <select name="service_type" id="update_service_type" class="form-control">
-                                {% for service in service_list %}
-                                <option value="{{ service.id }}" {% if service.id == appointment.service_type.id %} selected {% endif %}>{{ service.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="update_phone">Ihr Telefon</label> <!-- Your Phone -->
-                            <input type="tel" name="phone" id="update_phone" class="form-control" value="{{ appointment.phone }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="update_message">Zusätzliche Nachricht</label> <!-- Additional Message -->
-                            <textarea name="message" id="update_message" class="form-control">{{ appointment.message }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary rounded-pill">Termin aktualisieren</button> <!-- Update Appointment -->
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
     
-    <!-- Delete Appointment Popup Section -->
-    <div class="modal fade" id="delete-appointment-modal" tabindex="-1" role="dialog" aria-labelledby="delete-appointment-modal-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title rounded-pill" id="delete-appointment-modal-label">Termin löschen</h5> <!-- Delete Appointment -->
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body rounded-pill">
-                    <p>Sind Sie sicher, dass Sie den Termin für <span id="delete-appointment-name"></span> mit <span id="delete-appointment-barber"></span> löschen möchten?</p> <!-- Are you sure you want to delete the appointment for... -->
-                </div>
-                <div class="modal-footer">
-                    <form id="delete-appointment-form" method="post" hx-post hx-target=".appointment-list">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger rounded-pill">Löschen</button> <!-- Delete -->
-                        <button type="button" class="btn btn-secondary rounded-pill" data-dismiss="modal">Abbrechen</button> <!-- Cancel -->
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    
     
 </div>
 
