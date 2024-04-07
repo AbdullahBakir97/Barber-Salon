@@ -97,8 +97,7 @@ class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         owner = self.get_object()
-        owner_profile = owner.owner_profile
-        if owner_profile and request.user != owner_profile.user:
+        if not self.request.user.is_authenticated:
             raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
         
         return super().dispatch(request, *args, **kwargs)
