@@ -220,7 +220,7 @@
         success: function(response){
           console.log('Review form submitted successfully.');
           console.log('Response:', response);
-          if (response.success) {
+          if (response.result === 'success') {
             $('#all-reviews').html(response.reviews_html);
             $('#reviewModal').modal('hide');
             $('#reviewForm')[0].reset();

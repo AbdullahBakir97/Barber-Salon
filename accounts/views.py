@@ -14,7 +14,8 @@ from django.contrib.auth.models import User
 
 class CustomUserLoginView(LoginView):
     template_name = 'accounts/registration/login.html'
-
+    next_page = reverse_lazy('contact:management')
+    
 class CustomUserLogoutView(LogoutView):
     template_name = 'accounts/registration/logout.html'
     next_page = reverse_lazy('home')
@@ -24,14 +25,13 @@ class CustomUserSignUpView(SuccessMessageMixin, CreateView):
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
     success_message = 'Account created successfully.'
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.object)
+        login(self.request, self.User)
         return response
 
-    def get_success_url(self):
-        return reverse_lazy('home')
 
 class UserProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = UserProfile
