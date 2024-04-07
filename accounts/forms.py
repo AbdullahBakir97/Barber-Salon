@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import CustomUser, UserProfile, OwnerProfile
+from .models import UserProfile, OwnerProfile
+from django.contrib.auth.models import User
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
@@ -29,37 +30,11 @@ class OwnerProfileForm(forms.ModelForm):
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
-        fields = UserCreationForm.Meta.fields + (
-            'name', 'email', 'phone', 'date_of_birth', 'gender', 'address',
-            'password1', 'password2',  
-             'is_active',  
-        )
-        labels = {
-            'name': _('Name'),
-            'email': _('Email'),
-            'phone': _('Telefon'),
-            'date_of_birth': _('Geburtsdatum'),
-            'gender': _('Geschlecht'),
-            'address': _('Adresse'),
-            'password1': _('Passwort'),
-            'password2': _('Passwort bestätigen'),
-            'is_active': _('Active status'),
-        }
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control'}),
-            'gender': forms.Select(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control'}),
-        }
+        model = User
+        fields = UserCreationForm.Meta.fields
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
-        model = CustomUser
+        model = User
         fields = UserChangeForm.Meta.fields
 
-class CustomAuthenticationForm(AuthenticationForm):
-    class Meta:
-        model = CustomUser

@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, UserProfile, OwnerProfile
+from .models import User, UserProfile, OwnerProfile
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     can_delete = False
     verbose_name_plural = 'User Profiles'
 
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(UserAdmin):
     inlines = (UserProfileInline,)
     list_display = ('username', 'email', 'name', 'is_staff', 'is_active')
     fieldsets = (
@@ -27,5 +27,5 @@ class CustomUserAdmin(UserAdmin):
 class OwnerProfileAdmin(admin.ModelAdmin):
     model = OwnerProfile
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(UserProfile)
 admin.site.register(OwnerProfile, OwnerProfileAdmin)

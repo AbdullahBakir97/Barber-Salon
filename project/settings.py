@@ -13,16 +13,20 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEBUG= True
+DEBUG= os.environ.get('DEBUG')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--q$h@3d6acw*w*@*ju^li!yt#lmj8s26u8%1$5akz))mh!=%oh'
+SECRET_KEY = DEBUG= os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -69,7 +73,6 @@ INSTALLED_APPS = [
     
 ]
 
-# AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -143,16 +146,16 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
-#     'default': dj_database_url.parse("postgres://mypostgres_z40s_user:n6FK7Uoviu8FxWc6HdAin1N9m2UQJEbC@dpg-cn9onuen7f5s73fnso7g-a.frankfurt-postgres.render.com/mypostgres_z40s",conn_max_age=600,)
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
+# }
+
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'),conn_max_age=600)
+    }
 
 
 # Password validation
@@ -218,8 +221,8 @@ LOGOUT_URL = '/accounts/logout/'
 EMAIL_HOST = 'smtp.gmail.com'   # service
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "yahia2024@myyahoo.com"
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 ACCOUNT_UNIQUE_EMAIL = True

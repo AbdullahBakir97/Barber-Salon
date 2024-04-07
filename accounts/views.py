@@ -8,8 +8,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from django.db import IntegrityError
-from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm, CustomAuthenticationForm
-from .models import CustomUser, UserProfile, OwnerProfile
+from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm
+from .models import UserProfile, OwnerProfile
+from django.contrib.auth.models import User
 
 class CustomUserLoginView(LoginView):
     template_name = 'accounts/registration/login.html'
@@ -19,7 +20,7 @@ class CustomUserLogoutView(LogoutView):
     next_page = reverse_lazy('home')
 
 class CustomUserSignUpView(SuccessMessageMixin, CreateView):
-    model = CustomUser
+    model = User
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
     success_message = 'Account created successfully.'
