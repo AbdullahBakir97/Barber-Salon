@@ -168,7 +168,7 @@ class MessageDeleteView(OwnerProfileRequiredMixin, DeleteView):
     success_url = reverse_lazy('contact:management')  # Specify your success URL
     
     def get_object(self, queryset=None):
-        return get_object_or_404(Message, slug=self.kwargs['slug'])
+        return get_object_or_404(Message, pk=self.kwargs['pk'])
 
     def delete(self, request, *args, **kwargs):
         message = self.get_object()
