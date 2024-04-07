@@ -13,6 +13,7 @@ from .views import (
     create_visitor_review,
     submit_review,
     contact_view,
+    MessageDeleteView,
     pricing_view
 )
 
@@ -87,6 +88,7 @@ urlpatterns = [
     path('management/', management_view, name='management'),
     
     path('contact/', contact_view, name='contact'),
+    path('message_delete/', MessageDeleteView.as_view(), name='message_delete'),
     path('pricing/', pricing_view, name='pricing'),
     
     
