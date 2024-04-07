@@ -205,6 +205,49 @@
 </div>
 
 
+<div id="message_list" class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2 class="">Nachrichtenliste</h2> <!-- Message List -->
+        </div>
+    </div>
+
+    <!-- Message List -->
+    <div class="message-list mt-3">
+        <table class="table">
+            <thead class="thead-dark rounded-thead">
+                <tr>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Telefon</th>
+                    <th>Nachricht</th>
+                    <th>Zeitstempel</th> <!-- Timestamp -->
+                    <th>Aktion</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in message_list %}
+                <tr>
+                    <td>{{ message.name }}</td>
+                    <td>{{ message.email }}</td>
+                    <td>{{ message.phone }}</td>
+                    <td>{{ message.message }}</td>
+                    <td>{{ message.timestamp }}</td>
+                    <td>
+                         <a href="{% url 'contact:message_delete' slug=message.slug %}" class="btn btn-danger fa fa-trash rounded-pill"></a> <!-- Delete -->
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 <div id=barber_m class="container my-5 py-5">
     <div class="row p-3">
         <div class="col-md-10 heading-section ftco-animate">
