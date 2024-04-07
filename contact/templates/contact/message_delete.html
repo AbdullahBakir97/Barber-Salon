@@ -10,7 +10,7 @@
    <h2>Nachricht löschen</h2>
 
    <p>Sind Sie sicher, dass Sie die Nachricht von <strong>{{ message.name }}</strong> löschen möchten?</p>
-   <form method="post" action="{% url 'contact:message_delete' slug=message.slug %}">
+   <form method="post" action="{% url 'contact:message_delete' pk=message.pk %}">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
       <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
