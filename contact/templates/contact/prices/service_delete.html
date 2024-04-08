@@ -22,6 +22,7 @@
                   {% csrf_token %}
                   <div class="form-group">
                       <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Service löschen </button>
+                      <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
                   </div>
               </form>
           </div>
