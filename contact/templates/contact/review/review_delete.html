@@ -16,7 +16,7 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-danger rounded-pill fa fa-trash"> Löschen </button>
-    <a href="{% url 'contact:review_list' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
+    <a href="{% url 'contact:management' %}" class="btn btn-secondary rounded-pill">Abbrechen</a>
   </form>
 </div>
 
