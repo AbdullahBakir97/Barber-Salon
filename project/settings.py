@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     "phonenumber_field",
     'faker',
-    'compressor',
     
     # my app 
     
