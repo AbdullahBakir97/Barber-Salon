@@ -3,7 +3,6 @@
 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
 {% endblock css %}
 
 {% block body %}
@@ -45,20 +44,20 @@
                         {{ form.about }}
                     </div>
                     <div class="form-group">
-                        <label for="id_work_days">Work Days</label>
+                        <label for="id_work_days">Arbeits Tage</label>
                         {{ form.work_days }}
                     </div>
                     <div class="form-group">
-                        <label for="id_opening_time">Opening Time</label>
+                        <label for="id_opening_time">Öffnungszeit</label>
                         {{ form.opening_time }}
                     </div>
                     <div class="form-group">
-                        <label for="id_closing_time">Closing Time</label>
+                        <label for="id_closing_time">Schließungszeit</label>
                         {{ form.closing_time }}
                     </div>
                     <div class="form-group">
-                        <label for="id_social_media_links">Social-Media-Links</label>
-                        <input type="text" name="social_media_links" id="id_social_media_links" value="{{ form.social_media_links.value }}" class="form-control">
+                        <label for="id_tax">Steuer ID</label>
+                        <input type="text" name="tax_id" id="id_tax" value="{{ form.tax_id.value }}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="id_logo">Ihr Logo</label>

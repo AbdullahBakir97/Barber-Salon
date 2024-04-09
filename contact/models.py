@@ -15,13 +15,13 @@ class Owner(models.Model):
     email = models.EmailField(_('Email'),)
     phone = PhoneNumberField(_('Telefon'),max_length=15)
     address = models.TextField(_('Adresse'),)
-    logo = models.ImageField(_('Logo'),upload_to='owner_logos/')
+    logo = models.ImageField(_('Logo'),blank=True, null=True, upload_to='owner_logos/')
     website = models.URLField(_('Webseite'),blank=True, null=True)
     work_days = models.CharField(_('Arbeits Tage'),max_length=255, default='Montag-Freitag')
     opening_time = models.TimeField(_('Öffnungszeit'), default=datetime.time(9, 0))
     closing_time = models.TimeField(_('Schließungszeit'), default=datetime.time(20, 0))
     about = models.TextField(_('Über'),blank=True, null=True)
-    social_media_links = models.JSONField(_('Social Links'),blank=True, null=True)
+    tax_id = models.CharField(max_length=100, blank=True, null=True)
     slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
     
     def save(self, *args, **kwargs):

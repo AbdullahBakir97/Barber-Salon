@@ -1,12 +1,23 @@
-{% extends 'base.html' %}
 {% load static %} 
+{% block title %}
+    Page Not Found (404)
+{% endblock title %}
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock css %}
 
 {% block body %}
 
-<h1>404 - Page Not Found</h1>
-<p>Sorry, the page you requested could not be found.</p>
+<div class="container my-5 py-5 text-center">
+   <h1 class="display-4">404 - Page Not Found</h1>
+   <p class="lead">Sorry, the page you requested could not be found.</p>
+   <div class="row justify-content-center">
+      <div class="col-md-6">
+      </div>
+   </div>
+   <div class="mt-4">
+      <a href="{% url 'home' %}" class="btn btn-primary rounded-pill">Zur Startseite</a>
+   </div>
+</div>
 
 {% endblock body %}

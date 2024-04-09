@@ -18,6 +18,8 @@ from accounts.models import OwnerProfile
 import logging
 from project import settings
 from django.core.mail import send_mail
+from settings.salon_context_processor import get_salon_data
+from settings.models import Salon
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 logger = logging.getLogger(__name__)
@@ -39,7 +41,7 @@ def my_view(request):
 
     logger.debug('Exiting my_view function...')
 
-# Define the function that performs some task (placeholder)
+
 def perform_some_task():
     # Placeholder code
     return "Task result"
@@ -47,8 +49,10 @@ def perform_some_task():
 # Owner
 
 class OwnerProfileRequiredMixin(LoginRequiredMixin):
+
     def handle_no_permission(self):
-        raise Http404(_("Sie sind nicht berechtigt, diese Seite zu sehen, melden sie sich erstmal an."))
+        messages.error(self.request, _("Sie sollen sich erstmal anmelden."))
+        return HttpResponseRedirect(reverse('accounts:account_login'))
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -85,8 +89,6 @@ class OwnerCreateView(LoginRequiredMixin, CreateView):
             messages.error(self.request, _('Ein Fehler ist aufgetreten.'))
             return self.handle_no_permission()
 
-    def handle_no_permission(self):
-        raise Http404(_("Sie sind nicht berechtigt, diese Seite zu sehen."))
 
 
 class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
@@ -94,15 +96,22 @@ class OwnerUpdateView(OwnerProfileRequiredMixin, UpdateView):
     form_class = OwnerForm
     template_name = 'contact/owner/owner_update.html'
     success_url = reverse_lazy('contact:management')
+    
+    def get_object(self, queryset=None):
+        return get_object_or_404(Owner, pk=self.kwargs['pk'])
 
-    def dispatch(self, request, *args, **kwargs):
-        owner = self.get_object()
-        if not self.request.user.is_authenticated:
-            raise Http404(_("Sie dürfen dieses Eigentümerprofil nicht bearbeiten."))
-        
-        return super().dispatch(request, *args, **kwargs)
-        
-        
+    def form_valid(self, form):
+        messages.success(self.request, "Owner details updated successfully.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Error updating owner details. Please check the form.")
+        return super().form_invalid(form)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You do not have permission to update owner details.")
+        return redirect('contact:management')
+           
 class OwnerDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Owner
     template_name = 'contact/owner/owner_delete.html'
@@ -170,10 +179,6 @@ class MessageDeleteView(OwnerProfileRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         return get_object_or_404(Message, pk=self.kwargs['pk'])
 
-    def delete(self, request, *args, **kwargs):
-        message = self.get_object()
-        message.delete()
-        return HttpResponseRedirect(self.get_success_url())
 
 # Barber
 class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
@@ -193,30 +198,20 @@ class BarberCreateView(OwnerProfileRequiredMixin, CreateView):
             else:
                 return super().form_valid(form)
 
-        
-        
+          
 class BarberUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Barber
     form_class = BarberForm
     template_name = 'contact/barber/barber_update.html'
     success_url = reverse_lazy('contact:management')
-    
 
 class BarberDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Barber
     template_name = 'contact/barber/barber_delete.html'
     success_url = reverse_lazy('contact:management')
-    
 
     def get_object(self, queryset=None):
         return get_object_or_404(Barber, pk=self.kwargs['pk'])
-
-    def delete(self, request, *args, **kwargs):
-        barber = self.get_object()
-        barber.delete()
-        return HttpResponseRedirect(self.get_success_url())
-
-
 
 class BarberListView(OwnerProfileRequiredMixin, ListView):
     model = Barber
@@ -224,7 +219,7 @@ class BarberListView(OwnerProfileRequiredMixin, ListView):
     
     def get_queryset(self):
         return Barber.objects.all()
-    
+        
 class BarberManagementView(OwnerProfileRequiredMixin, ListView):
     model = Barber
     template_name = 'contact/barber/barber_management.html'
@@ -233,8 +228,6 @@ class BarberManagementView(OwnerProfileRequiredMixin, ListView):
         return Barber.objects.all()
     
     
-
-
 # GalleryItem
 class GalleryItemCreateView(OwnerProfileRequiredMixin, CreateView):
     model = GalleryItem
@@ -257,7 +250,6 @@ class GalleryItemUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/gallery/item_update.html'
     success_url = reverse_lazy('contact:management')
 
-
 class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = GalleryItem
     template_name = 'contact/gallery/item_delete.html'
@@ -271,15 +263,13 @@ class GalleryItemDeleteView(OwnerProfileRequiredMixin, DeleteView):
         item.delete()
         return HttpResponseRedirect(self.get_success_url())
 
-
 class GalleryItemListView(OwnerProfileRequiredMixin, ListView):
     model = GalleryItem
     template_name = 'contact/gallery/item_list.html'
     
     def get_queryset(self):
         return GalleryItem.objects.all()
-    
-    
+     
 class GalleryItemManagementView(OwnerProfileRequiredMixin, ListView):
     model = GalleryItem
     template_name = 'contact/gallery/item_management.html'
@@ -288,8 +278,7 @@ class GalleryItemManagementView(OwnerProfileRequiredMixin, ListView):
         return GalleryItem.objects.all()
 
 
-
-    
+# category    
 class CategoryCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Category
     form_class = CategoryForm
@@ -308,7 +297,7 @@ class CategoryDeleteView(OwnerProfileRequiredMixin, DeleteView):
     success_url = reverse_lazy('contact:management')
 
 
-
+# service
 class ServiceCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Service
     form_class = ServiceForm
@@ -325,8 +314,7 @@ class ServiceDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Service
     template_name = 'contact/prices/service_delete.html'
     success_url = reverse_lazy('contact:management')
-    
-    
+      
 def pricing_view(request):
     if request.method == 'POST':
         # If a product is edited or deleted, redirect to the pricing view
@@ -334,8 +322,7 @@ def pricing_view(request):
     categories = Category.objects.prefetch_related('service_category').all()
     services = Service.objects.exclude(product_service__isnull=True)
     return render(request, 'contact/prices/pricing.html', {'categories': categories, 'services': services})
-    
-      
+       
 class ServiceManagementView(OwnerProfileRequiredMixin, ListView):
     model = Service
     template_name = 'contact/prices/service_management.html'
@@ -366,13 +353,10 @@ class ReviewUpdateView(OwnerProfileRequiredMixin, UpdateView):
     template_name = 'contact/review/review_update.html'
     success_url = reverse_lazy('contact:management')
 
-
-
 class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Review
     template_name = 'contact/review/review_delete.html'
     success_url = reverse_lazy('contact:management')
-
 
     def get_object(self, queryset=None):
         return get_object_or_404(Review, pk=self.kwargs['pk'])
@@ -381,7 +365,6 @@ class ReviewDeleteView(OwnerProfileRequiredMixin, DeleteView):
         review = self.get_object()
         review.delete()
         return HttpResponseRedirect(self.get_success_url())
-
 
 class ReviewListView(ListView):
     model = Review
@@ -431,6 +414,7 @@ class ReviewManagementView(OwnerProfileRequiredMixin, ListView):
     def get_queryset(self):
         return Review.objects.all()
 
+
 # Appointment
 class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
     model = Appointment
@@ -443,13 +427,10 @@ class AppointmentCreateView(OwnerProfileRequiredMixin, CreateView):
             self.submitted = True
             return super().form_valid(form)
 
-    
     def form_invalid(self, form):
         self.submitted = False
         return self.render_to_response(self.get_context_data(form=form))
     
-
-
 class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
     model = Appointment
     form_class = AppointmentForm
@@ -461,7 +442,6 @@ class AppointmentUpdateView(OwnerProfileRequiredMixin, UpdateView):
         context['appointment'] = self.object  # Pass appointment object to template
         return context
 
-
 class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
     model = Appointment
     template_name = 'contact/appointment/appointment_delete.html'
@@ -472,10 +452,6 @@ class AppointmentDeleteView(OwnerProfileRequiredMixin, DeleteView):
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
 
-
-
-
-
 class AppointmentListView(OwnerProfileRequiredMixin, ListView):
     model = Appointment
     template_name = 'contact/appointment/appointment_list.html'
@@ -485,7 +461,6 @@ class AppointmentListView(OwnerProfileRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['verbose_name'] = self.model._meta.verbose_name.title()
         return context
-    
     
 class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
     model = Appointment
@@ -499,7 +474,6 @@ class AppointmentManagementView(OwnerProfileRequiredMixin, ListView):
 
 
 # Visitor Views
-
 class VisitorAppointmentCreateView(CreateView):
     model = Appointment
     form_class = AppointmentForm

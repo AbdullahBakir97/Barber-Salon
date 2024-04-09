@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
-from settings.views import home_view
+from settings.views import home_view , handl404, handl500
 
 from django.urls import re_path
 from rest_framework import permissions

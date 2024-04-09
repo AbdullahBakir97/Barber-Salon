@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+    .scrollable-list {
+        overflow-y: auto;
+        max-height: 400px; /* Adjust as needed */
+    }
+    .card {
+        border-radius: 10px;
+        border: #khaki
+
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .card:hover {
+        transform: scale(1.05);
+        border-color: #gray
+    }
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .card-text {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 5px;
+        background-color: red; /* Changed to gold */
+        color: #fff;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    /* Hover effect */
+    .btn:hover {
+        background-color: #red; /* Lighter gold */
+        color: #black;
+        border-color: #darkred; /* Lighter gold */
+    }
+
+    /* Text color change on hover */
+
+
+    /* Cancel button */
+    .btn-cancel {
+        background-color: red;
+        border-color: darkred;
+    }
+
+    .btn-cancel:hover {
+        background-color: darkred;
+        border-color: red;
+    }
+
+    /* Add button */
+    .btn-add {
+        background-color: goldenrod;
+        border-color: darkgoldenrod;
+    }
+
+    .btn-add:hover {
+        background-color: darkgoldenrod;
+        border-color: goldenrod;
+    }
+
+    /* Text color for delete button */
+    .btn-delete .btn-text {
+        color: red;
+    }
+
+    /* Text color for add button */
+    .btn-add .btn-text {
+        color: gold;
+    }
+
+    
+</style>
+{% endblock css %}
+
+{% block body %}
+<div class="container my-5 py-5">
+    <div class="row p-3">
+        <div class="col-md-10 heading-section ftco-animate">
+            <h2>Benutzerverwaltung</h2>
+        </div>
+    </div>
+
+    <!-- Add New User Button (visible only to authenticated users) -->
+    {% if user.is_authenticated %}
+    <button id="toggleCreateForm" class="btn btn-add mb-3 rounded-pill"><i class="fas fa-user-plus"></i> Neuen Benutzer hinzufügen</button>
+    <div id="createForm" style="display: none;">
+        <h3>Neuen Benutzer hinzufügen</h3>
+        <form method="post" action="{% url 'accounts:create_user' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary rounded-pill"><i class="fas fa-check"></i> Erstellen</button>
+            <button type="button" class="btn btn-cancel rounded-pill"><i class="fas fa-times"></i> Abbrechen</button> <!-- Cancel button -->
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Show Login Button for Non-Authenticated Users -->
+    <a class="btn btn-primary rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+
+    <!-- List Users as Cards -->
+    <div class="row">
+        {% for user in accounts_list %}
+            <div class="col-md-6 col-lg-3 mb-4 ">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-user"></i> <strong>{{ user.username }}</strong></h5>
+                        <p class="card-text"><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                        <p class="card-text"><i class="fas fa-user"></i> Name: {{ user.name }}</p>
+                        <p class="card-text"><i class="fas fa-calendar-alt"></i> Date of Birth: {{ user.date_of_birth }}</p>
+                        <p class="card-text"><i class="fas fa-venus-mars"></i> Gender: {{ user.gender }}</p>
+                        <p class="card-text"><i class="fas fa-phone"></i> Phone: {{ user.phone }}</p>
+                        <p class="card-text"><i class="fas fa-map-marker-alt"></i> Address: {{ user.address }}</p>
+                        <p class="card-text"><i class="fas fa-toggle-on"></i> Active: {{ user.is_active }}</p>
+                        <p class="card-text"><i class="fas fa-sign-in-alt"></i> Last Login: {{ user.last_login }}</p>
+                    </div>
+                    <div class="btn-group" role="group">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'accounts:edit_user' pk=user.pk %}" class="btn btn-primary rounded-pill btn-edit"><i class="fas fa-edit"></i> Bearbeiten</a>
+                        <a href="{% url 'accounts:delete_user' pk=user.pk %}" class="btn btn-cancel rounded-pill btn-delete"><i class="fas fa-trash-alt"></i> Löschen</a>
+                        {% elif not user.is_authenticated %}
+                        <a class="btn btn-primary rounded-pill" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // Toggle create user form
+    const toggleCreateForm = document.getElementById('toggleCreateForm');
+    const createForm = document.getElementById('createForm');
+    toggleCreateForm.addEventListener('click', () => {
+        if (createForm.style.display === 'none') {
+            createForm.style.display = 'block';
+        } else {
+            createForm.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}
+

@@ -2,7 +2,6 @@
 {% load static %}
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
 {% endblock css %}
 
 {% block body %}
@@ -15,9 +14,10 @@
         </div>
 
         <div class="card-body">
-          <h1 class="logo"><strong></strong><a href="#"><span class=""></span>{{ salon_data.owner.name }}</a> <a href="{% url 'contact:owner_update' pk=salon_data.owner.pk %}" style="color: gold;">
-              <i class="fa fa-edit btn btn-primary rounded-pill"></i>
-          </a></h1>
+          <h1 class="logo"><strong></strong><a href="#"><span class=""></span>{{ salon_data.owner.name }}</a>
+            <a href="{% url 'contact:owner_update' pk=salon_data.owner.pk %}" style="color: gold;">
+              <i class="fa fa-edit btn btn-primary rounded-pill"></i></a>
+          </h1>
           <p class="icon icon-envelope"><strong> E-Mail: </strong> {{ salon_data.owner.email }}</p>
           <p class="icon icon-phone"><strong> Telefon: </strong> {{ salon_data.owner.phone }}</p>
           <p class="icon icon-map-marker"><strong> Adresse: </strong> {{ salon_data.owner.address }}</p>

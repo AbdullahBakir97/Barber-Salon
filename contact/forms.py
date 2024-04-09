@@ -11,7 +11,7 @@ class OwnerForm(forms.ModelForm):
     closing_time = forms.TimeField(label=_('Schließungszeit'), widget=forms.TimeInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Owner
-        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about','work_days', 'opening_time', 'closing_time']
+        fields = ['name', 'email', 'phone', 'address', 'logo', 'website', 'about','work_days', 'opening_time', 'closing_time', 'tax_id']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -24,6 +24,7 @@ class OwnerForm(forms.ModelForm):
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'about': forms.Textarea(attrs={'class': 'form-control'}),
+            'tax_id': forms.TextInput(attrs={'class': 'form-control'}),
             
         }
 
@@ -38,23 +39,63 @@ class OwnerForm(forms.ModelForm):
             'work_days': _('Arbeits Tage'),
             'opening_time': _('Öffnungszeit'),
             'closing_time': _('Schließungszeit'),
-
+            'tax_id': _('Steuernummer'),
         }
+        
+        error_messages = {
+            'name': {
+                'required': _("Der Name ist erforderlich."),
+            },
+            'email': {
+                'required': _("Die E-Mail ist erforderlich."),
+                'unique': _("Ein Eigentümer mit dieser E-Mail existiert bereits."),
+            },
+            'phone': {
+                'required': _("Die Telefonnummer ist erforderlich."),
+            },
+            'address': {
+                'required': _("Die Adresse ist erforderlich."),
+            },
+            'logo': {
+                'required': _("Das Logo ist erforderlich."),
+            },
+            'website': {
+                'required': _("Die Webseite ist erforderlich."),
+            },
+            'about': {
+                'required': _("Informationen über den Eigentümer sind erforderlich."),
+            },
+            'work_days': {
+                'required': _("Die Arbeits Tage sind erforderlich."),
+            },
+            'opening_time': {
+                'required': _("Die Öffnungszeit ist erforderlich."),
+            },
+            'closing_time': {
+                'required': _("Die Schließungszeit ist erforderlich."),
+            },
+            'tax_id': {
+                'required': _("Die Steuernummer ist erforderlich."),
+            },
+        }
+
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if Owner.objects.filter(email=email).exists():
-            raise ValidationError(_('Ein Eigentümer mit dieser E-Mail existiert bereits.'))
+            raise ValidationError(_('An owner with this email already exists.'))
         return email
 
+    def clean(self):
+        cleaned_data = super().clean()
+        opening_time = cleaned_data.get('opening_time')
+        closing_time = cleaned_data.get('closing_time')
 
-    def value_from_datadict(self, data, files, name):
-        if name in data:
-            return data.get(name)  # Return the value if present in data
-        elif self.instance and hasattr(self.instance, name):
-            return getattr(self.instance, name)  # Return instance value if present
-        else:
-            return None
+        if opening_time and closing_time:
+            if opening_time >= closing_time:
+                raise forms.ValidationError(_('The closing time must be after the opening time.'))
+
+        return cleaned_data
 
 class MessageForm(forms.ModelForm):
     name = forms.CharField(label='Your Name', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))

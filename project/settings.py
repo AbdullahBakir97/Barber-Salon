@@ -33,8 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-handler404 = 'settings.views.handl404'
-handler500 = 'settings.views.handl500'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
     # allauth
     'allauth',
@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "phonenumber_field",
     'faker',
+    'compressor',
     
     # my app 
     
@@ -93,8 +94,8 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -129,6 +130,7 @@ INTERNAL_IPS = [
     # ...
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -211,10 +213,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+WHITENOISE_STATIC_PREFIX = '/static/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL =  '/media/'
 MEDIA_ROOT =  BASE_DIR / "media"
@@ -255,4 +261,3 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400  # 1 day (in seconds)
 
 
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

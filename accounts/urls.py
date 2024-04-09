@@ -1,9 +1,11 @@
 from django.urls import path
+from django.shortcuts import render, HttpResponseRedirect, reverse, get_object_or_404
+from django.views import View
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
 )
-from .views import CustomUserLoginView , CustomUserLogoutView , CustomUserSignUpView ,  UserProfileUpdateView , OwnerProfileUpdateView
-
+from .views import CustomUserLoginView , CustomUserLogoutView , CustomUserSignUpView ,  UserProfileUpdateView , OwnerProfileUpdateView , create_user, edit_user, delete_user, accounts_management
+from . import views
 app_name = 'accounts'
 
 urlpatterns = [
@@ -15,5 +17,10 @@ urlpatterns = [
     path('password/change/', PasswordChangeView.as_view(), name='account_change_password'),
     path('password/reset/', PasswordResetView.as_view(), name='account_reset_password'),
     path('password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='account_reset_password_confirm'),
-    # Add other URLs as needed
+    path('dashboard/', accounts_management, name='management'),
+    path('create/', create_user, name='create_user'),
+    path('edit/<int:pk>/', edit_user, name='edit_user'),
+    path('delete/<int:pk>/', delete_user, name='delete_user'),
+    # Add URLs for create, edit, and delete users
+
 ]
