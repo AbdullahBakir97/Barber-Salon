@@ -7,7 +7,7 @@
 Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by HTMX for seamless, dynamic interactions.
 
 ## Demo
-See it in action: [Live Demo](https://hair-salon-ni23.onrender.com/)
+See it in action: [Live Demo](https://kharsa-style.de/)
 
 
 <p align="center">
