@@ -8,8 +8,9 @@ from django.contrib.auth.models import User
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['profile_image', 'barber', 'phone', 'date_of_birth', 'gender', 'address']
+        fields = ['user', 'profile_image', 'barber', 'phone', 'date_of_birth', 'gender', 'address']
         labels = {
+            'user': _('Benutzer'),
             'profile_image': _('Profile Foto'),
             'barber': _('Friseur'),
             'phone': _('Telefon'),
@@ -18,7 +19,8 @@ class UserProfileForm(forms.ModelForm):
             'address': _('Adresse'),
         }
         widgets = {
-            'profile_image': forms.ClearableFileInput(attrs={'class': 'custom-file-input'}),
+            'user': forms.Select(attrs={'class': 'form-control'}),
+            'profile_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'barber': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -29,8 +31,9 @@ class UserProfileForm(forms.ModelForm):
 class OwnerProfileForm(forms.ModelForm):
     class Meta:
         model = OwnerProfile
-        fields = ['image', 'phone', 'date_of_birth', 'gender', 'address']
+        fields = ['user','image', 'phone', 'date_of_birth', 'gender', 'address']
         labels = {
+            'user': _('Benutzer'),
             'image': _('Foto'),
             'phone': _('Telefon'),
             'date_of_birth': _('Geburtsdatum'),
@@ -38,6 +41,7 @@ class OwnerProfileForm(forms.ModelForm):
             'address': _('Adresse'),
         }
         widgets = {
+            'user': forms.Select(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'custom-file-input'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),

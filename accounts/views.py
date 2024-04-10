@@ -16,15 +16,17 @@ from django.contrib.auth.models import User
 
 
 class CustomUserLoginView(LoginView):
+    model = UserProfile
     template_name = 'accounts/registration/login.html'
     next_page = reverse_lazy('contact:management')
     
 class CustomUserLogoutView(LogoutView):
+    model = UserProfile
     template_name = 'accounts/registration/logout.html'
-    next_page = reverse_lazy('home')
+    next_page = reverse_lazy('project:home')
 
 class CustomUserSignUpView(SuccessMessageMixin, CreateView):
-    model = User
+    model = UserProfile
     form_class = CustomUserCreationForm
     template_name = 'accounts/signup.html'
     success_message = 'Account created successfully.'
@@ -38,6 +40,7 @@ class CustomUserSignUpView(SuccessMessageMixin, CreateView):
         return reverse_lazy('home')
     
 def create_user(request):
+    
     if request.method == 'POST':
         form = UserProfileForm(request.POST)
         if form.is_valid():
@@ -45,25 +48,28 @@ def create_user(request):
             return redirect('accounts:management')
     else:
         form = UserProfileForm()
-    return render(request, 'accounts/accounts_management.html', {'form': form})
+    return render(request, 'accounts/accounts_create.html', {'form': form})
 
 def edit_user(request, pk):
-    user = get_object_or_404(User, pk=pk)
+    user_profile = get_object_or_404(UserProfile, pk=pk)
+
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
+        form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
             return redirect('accounts:management')
     else:
-        form = UserProfileForm(instance=user)
-    return render(request, 'accounts/accounts_management.html', {'form': form})
+        form = UserProfileForm(instance=user_profile)
+    
+    return render(request, 'accounts/accounts_update.html', {'user_profile': user_profile})
+
 
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         user.delete()
         return redirect('accounts:management')
-    return render(request, 'accounts/accounts_management.html', {'user': user})
+    return render(request, 'accounts/accounts_delete.html', {'user': user})
     
 class UserCretateView(SuccessMessageMixin, View):
     model = User
@@ -72,8 +78,9 @@ class UserCretateView(SuccessMessageMixin, View):
 
 
 def accounts_management(request):
-    accounts_list = User.objects.all()
-   
+    accounts_list = UserProfile.objects.all()
+     
+    
 
     
     context = {

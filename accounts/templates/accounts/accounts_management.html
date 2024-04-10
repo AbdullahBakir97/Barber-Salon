@@ -83,8 +83,8 @@
         color: gold;
     }
 
-    
-</style>
+        
+    </style>
 {% endblock css %}
 
 {% block body %}
@@ -103,15 +103,15 @@
         <form method="post" action="{% url 'accounts:create_user' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary rounded-pill"><i class="fas fa-check"></i> Erstellen</button>
-            <button type="button" class="btn btn-cancel rounded-pill"><i class="fas fa-times"></i> Abbrechen</button> <!-- Cancel button -->
+            <button type="submit" class="btn btn-add rounded-pill"><i class="fas fa-check"></i> Erstellen</button>
+            <button type="close" class="btn btn-cancel rounded-pill"><i class="fas fa-times"></i> Abbrechen</button> <!-- Cancel button -->
         </form>
     </div>
-    {% endif %}
-
+    
+    {% elif not user.is_authenticated %}
     <!-- Show Login Button for Non-Authenticated Users -->
-    <a class="btn btn-primary rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
-
+    <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+    {% endif %}
     <!-- List Users as Cards -->
     <div class="row">
         {% for user in accounts_list %}
@@ -120,7 +120,7 @@
                     <div class="card-body">
                         <h5 class="card-title"><i class="fas fa-user"></i> <strong>{{ user.username }}</strong></h5>
                         <p class="card-text"><i class="fas fa-envelope"></i> {{ user.email }}</p>
-                        <p class="card-text"><i class="fas fa-user"></i> Name: {{ user.name }}</p>
+                        <p class="card-text"><i class="fas fa-user"></i> Name: {{ user.user }}</p>
                         <p class="card-text"><i class="fas fa-calendar-alt"></i> Date of Birth: {{ user.date_of_birth }}</p>
                         <p class="card-text"><i class="fas fa-venus-mars"></i> Gender: {{ user.gender }}</p>
                         <p class="card-text"><i class="fas fa-phone"></i> Phone: {{ user.phone }}</p>
@@ -130,10 +130,10 @@
                     </div>
                     <div class="btn-group" role="group">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'accounts:edit_user' pk=user.pk %}" class="btn btn-primary rounded-pill btn-edit"><i class="fas fa-edit"></i> Bearbeiten</a>
+                        <a href="{% url 'accounts:edit_user' pk=user.pk %}" class="btn btn-add rounded-pill btn-edit"><i class="fas fa-edit"></i> Bearbeiten</a>
                         <a href="{% url 'accounts:delete_user' pk=user.pk %}" class="btn btn-cancel rounded-pill btn-delete"><i class="fas fa-trash-alt"></i> Löschen</a>
                         {% elif not user.is_authenticated %}
-                        <a class="btn btn-primary rounded-pill" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
                         {% endif %}
                     </div>
                 </div>

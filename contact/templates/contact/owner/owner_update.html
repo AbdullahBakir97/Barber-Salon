@@ -76,7 +76,12 @@
                         <label for="id_logo">Ihr Logo</label>
                         {{ form.logo }}
                     </div>
-                    <button type="submit" class="btn btn-primary rounded-pill">Aktualisieren</button>
+                    {% if form.logo %}
+                    <div>
+                        <img src="{{ form.logo.value.url }}" class="img-fluid barber-image">
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary rounded-pill mt-3">Aktualisieren</button>
                 </form>
             </div>
         </div>
