@@ -16,12 +16,12 @@ from django.contrib.auth.models import User
 
 
 class CustomUserLoginView(LoginView):
-    model = UserProfile
+    model = User
     template_name = 'accounts/registration/login.html'
     next_page = reverse_lazy('contact:management')
     
 class CustomUserLogoutView(LogoutView):
-    model = UserProfile
+    model = User
     template_name = 'accounts/registration/logout.html'
     next_page = reverse_lazy('project:home')
 
