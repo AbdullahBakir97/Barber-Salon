@@ -110,6 +110,7 @@
             <p class="icon icon-link"><strong> Webseite: </strong> <a href="{{ salon_data.owner.website }}">{{salon_data.owner.website }}</a></p>
             <p class="icon icon-clock-o"><strong> Öffnungszeiten: </strong> {{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
             <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
+            <span class="icon icon-confirmation_number"></span><span class="text">{{ salon_data.owner.tax_id }}</span>
             <p class="logo"><strong> Logo: </strong><br>
             <img src="{{ salon_data.owner.logo.url }}" alt="{{ salon_data.owner.name }} Logo"></p>
             <!-- Add display for other fields as needed -->
