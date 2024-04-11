@@ -35,7 +35,7 @@
         font-weight: bold;
         text-decoration: none;
         border-radius: 5px;
-        background-color: red; /* Changed to gold */
+        background-color: red; 
         color: #fff;
         border: 2px solid transparent;
         transition: all 0.3s ease;
@@ -43,12 +43,10 @@
 
     /* Hover effect */
     .btn:hover {
-        background-color: #red; /* Lighter gold */
+        background-color: #red;
         color: #black;
         border-color: #darkred; /* Lighter gold */
     }
-
-    /* Text color change on hover */
 
 
     /* Cancel button */
@@ -73,12 +71,12 @@
         border-color: goldenrod;
     }
 
-    /* Text color for delete button */
+    
     .btn-delete .btn-text {
         color: red;
     }
 
-    /* Text color for add button */
+
     .btn-add .btn-text {
         color: gold;
     }
@@ -95,7 +93,7 @@
         </div>
     </div>
 
-    <!-- Add New User Button (visible only to authenticated users) -->
+    <!-- User Button (visible only to authenticated users) -->
     {% if user.is_authenticated %}
     <button id="toggleCreateForm" class="btn btn-add mb-3 rounded-pill"><i class="fas fa-user-plus"></i> Neuen Benutzer hinzufügen</button>
     <div id="createForm" style="display: none;">
