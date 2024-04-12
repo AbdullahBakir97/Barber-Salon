@@ -16,7 +16,7 @@ GENDER_CHOICES = [
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='user_profile', on_delete=models.CASCADE, verbose_name=_('Benutzer'))
+    user = models.OneToOneField(User, related_name='user_profile', on_delete=models.SET_NULL, verbose_name=_('Benutzer'),null=True, blank=True)
     barber = models.ForeignKey(Barber, related_name='barber_profile', on_delete=models.SET_NULL, verbose_name=_('Friseur'),  null=True, blank=True)
     phone = models.CharField(_('Telefon'), max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(_('Geburtsdatum'), blank=True, null=True)
@@ -28,8 +28,8 @@ class UserProfile(models.Model):
         return f"Profil von {self.user.username}"
 
 class OwnerProfile(models.Model):
-    user = models.OneToOneField(User, related_name='owner_user_profile', on_delete=models.CASCADE, verbose_name=_('Benutzer'), default=1)
-    owner = models.OneToOneField(Owner, related_name='owner_profile', on_delete=models.CASCADE, verbose_name=_('Eigentümer'), default=None)
+    user = models.OneToOneField(User, related_name='owner_user_profile', on_delete=models.SET_NULL, verbose_name=_('Benutzer'), default=1,null=True, blank=True)
+    owner = models.OneToOneField(Owner, related_name='owner_profile', on_delete=models.SET_NULL, verbose_name=_('Eigentümer'), default=None, null=True, blank=True)
     phone = models.CharField(_('Telefon'), max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(_('Geburtsdatum'), blank=True, null=True)
     gender = models.CharField(_('Geschlecht'), max_length=10, choices=GENDER_CHOICES, blank=True, null=True)

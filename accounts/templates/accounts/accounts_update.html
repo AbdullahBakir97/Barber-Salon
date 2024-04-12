@@ -2,15 +2,18 @@
 {% load static %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock css %}
 
 {% block body %}
-<div class="container mt-4">
-    <h2>Edit User</h2>pk
-    <form method="post" href="{% url 'accounts:edit_user' pk=user.pk %}">
+<div class="container my-5 py-5">
+    <h2>Edit User</h2>
+    <form method="post" href="{% url 'accounts:edit_profile' pk=user.pk %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update</button>
+
+        {{ form.is_active }}
+        <button type="submit" class="btn btn-add rounded-pill">Aktualisieren </button>
     </form>
 </div>
 {% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+
+<section class="ftco-section ftco-booking bg-light">
+    <div class="container ftco-relative">
+        <div class="row justify-content-center pb-3">
+            <div class="col-md-10 heading-section text-center ftco-animate">
+                <span class="subheading">Benutzerprofil</span>
+                <h2 class="mb-4">Benutzerprofil aktualisieren</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 heading-section text-center ftco-animate">
+            <form method="post" action="{% url 'accounts:create_user'  %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+
+                    <h2> Personal info:</h2>
+                    <br>
+
+
+                    <h5> Benutzer: {{ form.username }}</h5>
+                    <h5> Name: {{ form.first_name }}</h5>
+                    <h5> N-Name: {{ form.last_name }}</h5>  
+                    <h5> E-mail: {{ form.email }}</h5>
+                    <h2> Berechtigungen:</h2>
+                    <div>
+                    <h5>Stuff: {{ form.is_staff }} Active: {{ form.is_active }} Admin: {{ form.is_superuser }}</h5>
+                    </div>
+                    {{ form.date_joined.label_tag }}
+                    {{ form.date_joined }}
+                    {{ form.last_login.label_tag }}
+                    {{ form.last_login }}
+                    <br>
+                    <button type="submit" class="btn btn-add rounded-pill mt-2">Erstellen</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div><
+</section>
+{% endblock %}

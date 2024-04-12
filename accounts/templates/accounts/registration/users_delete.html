@@ -9,9 +9,8 @@
 <div class="container mt-4">
     <h2>Delete User</h2>
     <p>Are you sure you want to delete this user?</p>
-    <form method="post" href="{% url 'accounts:delete_profile' pk=pk %}">
+    <form method="post" href="{% url 'accounts:delete_user' pk=user.pk %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-cancel rounded-pill">Löschen</button>
+        <button type="submit" class="btn btn-cancel">Löschen</button>
     </form>
 </div>
-{% endblock %}

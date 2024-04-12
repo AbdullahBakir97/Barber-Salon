@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, HttpResponseRedirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login
@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView,  View , TemplateView
 from django.urls import reverse_lazy
 from django.db import IntegrityError
-from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm
+from .forms import CustomUserCreationForm, UserProfileForm, OwnerProfileForm, CustomUserChangeForm
 from .models import UserProfile, OwnerProfile
 from django.contrib.auth.models import User
 
@@ -26,20 +26,45 @@ class CustomUserLogoutView(LogoutView):
     next_page = reverse_lazy('project:home')
 
 class CustomUserSignUpView(SuccessMessageMixin, CreateView):
-    model = UserProfile
+    model = User
     form_class = CustomUserCreationForm
-    template_name = 'accounts/signup.html'
+    template_name = 'accounts/registration/signup.html'
     success_message = 'Account created successfully.'
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        login(self.request, self.user)
+        login(self.request, self.UserProfile)
         return response
 
     def get_success_url(self):
         return reverse_lazy('home')
     
-def create_user(request):
+    
+class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = User
+    form_class = CustomUserChangeForm
+    success_message = 'Account updated successfully.'
+    template_name = 'accounts/registration/users_update.html'
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+    
+    
+class UserDeleteView(LoginRequiredMixin, SuccessMessageMixin, View):
+    model = User
+    template_name = 'accounts/registration/users_delete.html'
+    success_message = 'Account deleted successfully.'
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(reverse('accounts:management'))
+    
+    
+def create_profile(request):
     
     if request.method == 'POST':
         form = UserProfileForm(request.POST)
@@ -50,8 +75,11 @@ def create_user(request):
         form = UserProfileForm()
     return render(request, 'accounts/accounts_create.html', {'form': form})
 
-def edit_user(request, pk):
-    user_profile = get_object_or_404(UserProfile, pk=pk)
+def edit_profile(request, pk):
+    try:
+        user_profile = UserProfile.objects.get(pk=pk)
+    except UserProfile.DoesNotExist:
+        return HttpResponseNotFound("UserProfile not found")
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
@@ -61,10 +89,10 @@ def edit_user(request, pk):
     else:
         form = UserProfileForm(instance=user_profile)
     
-    return render(request, 'accounts/accounts_update.html', {'user_profile': user_profile})
+    return render(request, 'accounts/accounts_update.html', {'form': form, 'user_profile': user_profile})
 
 
-def delete_user(request, pk):
+def delete_profile(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         user.delete()
@@ -78,6 +106,7 @@ class UserCretateView(SuccessMessageMixin, View):
 
 
 def accounts_management(request):
+    user_list = User.objects.all()
     accounts_list = UserProfile.objects.all()
      
     
@@ -85,7 +114,7 @@ def accounts_management(request):
     
     context = {
         'accounts_list': accounts_list,
-
+        'user_list': user_list,
     }
     
     return render(request, 'accounts/accounts_management.html', context)

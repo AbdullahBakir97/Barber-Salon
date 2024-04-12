@@ -3,6 +3,7 @@
 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
    <style>
       /* Add your custom styling here */
       .card {
@@ -45,7 +46,7 @@
               {{ form.as_p }}
               <!-- Add other form fields here -->
               <div class="form-group">
-                <button type="submit" class="btn btn-primary rounded-pill">{{ _('Signup') }}</button>
+                <button type="submit" class="btn btn-add rounded-pill">{{ _('Signup') }}</button>
               </div>
             </form>
           </div>
