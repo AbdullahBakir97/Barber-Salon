@@ -4,6 +4,7 @@
 {% endblock title %}
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock css %}
 
 {% block body %}
@@ -16,7 +17,7 @@
       </div>
    </div>
    <div class="mt-4">
-      <a href="{% url 'home' %}" class="btn btn-primary rounded-pill">Zur Startseite</a>
+      <a href="{% url 'home' %}" class="btn btn-add rounded-pill">Zur Startseite</a>
    </div>
 </div>
 
