@@ -199,10 +199,7 @@
     if (!menu.contains(event.target) && !button.contains(event.target)) {
         if (menu.classList.contains('show')) {
             menu.classList.remove('show');
-            menu.classList.add('hide');
-            setTimeout(function() {
-                menu.classList.remove('hide');
-            }, 300); // Adjust the time according to your transition duration in CSS
+            menu.style.height = '0px';
         }
     }
   });
@@ -256,13 +253,13 @@
 
 
 <style>
-  .collapse {
+  #ftco-nav {
     transition: height 0.3s ease;
+    overflow: hidden;
   }
 
-  .hide {
-    height: 0 !important;
-    overflow: hidden;
+  .show {
+    height: auto !important;
   }
 </style>
 
