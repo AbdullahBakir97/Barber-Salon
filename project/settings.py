@@ -31,9 +31,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
+allowed_hosts_string = os.environ.get('ALLOWED_HOSTS')
 
+# Convert the string to a list by splitting it on commas
+# Remove any leading/trailing whitespace from each item
+allowed_hosts = [host.strip() for host in allowed_hosts_string.split(',')]
 
+# Set ALLOWED_HOSTS to the list of hosts
+ALLOWED_HOSTS = allowed_hosts
 # Application definition
 
 INSTALLED_APPS = [
