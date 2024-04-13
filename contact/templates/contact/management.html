@@ -326,15 +326,13 @@
     </div>
 
     <!-- Barber List -->
-    <form method="post" action="{% url 'contact:barber_create' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
+    
         {% if user.is_authenticated %}
-        <button type="submit" class="btn btn-add rounded-pill">Erstellen</button> <!-- Create -->
+        <a class="btn btn-add rounded-pill" href="{% url 'contact:barber_create' %}"> Erstellen </a>
         {% elif not user.is_authenticated %}
         <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
         {% endif %}
-    </form>
+
     <div class="row my-5">
         {% for barber in barber_list %}
             <div class="col-md-4 mb-4 scrollable-list">

@@ -191,6 +191,15 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
+
+  document.addEventListener('click', function(event) {
+    var menu = document.getElementById('ftco-nav');
+    var button = document.querySelector('[data-toggle="collapse"]');
+
+    if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+  });
   // Function to update the hidden input field with the selected star rating
   function updateRating() {
     const ratingInput = document.getElementById('ratingInput');
