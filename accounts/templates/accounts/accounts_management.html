@@ -77,7 +77,7 @@
                         <div class="btn-group m-2" role="group">
                             {% if user.is_authenticated %}
                             <a href="{% url 'accounts:edit_profile' pk=user.pk %}" class="btn btn-add rounded-pill btn-edit mr-2"><i class="fas fa-edit"></i> Bearbeiten</a>
-                            <a href="{% url 'accounts:delete_user' pk=user.pk %}" class="btn btn-cancel rounded-pill btn-delete"><i class="fas fa-trash-alt"></i> Löschen</a>
+                            <a href="{% url 'accounts:delete_profile' pk=user.pk %}" class="btn btn-cancel rounded-pill btn-delete"><i class="fas fa-trash-alt"></i> Löschen</a>
                             {% elif not user.is_authenticated %}
                             <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
                             {% endif %}

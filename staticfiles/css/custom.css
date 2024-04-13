@@ -1,0 +1,52 @@
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: red; 
+    color: #fff;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+
+.btn:hover {
+    background-color: red;
+    color: black;
+    border-color: darkred;
+}
+
+
+/* Cancel button */
+.btn-cancel {
+    background-color: red;
+    border-color: darkred;
+}
+
+.btn-cancel:hover {
+    background-color: darkred;
+    border-color: red;
+}
+
+/* Add button */
+.btn-add {
+    background-color: goldenrod;
+    border-color: darkgoldenrod;
+}
+
+.btn-add:hover {
+    background-color: darkgoldenrod;
+    border-color: goldenrod;
+}
+
+
+.btn-delete .btn-text {
+    color: red;
+}
+
+
+.btn-add .btn-text {
+    color: gold;
+}
