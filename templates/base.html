@@ -197,7 +197,10 @@
     var button = document.querySelector('[data-toggle="collapse"]');
 
     if (!menu.contains(event.target) && !button.contains(event.target)) {
-        menu.classList.remove('show');
+        if (menu.classList.contains('show')) {
+            menu.classList.remove('show');
+            menu.style.height = '0px';
+        }
     }
   });
   // Function to update the hidden input field with the selected star rating
@@ -249,7 +252,16 @@
 </script>
 
 
+<style>
+  #ftco-nav {
+    transition: height 0.3s ease;
+    overflow: hidden;
+  }
 
+  .show {
+    height: auto !important;
+  }
+</style>
 
 
     <footer class="ftco-footer ftco-section">
