@@ -252,7 +252,7 @@
                     // Show error message in the modal
                     $('#modal-messages').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
                     // Scroll to the error message
-                    scrollToElement('#reviewForm');
+                    scrollToElement('#modal-messages');
                 }
             },
             error: function(xhr, status, error) {
