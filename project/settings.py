@@ -229,39 +229,37 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, "media")
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = os.environ.get('DEFAULT_AUTO_FIELD')
 
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
+LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL')
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-SITE_ID = 1  # Make sure to set the correct site ID
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'optional' if you want optional email verification
-LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+SITE_ID = int(os.environ.get('SITE_ID'))
+ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION')
+LOGIN_URL = os.environ.get('LOGIN_URL')
+LOGOUT_URL = os.environ.get('LOGOUT_URL')
 
 
-EMAIL_HOST = 'smtp.gmail.com'   # service
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400  # 1 day (in seconds)
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = int(os.environ.get('ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS'))
+ACCOUNT_UNIQUE_EMAIL = os.environ.get('ACCOUNT_UNIQUE_EMAIL')
+ACCOUNT_USERNAME_REQUIRED = os.environ.get('ACCOUNT_USERNAME_REQUIRED')
+ACCOUNT_AUTHENTICATION_METHOD = os.environ.get('ACCOUNT_AUTHENTICATION_METHOD')
+ACCOUNT_EMAIL_REQUIRED = os.environ.get('ACCOUNT_EMAIL_REQUIRED')
+ACCOUNT_LOGOUT_ON_GET = os.environ.get('ACCOUNT_LOGOUT_ON_GET')
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = os.environ.get('ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE')
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = int(os.environ.get('ACCOUNT_LOGIN_ATTEMPTS_LIMIT'))
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = int(os.environ.get('ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT'))
 
 
-
-WHITENOISE_STATIC_PREFIX = '/static/'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_STATIC_PREFIX = os.environ.get('WHITENOISE_STATIC_PREFIX')
+STATICFILES_STORAGE = os.environ.get('STATICFILES_STORAGE')

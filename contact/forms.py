@@ -193,7 +193,7 @@ class GalleryItemForm(forms.ModelForm):
         cleaned_data = super().clean()
         category = cleaned_data.get('category')
         service = cleaned_data.get('service')
-
+        return cleaned_data
 
 
 

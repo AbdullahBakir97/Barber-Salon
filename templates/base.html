@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Barlow+Condensed:500,600,700&display=swap" rel="stylesheet">
 
     <!--FAVICON start-->
-    <link rel="shortcut icon" href="media/barbershop.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ salon_data.web_icon.url }}" type="image/x-icon">
     <!--FAVICON start-->
 
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
@@ -88,13 +88,17 @@
         <form method="POST" id="reviewForm" class="review-form" action="{% url 'contact:visitor_review_create' %}" enctype="multipart/form-data">
           {% csrf_token %}
           {% if messages %}
-              {% for message in messages %}
-                  {% if message.tags == 'error' %}
-                      <div class="alert alert-danger" role="alert">
-                          {{ message }}
-                      </div>
-                  {% endif %}
-              {% endfor %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
           {% endif %}
         <div id="modal-messages"></div>
         <div class="row">
@@ -232,7 +236,7 @@
         success: function(response){
           console.log('Review form submitted successfully.');
           console.log('Response:', response);
-          if (response.result === 'success') {
+          if (response.success) {
             $('#all-reviews').html(response.reviews_html);
             $('#reviewModal').modal('hide');
             $('#reviewForm')[0].reset();
@@ -253,7 +257,7 @@
 
 
 <style>
-  #ftco-nav {
+  .ftco-nav {
     transition: height 0.3s ease;
     overflow: hidden;
   }

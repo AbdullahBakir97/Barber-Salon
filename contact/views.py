@@ -554,7 +554,7 @@ def create_visitor_review(request):
             # Process the review form data and save to the database
             review = form.save()
             reviews_html = render_to_string('include/reviews.html', {'review_data': Review.objects.all()})
-            return JsonResponse({'success': True, 'message': 'Review submitted successfully.', 'reviews_html': reviews_html})
+            return JsonResponse({'success': True, 'message': 'Bewertung erfolgreich hinzugefügt.', 'review': reviews_html})
             # Here, you can customize the success response as needed
         else:
             # Return form errors in case of validation failure
@@ -562,7 +562,7 @@ def create_visitor_review(request):
             return JsonResponse({'success': False, 'errors': errors})
     else:
         # Handle GET request or other HTTP methods
-        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+        return JsonResponse({'success': False, 'message': 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'})
 
 @require_POST
 def submit_review(request):

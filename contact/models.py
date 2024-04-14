@@ -70,7 +70,7 @@ class Review(models.Model):
     email = models.EmailField(_('Email'))
     comment = models.TextField(_('Kommentare'),)
     rating = models.IntegerField(_('Bewertung'), validators=[MinValueValidator(1), MaxValueValidator(5)])
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -99,7 +99,7 @@ class Review(models.Model):
 
 class Category(models.Model):
     name = models.CharField(_('Name'), max_length=255, default='Default Category Name')
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -113,7 +113,7 @@ class Service(models.Model):
     name = models.CharField(_('Name'), max_length=255, default='Default Service Name')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='service_category')
     price = models.DecimalField(_('Preis'),max_digits=10, decimal_places=2)
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -130,7 +130,7 @@ class GalleryItem(models.Model):
     description = models.TextField(_('Beschriebeung'),)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='gallery_category')
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='gallery_service')
-    slug = models.SlugField(_('Slug'), unique=True,blank=True, null=True)
+    slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.slug:
