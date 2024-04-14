@@ -217,42 +217,57 @@
     }
   }
 
-  $(document).ready(function() {
+ $(document).ready(function() {
+    // Function to scroll to a specific element
+    function scrollToElement(selector) {
+        $('html, body').animate({
+            scrollTop: $(selector).offset().top
+        }, 'slow');
+    }
+
     // Submit review form via AJAX
     $('#reviewForm').on('submit', function(event){
-      event.preventDefault();
-      console.log('Submitting review form...');
-      var formData = new FormData(this);
-      
-      $.ajax({
-        type: $(this).attr('method'),
-        url: $(this).attr('action'),
-        data: formData,
-        dataType: 'json',
-        headers: {'X-CSRFToken': '{{ csrf_token }}'},
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function(response){
-          console.log('Review form submitted successfully.');
-          console.log('Response:', response);
-          if (response.success) {
-            $('#all-reviews').html(response.reviews_html);
-            $('#reviewModal').modal('hide');
-            $('#reviewForm')[0].reset();
-            $('#review-messages').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
-        } else if (response.errors) {
-            // Show error message in the modal
-            $('#modal-messages').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
-        }
-      },
-      error: function(xhr, status, error) {
-          console.error('Error submitting review form:', xhr.responseText);
-          alert('An error occurred. Please try again later.');
-      }
-      });
+        event.preventDefault();
+        console.log('Submitting review form...');
+        var formData = new FormData(this);
+        
+        $.ajax({
+            type: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: formData,
+            dataType: 'json',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(response){
+                console.log('Review form submitted successfully.');
+                console.log('Response:', response);
+                if (response.success) {
+                    $('#all-reviews').html(response.reviews_html);
+                    $('#reviewModal').modal('hide');
+                    $('#reviewForm')[0].reset();
+                    $('#review-messages').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
+                } else if (response.errors) {
+                    // Show error message in the modal
+                    $('#modal-messages').html('<div class="alert alert-danger" role="alert">' + response.errors + '</div>');
+                    // Scroll to the error message
+                    scrollToElement('#modal-messages');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error submitting review form:', xhr.responseText);
+                alert('An error occurred. Please try again later.');
+            }
+        });
     });    
-  });
+
+    // Scroll to the messages inside the modal when it appears
+    $('#reviewModal').on('shown.bs.modal', function () {
+        // Scroll to the messages element
+        scrollToElement('#modal-messages');
+    });
+});
 </script>
 
 
