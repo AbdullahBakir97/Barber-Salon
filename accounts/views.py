@@ -24,6 +24,12 @@ class CustomUserLogoutView(LogoutView):
     model = User
     template_name = 'accounts/registration/logout.html'
     next_page = reverse_lazy('project:home')
+    
+    
+def user_logout(request):
+    logout(request)
+    return redirect('project:home')
+
 
 class CustomUserSignUpView(SuccessMessageMixin, CreateView):
     model = User
