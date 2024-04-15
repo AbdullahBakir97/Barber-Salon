@@ -7,14 +7,15 @@ from django.contrib.auth.views import (
 from .views import (
 CustomUserLoginView, CustomUserLogoutView, CustomUserSignUpView,  UserProfileUpdateView,
 OwnerProfileUpdateView , create_profile, edit_profile, delete_profile, accounts_management,
-UserUpdateView, UserDeleteView
+UserUpdateView, UserDeleteView, user_logout
 )
 from . import views
 app_name = 'accounts'
 
 urlpatterns = [
     path('login/', CustomUserLoginView.as_view(), name='account_login'),
-    path('logout/', CustomUserLogoutView.as_view(), name='account_logout'),
+    path('logout/', user_logout, name='account_logout'),
+    
     path('signup/', CustomUserSignUpView.as_view(), name='account_signup'),
     path('profile/user_edit/', UserProfileUpdateView.as_view(), name='profile_edit'),
     path('profile/owner_update/', OwnerProfileUpdateView.as_view(), name='profile_update'),
