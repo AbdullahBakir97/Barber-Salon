@@ -17,7 +17,6 @@
         font-weight: bold;
         text-decoration: none;
         border-radius: 5px;
-        background-color: red; /* Changed to gold */
         color: #fff;
         border: 2px solid transparent;
         transition: all 0.3s ease;
@@ -358,7 +357,7 @@
     <div class="row">
         <div class="col-md-6">
             {% if user.is_authenticated %}
-            <button type="button" class="btn btn-add rounded-pill mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
+            <button type="button" class="btn btn-add rounded-pill mt-3 mb-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
             {% elif not user.is_authenticated %}
             <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
             {% endif %}
@@ -570,15 +569,6 @@
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->
             <div class="row my-1 py-1">
-                <form method="post" action="{% url 'contact:service_create' %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    {% if user.is_authenticated %}
-                    <button type="submit" class="btn btn-add rounded-pill mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
-                    {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill mr-1" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
-                    {% endif %}
-                </form>
                 <form method="post" action="{% url 'contact:category_create' %}">
                     {% csrf_token %}
                     {{ category_form.as_p }}
@@ -586,6 +576,15 @@
                     <button type="submit" class="btn btn-add rounded-pill mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
                     {% elif not user.is_authenticated %}
                     <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                    {% endif %}
+                </form>
+                <form method="post" action="{% url 'contact:service_create' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if user.is_authenticated %}
+                    <button type="submit" class="btn btn-add rounded-pill mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
+                    {% elif not user.is_authenticated %}
+                    <a class="btn btn-add rounded-pill mr-1" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
                     {% endif %}
                 </form>
             </div>
@@ -596,7 +595,7 @@
         <div class="col-md-4 ftco-animate">
             <div class="pricing-entry pb-5 text-center">
                 <div>
-                    <h3 class="mb-4">{{ category.name }}</h3>
+                    <h3 class="mb-4">Kategorie: {{ category.name }}</h3>
                     {% if user.is_authenticated %}
                     <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-add fa fa-edit rounded-pill"></a> <!-- Edit Category -->
                     <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete Category -->
@@ -605,7 +604,7 @@
                     {% endif %}
                 </div>
                 <div class="scrollable-list">
-                    <ul>
+                    <ul> services:
                         {% for service in category.service_category.all %}
                         <li>
                             <p><span class="price">{{ service.name }}</span> <span class="per">/€{{ service.price }}</span></p>
