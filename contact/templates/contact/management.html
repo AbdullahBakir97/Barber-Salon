@@ -133,7 +133,7 @@
         <button type="button" class="btn btn-add rounded-pill mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
     </div>
     {% elif not user.is_authenticated %}
-    <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+    <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
     {% endif %}
     <!-- Appointment List -->
     
@@ -174,7 +174,7 @@
                             <td>
                                 <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> 
                                 {% elif not user.is_authenticated %}
-                                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -303,7 +303,7 @@
                         {% if user.is_authenticated %}
                         <a href="{% url 'contact:message_delete' pk=message.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
-                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                         {% endif %}
                     </td>
                     <td>
@@ -329,7 +329,7 @@
         {% if user.is_authenticated %}
         <a class="btn btn-add rounded-pill" href="{% url 'contact:barber_create' %}"> Erstellen </a>
         {% elif not user.is_authenticated %}
-        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
         {% endif %}
 
     <div class="row my-5">
@@ -346,7 +346,7 @@
                         <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
                         <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
-                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -359,7 +359,7 @@
             {% if user.is_authenticated %}
             <button type="button" class="btn btn-add rounded-pill mt-3 mb-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
             {% elif not user.is_authenticated %}
-            <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+            <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
             {% endif %}
         </div>
     </div>
@@ -394,7 +394,7 @@
                         <td>
                             <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a>
                             {% elif not user.is_authenticated %}
-                            <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                            <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                             {% endif %}
                         </td>
                     </tr>
@@ -437,7 +437,7 @@
     {% if user.is_authenticated %}
     <a href="{% url 'contact:item_create' %}" class="btn btn-add mb-3 rounded-pill">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
     {% elif not user.is_authenticated %}
-    <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+    <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
     {% endif %}
     <!-- List Gallery Items as Cards -->
     <div class="row">
@@ -455,7 +455,7 @@
                         <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
                         <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
-                        <a class="btn btn-primary rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                         {% endif %}
                     </div>
                 </div>
@@ -509,7 +509,7 @@
                   {% if user.is_authenticated %}
                   <button type="submit" class="btn btn-add rounded-pill mt-5">Bewertung hinzufügen</button> <!-- Add Review -->
                   {% elif not user.is_authenticated %}
-                  <a class="btn btn-add rounded-pill mt-5" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                  <a class="btn btn-add rounded-pill mt-5" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                   {% endif %}
                 </form>
               </div>
@@ -553,7 +553,7 @@
                     <td>
                         <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash btn btn-cancel rounded-pill"></i></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
-                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                         {% endif %}
                     </td>
                     
@@ -575,7 +575,7 @@
                     {% if user.is_authenticated %}
                     <button type="submit" class="btn btn-add rounded-pill mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
                     {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                    <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                     {% endif %}
                 </form>
                 <form method="post" action="{% url 'contact:service_create' %}">
@@ -584,7 +584,7 @@
                     {% if user.is_authenticated %}
                     <button type="submit" class="btn btn-add rounded-pill mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
                     {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill mr-1" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                    <a class="btn btn-add rounded-pill mr-1" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                     {% endif %}
                 </form>
             </div>
@@ -600,7 +600,7 @@
                     <a href="{% url 'contact:category_update' pk=category.pk %}" class="btn btn-add fa fa-edit rounded-pill"></a> <!-- Edit Category -->
                     <a href="{% url 'contact:category_delete' pk=category.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete Category -->
                     {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                    <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                     {% endif %}
                 </div>
                 <div class="scrollable-list">
@@ -613,7 +613,7 @@
                                 <a href="{% url 'contact:service_update' pk=service.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
                                 <a href="{% url 'contact:service_delete' pk=service.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                                 {% elif not user.is_authenticated %}
-                                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                                 {% endif %}
                             </div>
                         </li>
