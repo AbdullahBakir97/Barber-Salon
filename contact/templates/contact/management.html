@@ -88,9 +88,9 @@
         <div class="card">
             <div class="mb-4 mt-3 ml-3" id="login-btn" ">
                 {% if not user.is_authenticated %}
-                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Login </span></a>
+                <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                 {% elif  user.is_authenticated %}
-                <a class="btn btn-danger rounded-pill" href="{% url 'accounts:account_logout' %}"><span class="icon icon-account_circle"> Logout </span></a>
+                <a class="btn btn-danger rounded-pill" href="{% url 'accounts:account_logout' %}"><span class="icon icon-account_circle"> Ausloggen </span></a>
                 {% endif %}
             </div>
           <div class="card-header bg-primary text-white">
