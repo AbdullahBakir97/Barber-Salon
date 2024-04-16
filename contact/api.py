@@ -14,7 +14,6 @@ from .myfilter import (
     OwnerFilter, BarberFilter, ReviewFilter, CategoryFilter,
     ServiceFilter, GalleryItemFilter, AppointmentFilter, MessageFilter
 )
-import hashlib
 from django.http import Http404
 from django.db.models import Q
 from rest_framework.views import APIView
