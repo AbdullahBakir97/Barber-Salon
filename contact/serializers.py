@@ -8,7 +8,16 @@ class OwnerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AppointmentSerializer(serializers.ModelSerializer):
+    barber = serializers.StringRelatedField(read_only=True)
+    service_type = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+        
 class BarberSerializer(serializers.ModelSerializer):
+    appointments = serializers.StringRelatedField(many=True,read_only=True)
     review_count = serializers.SerializerMethodField()
     avg_rate = serializers.SerializerMethodField()
     appointment_count = serializers.SerializerMethodField()
@@ -64,13 +73,6 @@ class GalleryItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AppointmentSerializer(serializers.ModelSerializer):
-    barber = serializers.StringRelatedField(read_only=True)
-    service_type = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = Appointment
-        fields = '__all__'
 
 
 class MessageSerializer(serializers.ModelSerializer):

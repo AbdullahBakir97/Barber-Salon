@@ -7,6 +7,7 @@ from django.db.models import Avg, Count
 from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
 from phonenumber_field.modelfields import PhoneNumberField
+import PIL.Image
 
 
 
@@ -34,7 +35,7 @@ class Owner(models.Model):
 
 class Barber(models.Model):
     name = models.CharField(_('Name'),max_length=255)
-    appointment = models.ForeignKey('Appointment',related_name='barber_appointment', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Termine'))
+    appointment = models.ForeignKey('Appointment',related_name='appointments', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_('Termine'))
     expertise = models.CharField(_('Erfahrung'),max_length=255)
     experience_years = models.IntegerField(_('Erfahrung Jahre'),)
     image = models.ImageField(_('Foto'),upload_to='barber_images/')

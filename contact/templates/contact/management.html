@@ -2,12 +2,79 @@
 {% load static %} 
 {% block css %}
    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
    <style>
-    /* Apply styles for scrollbars */
-    .scrollable-list {
-        max-height: 400px; /* Adjust the maximum height as needed */
+    .appointment-list table,
+    .message-list table,
+    .review-list-container table,
+    .barber-appointment-list table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .appointment-list table{
+        white-space: normal;
+    }
+
+    td.long-text {
+        white-space: normal;
+    }
+
+    .appointment-list,
+    .message-list,
+    .appointment-list-container,
+    .review-list-container,
+    .barber-appointment-list-container {
+        max-height: 400px;
         overflow-y: auto;
+    }
+
+
+    /* Adjustments for scrollable list */
+    .scrollable-list {
+        display: auto;
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+    /* Sticky header */
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* CSS for Mobile Devices */
+    @media only screen and (max-width: 767px) {
+        /* Adjustments for hero section */
+        .hero-wrap {
+        height: 300px;
+        background-size: cover;
+        }
+    
+        /* Adjustments for card layout */
+        .card {
+        margin: 0 auto;
+        width: 100%;
+        }
+    }
+    
+    /* CSS for Tablets */
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+        /* Add your tablet-specific CSS here */
+    }
+    
+    /* CSS for Small Desktops */
+    @media only screen and (min-width: 992px) and (max-width: 1199px) {
+        /* Add your small desktop-specific CSS here */
+    }
+    
+    /* CSS for Large Desktops and Above */
+    @media only screen and (min-width: 1200px) {
+        /* Add your large desktop-specific CSS here */
     }
 
     .btn {
@@ -60,6 +127,18 @@
     .btn-add .btn-text {
         color: gold;
     }
+
+    .gallery-image, .barber-image {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .btn-group{
+        margin: 0px 0px 9px 0px;
+        margin-right: 12px;
+        margin-left: 12px;
+    }
+    
 </style>
 {% endblock css %}
 {% block body %}
@@ -90,7 +169,7 @@
                 {% if not user.is_authenticated %}
                 <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
                 {% elif  user.is_authenticated %}
-                <a class="btn btn-danger rounded-pill" href="{% url 'accounts:account_logout' %}"><span class="icon icon-account_circle"> Ausloggen </span></a>
+                <a class="btn btn-cancel rounded-pill" href="{% url 'accounts:account_logout' %}"><span class="icon icon-account_circle"> Ausloggen </span></a>
                 {% endif %}
             </div>
           <div class="card-header bg-primary text-white">
@@ -99,7 +178,7 @@
           <div class="card-body">
             {% if  user.is_authenticated %}
             <h1 class="logo"><strong></strong><a href="#"><span class=""></span>{{ salon_data.owner.name }}</a> <a href="{% url 'contact:owner_update' pk=salon_data.owner.pk %}" style="color: gold;">
-                <i class="fa fa-edit btn btn-add rounded-pill"></i></a> 
+                <i class="fa fa-edit btn btn-add rounded-pill"></i></a>
             {% endif %}  
     
             </h1>
@@ -109,7 +188,7 @@
             <p class="icon icon-link"><strong> Webseite: </strong> <a href="{{ salon_data.owner.website }}">{{salon_data.owner.website }}</a></p>
             <p class="icon icon-clock-o"><strong> Öffnungszeiten: </strong> {{ salon_data.owner.work_days }} von {{ salon_data.owner.opening_time|time:'H:i' }} bis {{ salon_data.owner.closing_time|time:'H:i' }} Sonntag: Geschloßen</p>
             <p><strong> Über: </strong> {{ salon_data.owner.about }} </p>
-            <span class="icon icon-confirmation_number"></span><span class="text">{{ salon_data.owner.tax_id }}</span>
+            <span class="icon icon-confirmation_number"> Register Nummer: </span><span class="text">{{ salon_data.owner.tax_id }}</span>
             <p class="logo"><strong> Logo: </strong><br>
             <img src="{{ salon_data.owner.logo.url }}" alt="{{ salon_data.owner.name }} Logo"></p>
             <!-- Add display for other fields as needed -->
@@ -137,12 +216,12 @@
     {% endif %}
     <!-- Appointment List -->
     
-    <div class="appointment-list ">
+    <div class="appointment-list">
         <table class="table">
-            <thead class="thead-dark rounded-thead">
+            <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Barbier</th> <!-- Barber -->
+                    <th>Friseur</th> <!-- Barber -->
                     <th>Datum</th> <!-- Date -->
                     <th>Zeit</th> <!-- Time -->
                     <th>Dienstleistung</th> <!-- Service -->
@@ -156,7 +235,7 @@
             <tbody>
                 {% for appointment in appointment_list %}
                 <div>
-                    <ul class="scrollable-list">
+                    <ul>
                         <tr >
                             <td>{{ appointment.name }}</td>
                             <td>{{ appointment.barber.name }}</td>
@@ -180,7 +259,6 @@
                         </tr>
                     </ul>
                 </div>
-                
                 {% endfor %}
             </tbody>
         </table>
@@ -279,8 +357,8 @@
 
     <!-- Message List -->
     <div class="message-list mt-3">
-        <table class="table table-responsive">
-            <thead class="thead-dark rounded-thead">
+        <table class="table">
+            <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
                     <th>E-Mail</th>
@@ -343,7 +421,7 @@
                     </div>
                     <div class="btn-group" role="group">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                        <a href="{% url 'contact:barber_update' pk=barber.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-2"></a> <!-- Edit -->
                         <a href="{% url 'contact:barber_delete' pk=barber.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
                         <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
@@ -365,6 +443,7 @@
     </div>
     <!-- Barber Appointments -->
     {% for barber in barber_list %}
+    <div class="appointment-list-container mt-3">
     <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
     <table id=barber_appointment_m class="table">
         <thead class="thead-dark">
@@ -381,7 +460,7 @@
         <tbody>
             {% for appointment in appointment_list %}
                 {% if appointment.barber == barber %}
-                    <tr class="scrollable-list">
+                    <tr>
                         <td>{{ appointment.name }}</td>
                         <td>{{ appointment.date }}</td>
                         <td>{{ appointment.time }}</td>
@@ -402,6 +481,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     {% endfor %}
 
 
@@ -452,7 +532,7 @@
                     </div>
                     <div class="btn-group" role="group">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-1"></a> <!-- Edit -->
+                        <a href="{% url 'contact:item_update' pk=object.pk %}" class="btn btn-add fa fa-edit rounded-pill mr-2"></a> <!-- Edit -->
                         <a href="{% url 'contact:item_delete' pk=object.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a> <!-- Delete -->
                         {% elif not user.is_authenticated %}
                         <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
@@ -489,14 +569,7 @@
     {% endif %}
 </div>
 
-<style>
 
-.gallery-image, .barber-image {
-    height: 200px;
-    object-fit: cover;
-}
-
-</style>
 
 <div id=review_m class="container my-5 py-5">
     <div class="row p-3">
@@ -517,50 +590,52 @@
     </div>
 
     <!-- List Reviews as Table -->
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th>Kundenname</th> <!-- Customer Name -->
-                <th>Friseur</th> <!-- Barber -->
-                <th>Bewertung</th> <!-- Rating -->
-                <th>Kommentar</th> <!-- Comment -->
-                <th>Aktion</th>
-                <th></th> <!-- Action -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for review in review_list %}
-                <tr class="scrollable-list">
-                    <td>{{ review.customer_name }}</td>
-                    <td>{{ review.barber.name }}</td>
-                    <td>
-                        <div class="star-rating">
-                            {% for _ in "12345" %}
-                                {% if forloop.counter <= review.rating %}
-                                    <span class="fa fa-star"></span>
-                                {% else %}
-                                    <span class="fa fa-star-o"></span>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </td>
-                    <td>{{ review.comment }}</td>
-                    <td class="action-links">
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit btn btn-add rounded-pill"></i></a> <!-- Edit -->
-                        
-                    </td>
-                    <td>
-                        <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash btn btn-cancel rounded-pill"></i></a> <!-- Delete -->
-                        {% elif not user.is_authenticated %}
-                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
-                        {% endif %}
-                    </td>
-                    
+    <div class="review-list-container">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Kundenname</th> <!-- Customer Name -->
+                    <th>Friseur</th> <!-- Barber -->
+                    <th>Bewertung</th> <!-- Rating -->
+                    <th>Kommentar</th> <!-- Comment -->
+                    <th>Aktion</th>
+                    <th></th> <!-- Action -->
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for review in review_list %}
+                    <tr >
+                        <td>{{ review.customer_name }}</td>
+                        <td>{{ review.barber.name }}</td>
+                        <td>
+                            <div class="star-rating">
+                                {% for _ in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <span class="fa fa-star"></span>
+                                    {% else %}
+                                        <span class="fa fa-star-o"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="long-text">{{ review.comment }}</td>
+                        <td class="action-links">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'contact:review_update' pk=review.pk %}" style="color: gold;"><i class="fa fa-edit btn btn-add rounded-pill"></i></a> <!-- Edit -->
+                            
+                        </td>
+                        <td>
+                            <a href="{% url 'contact:review_delete' pk=review.pk %}" style="color: red;"><i class="fa fa-trash btn btn-cancel rounded-pill"></i></a> <!-- Delete -->
+                            {% elif not user.is_authenticated %}
+                            <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
+                            {% endif %}
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

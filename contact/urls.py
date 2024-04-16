@@ -95,7 +95,8 @@ urlpatterns = [
     # API Views
     path('api/contact/', ContactAPIView.as_view(), name='contact-api'),
     
-    path('api/barbers/', BarberListAPIView.as_view(), name='barber-list-api'),
+    path('api/barbers/', BarberListAPIView.as_view({'get': 'list'}), name='barber-list-api'),
+    path('api/barbers/<int:pk>/edit', BarberListAPIView.as_view({'get': 'retrieve'}), name='custom-retrieve'),
     path('api/barbers/create/', BarberCreateAPIView.as_view(), name='barber-create-api'),
     path('api/barbers/<int:pk>/', BarberRetrieveUpdateDestroyAPIView.as_view(), name='barber-detail-api'),
     
@@ -107,7 +108,7 @@ urlpatterns = [
     path('api/items/create/', GalleryItemCreateAPIView.as_view(), name='gallery-item-create-api'),
     path('api/items/<int:pk>/', GalleryItemRetrieveUpdateDestroyAPIView.as_view(), name='gallery-item-detail-api'),
     
-    path('api/appointments/', AppointmentListAPIView.as_view(), name='appointment-list-api'),
+    path('api/appointments/', AppointmentListAPIView.as_view({'get': 'list'}), name='appointment-list-api'),
     path('api/appointments/create/', AppointmentCreateAPIView.as_view(), name='appointment-create-api'),
     path('api/appointments/<int:pk>/', AppointmentRetrieveUpdateDestroyAPIView.as_view(), name='appointment-detail-api'),
     

@@ -1,6 +1,7 @@
 from rest_framework import generics, filters
+from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter , OrderingFilter
 from .models import (
     Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
 )
@@ -58,10 +59,12 @@ class ModelRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return self.queryset
 
-class BarberListAPIView(ModelListAPIView):
+class BarberListAPIView(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all().prefetch_related('barber_appointment')
     queryset = Barber.objects.all()
     serializer_class = BarberSerializer
     filterset_fields = ['name', 'expertise', 'experience_years']
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name', 'expertise', 'experience_years']
     filterset_class = BarberFilter
     
@@ -108,10 +111,9 @@ class GalleryItemRetrieveUpdateDestroyAPIView(ModelRetrieveUpdateDestroyAPIView)
     queryset = GalleryItem.objects.all()
     serializer_class = GalleryItemSerializer
 
-class AppointmentListAPIView(ModelListAPIView):
+class AppointmentListAPIView(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    filterset_fields = ['barber', 'date', 'service_type']
     search_fields = ['barber__name', 'date', 'service_type__name']
     filterset_class = AppointmentFilter
     pagination_class = MyPagination
@@ -232,10 +234,10 @@ class VisitorAppointmentListAPIView(ListAPIView):
 
     def get_queryset(self):
     
-        email = self.request.POST.get('email', '')
+        email = self.request.POST.get('email')
 
         if email:
-            return Appointment.objects.filter(Q(email=email) | Q(name=name))
+            return Appointment.objects.filter(Q(email=email))
         else:
             return Appointment.objects.filter()
 

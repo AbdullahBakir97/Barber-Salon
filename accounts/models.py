@@ -25,7 +25,7 @@ class UserProfile(models.Model):
     profile_image = models.ImageField(_('Profile Foto'), upload_to='profile_images/', blank=True, null=True)
 
     def __str__(self):
-        return f"Profil von {self.user.username}"
+        return f"Profil von {self.user}"
 
 class OwnerProfile(models.Model):
     user = models.OneToOneField(User, related_name='owner_user_profile', on_delete=models.SET_NULL, verbose_name=_('Benutzer'), default=1,null=True, blank=True)
