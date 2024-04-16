@@ -4,7 +4,7 @@
   <img src="https://techstack-generator.vercel.app/github-icon.svg" alt="icon" width="40" height="40" /> 
                                   
 
-Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by Ajax & HTMX for seamless, dynamic interactions.
+Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by AJAX & HTMX for seamless, dynamic interactions.
 
 ## Demo
 See it in action: [Live Demo](https://kharsa-style.de/)
