@@ -274,7 +274,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;>
                     <!-- Appointment creation form -->
                     <form id="create-appointment-form" method="post" action="{% url 'contact:appointment_create' %}" hx-post hx-target=".appointment-list">
                         {% csrf_token %}
