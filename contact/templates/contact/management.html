@@ -349,7 +349,7 @@
 
 
 <div id="message_list" class="container my-5 py-5">
-    <div class="row p-3">
+    <div class="row ">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Nachrichtenliste</h2> <!-- Message List -->
         </div>
@@ -396,7 +396,7 @@
 
 
 <div id=barber_m class="container my-5 py-5">
-    <div class="row p-3">
+    <div class="row ">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Friseurverwaltung</h2> <!-- Barbers Management -->
         </div>
@@ -405,7 +405,7 @@
     <!-- Barber List -->
     
         {% if user.is_authenticated %}
-        <a class="btn btn-add rounded-pill" href="{% url 'contact:barber_create' %}"> Erstellen </a>
+        <a class="btn btn-add rounded-pill mt-3" href="{% url 'contact:barber_create' %}"> Erstellen </a>
         {% elif not user.is_authenticated %}
         <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
         {% endif %}
@@ -507,7 +507,7 @@
 </div>
 
 <div id=item_m class="container my-5 py-5">
-    <div class="row p-3">
+    <div class="row ">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Galerieverwaltung</h2> <!-- Gallery Management -->
         </div>
@@ -515,7 +515,7 @@
 
     <!-- Create Link -->
     {% if user.is_authenticated %}
-    <a href="{% url 'contact:item_create' %}" class="btn btn-add mb-3 rounded-pill">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
+    <a href="{% url 'contact:item_create' %}" class="btn btn-add mt-3 mb-3 rounded-pill">Neuen Artikel hinzufügen</a> <!-- Add New Item -->
     {% elif not user.is_authenticated %}
     <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
     {% endif %}
@@ -572,23 +572,16 @@
 
 
 <div id=review_m class="container my-5 py-5">
-    <div class="row p-3">
+    <div class="row ">
         <div class="col-md-10 heading-section ftco-animate">
-            <h2 class="">Bewertungsverwaltung</h2> <!-- Review Management -->
-            <div class="row my-1">
-                <form method="post" action="{% url 'contact:review_create' %}">
-                  {% csrf_token %}
-                  {{ form.as_p }}
-                  {% if user.is_authenticated %}
-                  <button type="submit" class="btn btn-add rounded-pill mt-5">Bewertung hinzufügen</button> <!-- Add Review -->
-                  {% elif not user.is_authenticated %}
-                  <a class="btn btn-add rounded-pill mt-5" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
-                  {% endif %}
-                </form>
-              </div>
+            <h2 class="">Bewertungsverwaltung</h2>           
         </div>
     </div>
-
+    {% if user.is_authenticated %}
+    <a href="{% url 'contact:review_create' %}" class="btn btn-add mt-3 mb-3 rounded-pill">Bewertung hinzufügen</a> <!-- Add New Item -->
+    {% elif not user.is_authenticated %}
+    <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
+    {% endif %}
     <!-- List Reviews as Table -->
     <div class="review-list-container">
         <table class="table">
@@ -640,31 +633,17 @@
 
 
 <div id=price_m class="container my-5 py-5">
-    <div class="row p-3">
+    <div class="row ">
         <div class="col-md-10 heading-section ftco-animate">
             <h2 class="">Preiseverwaltung</h2> <!-- Price Management -->
-            <div class="row my-1 py-1">
-                <form method="post" action="{% url 'contact:category_create' %}">
-                    {% csrf_token %}
-                    {{ category_form.as_p }}
-                    {% if user.is_authenticated %}
-                    <button type="submit" class="btn btn-add rounded-pill mt-5">Kategorie hinzufügen</button> <!-- Add Category -->
-                    {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
-                    {% endif %}
-                </form>
-                <form method="post" action="{% url 'contact:service_create' %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    {% if user.is_authenticated %}
-                    <button type="submit" class="btn btn-add rounded-pill mt-5 m-1">Service hinzufügen</button> <!-- Add Review -->
-                    {% elif not user.is_authenticated %}
-                    <a class="btn btn-add rounded-pill mr-1" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
-                    {% endif %}
-                </form>
-            </div>
         </div>
     </div>
+    {% if user.is_authenticated %}
+    <a href="{% url 'contact:category_create' %}" class="btn btn-add mt-3 mb-3 rounded-pill">Kategorie hinzufügen</a> 
+    <a href="{% url 'contact:service_create' %}" class="btn btn-add mt-3 mb-3 rounded-pill">Service hinzufügen</a><!-- Add New Item -->
+    {% elif not user.is_authenticated %}
+    <a class="btn btn-add rounded-pill mb-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
+    {% endif %}
     <div class="row">
         {% for category in category_list %}
         <div class="col-md-4 ftco-animate">

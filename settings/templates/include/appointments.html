@@ -1,7 +1,7 @@
 <h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form id="appointment-form" class="appointment-form" method="POST" action="{% url 'home' %}">
+                <form id="appointment-form" class="appointment-form" method="POST" action="{% url 'appointment' %}">
                     {% csrf_token %}
                     {% if messages %}
                         {% for message in messages %}

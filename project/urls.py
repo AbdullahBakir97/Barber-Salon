@@ -20,7 +20,7 @@ from django.conf import settings
 from django.views.static import serve
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from settings.views import home_view , handl404, handl500
+from settings.views import home_view , handl404, handl500, visitor_appointment_create
 
 
 from rest_framework import permissions
@@ -48,6 +48,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('',home_view, name='home'),
+    path('appointment/', visitor_appointment_create, name='appointment'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('admin/', admin.site.urls),

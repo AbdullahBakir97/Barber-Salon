@@ -6,7 +6,14 @@ from django.db import IntegrityError
 from django.views.generic.edit import FormView
 from django.utils.translation import gettext as _
 from contact.forms import AppointmentForm
+from django.core.mail import send_mail
+from django.conf import settings
 from contact.models import Owner, GalleryItem, Barber, Review, Appointment, Service, Category
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class HomeView(FormView):
     template_name = 'settings/home.html'
@@ -23,30 +30,57 @@ class HomeView(FormView):
             context['owner'] = owner
         return context
 
-    def form_valid(self, form):
-        try:
-            form.save()
-            messages.success(self.request, 'Ihre Termin wurde erfolgreich gesendet!')
-            return JsonResponse({'result': 'success', 'message': 'Ihre Termin wurde erfolgreich gesendet!'})
-        except IntegrityError as e:
-            messages.error(self.request, 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.')
-            return JsonResponse({'result': 'error', 'message': 'Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.'}, status=400)
-
-    def form_invalid(self, form):
-        errors = "\n".join([f" {errors[0]}" for field, errors in form.errors.items()])  
-        # Construct error messages as plain text
-        error_message = f"Bitte überprüfen Sie Ihre Eingaben.\n{errors}"
-        return HttpResponse(error_message, status=400, content_type="text/plain")
-    
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
 home_view = HomeView.as_view()
 
+def visitor_appointment_create(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            try:
+                appointment = form.save()
+
+                send_appointment_email(
+                    name=appointment.name,
+                    barber=appointment.barber,
+                    email=appointment.email,
+                    date=appointment.date,
+                    time=appointment.time,
+                    service_type=appointment.service_type,
+                    phone=appointment.phone,
+                    message=appointment.message
+                )
+
+                # Set a success message
+                messages.success(request, 'Ihre Termin wurde erfolgreich gesendet!')
+                return JsonResponse({'result': 'success', 'message': 'Ihre Termin wurde erfolgreich gesendet!'})
+            except IntegrityError as e:
+                logger.error(f'Error saving appointment: {e}')
+                return JsonResponse({'result': 'error', 'message': 'Fehler beim Speichern des Termins. Bitte versuchen Sie es erneut.'}, status=400)
+            except Exception as e:
+                logger.error(f'Error sending appointment email: {e}')
+                return HttpResponseServerError("Fehler beim Senden der Termin-E-Mail. Bitte versuchen Sie es später erneut: " + str(e))
+        else:
+            errors = "\n".join([f" {errors[0]}" for field, errors in form.errors.items()])  
+            error_message = f"Bitte überprüfen Sie Ihre Eingaben.\n{errors}"
+            return HttpResponse(error_message, status=400, content_type="text/plain")
+    else:
+        form = AppointmentForm()
+
+    return render(request, 'settings/home.html', {'form': form})
+
+def send_appointment_email(name, barber, email, date, time, service_type, phone, message):
+    try:
+        send_mail(
+            f'Neue Terminanfrage von {name}',
+            f'Name: {name}\nE-Mail: {email}\nTelefonnummer: {phone}\nNachricht: {message}\nDatum: {date}\nUhrzeit: {time}\nDienstleistungsart: {service_type}\nFriseur: {barber}',
+            email,
+            [settings.EMAIL_HOST_USER, email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        logger.error(f'Error sending email: {e}')
+        raise e  # Reraise the exception to handle it in the caller function
 
 def handl404(request, exception):
     return render(request, 'settings/404.html', status=404)

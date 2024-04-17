@@ -130,13 +130,7 @@
                 dataType: 'json',
                 headers: {'X-CSRFToken': '{{ csrf_token }}'},
                 success: function(response) {
-                    if (response.result === 'success') {
-                        // Display success message
-                        $('#message').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
-                    } else {
-                        // Display error message
-                        $('#message').html('<div class="alert alert-danger" role="alert">' + response.message + '</div>');
-                    }
+                    $('#message').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
                 },
                 error: function(xhr, status, error) {
                     // Display error message
