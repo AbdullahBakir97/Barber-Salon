@@ -8,25 +8,6 @@
 
 <section id="appointments" class="ftco-section ftco-booking bg-light">
     <div class="container ftco-relative">
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'success' %}
-                    <div id="popup-message" class="alert alert-success" style="display: none;">
-                        <section class="success-message">
-                            <div class="container">
-                                <h2>{{ message }}</h2>
-                                <p>Wir haben Ihre Termin erhalten und werden uns so schnell wie möglich bei Ihnen melden.</p>
-                                <p>Vielen Dank, dass Sie uns kontaktiert haben!</p>
-                            </div>
-                        </section>
-                    </div>
-                {% elif message.tags == 'error' %}
-                    <div class="alert alert-danger">
-                        <strong>Fehler:</strong> {{ message }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
         <div class="row justify-content-center pb-3">
             <div class="col-md-10 heading-section text-center ftco-animate">
                 <span class="subheading">Buchung</span>
@@ -37,19 +18,21 @@
         <h3 class="vr">Rufen Sie uns an: {{salon_data.owner.phone}}</h3>
         <div class="row justify-content-center">
             <div class="col-md-8 ftco-animate">
-                <form method="POST" class="appointment-form" action="{% url 'contact:visitor_appointment_create' %}">
+                <form method="POST" class="appointment-form" action="{% url 'contact:appointment_create' %}">
                     {% csrf_token %}
-                    {% if form.errors %}
+                    {% if form_errors %}
                         <div class="alert alert-danger" role="alert">
+                            <strong>Error:</strong>
                             <ul>
-                                {% for field in form %}
-                                    {% for error in field.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
+                            {% for field, errors in form_errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
                                 {% endfor %}
+                            {% endfor %}
                             </ul>
                         </div>
                     {% endif %}
+                    <div id="message"></div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -114,19 +97,5 @@
     </div>
 </section>
 
-<script>
-    // Show the popup message when the page loads
-    window.onload = function() {
-        var popup = document.getElementById('popup-message');
-        if (popup) {
-            popup.style.display = 'block';
-        }
-    };
 
-    // Function to display error message
-    function displayError() {
-        var errorMessage = '<div class="alert alert-danger" role="alert">Fehler beim Senden des Formulars. Bitte versuchen Sie es erneut.</div>';
-        document.getElementById('message').innerHTML = errorMessage;
-    }
-</script>
 {% endblock body %}

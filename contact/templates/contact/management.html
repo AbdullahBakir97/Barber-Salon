@@ -18,7 +18,7 @@
         white-space: normal;
     }
 
-    td.long-text {
+    .long-text {
         white-space: normal;
     }
 
@@ -205,17 +205,12 @@
             <h2 class="">Terminverwaltung</h2> <!-- Appointment Management -->
         </div>
     </div>
-
-
     {% if user.is_authenticated %}
-    <div class="col-md-6 mt-2 mb-3">
-        <button type="button" class="btn btn-add rounded-pill mt-3" data-toggle="modal" data-target="#create-appointment-modal">Termin erstellen</button> <!-- Create Appointment -->
-    </div>
+    <a class="btn btn-add rounded-pill mt-3 mb-3" href="{% url 'contact:appointment_create' %}"> Termin erstellen </a>
     {% elif not user.is_authenticated %}
     <a class="btn btn-add rounded-pill mt-3" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
     {% endif %}
     <!-- Appointment List -->
-    
     <div class="appointment-list">
         <table class="table">
             <thead class="thead-dark">
@@ -233,7 +228,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for appointment in appointment_list %}
+                {% for appointment in appointment_list reversed %}
                 <div>
                     <ul>
                         <tr >
@@ -274,10 +269,24 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <!-- Appointment creation form -->
-                    <form id="create-appointment-form" method="post" action="{% url 'contact:appointment_create' %}" hx-post hx-target=".appointment-list">
+                    <form id="create-appointment-form" method="post" action="{% url 'contact:create_appointment' %}" hx-post hx-target=".appointment-list">
                         {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'success' %}
+                                    <div class="alert alert-success" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% elif message.tags == 'error' %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div id="message"></div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -347,6 +356,41 @@
     
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        // Handle form submission using AJAX when form is submitted
+        $(document).on('submit', '#create-appointment-form', function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: formData,
+                dataType: 'json',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function(response) {
+                    // Update only the message div with success message
+                    $('#message').html('<div class="alert alert-success" role="alert">' + response.message + '</div>');
+                    // Update the appointment list with the new data
+                    $('#appointment_list_html').html(response.appointment_list_html);
+                    $('#create-appointment-modal').modal('hide');
+                    $('#create-appointment-form')[0].reset();
+                },
+                error: function(xhr, status, error) {
+                    // Display error message
+                    $('#message').html('<div class="alert alert-danger" role="alert">' + xhr.responseJSON.message + '</div>');
+                },
+                complete: function() {
+                    // Scroll to the top of the message div
+                    $('html, body').animate({
+                        scrollTop: $('#message').offset().top
+                    }, 'slow');
+                }
+            });
+        });
+    });
+</script>
 
 <div id="message_list" class="container my-5 py-5">
     <div class="row ">
