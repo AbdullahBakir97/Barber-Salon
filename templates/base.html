@@ -113,7 +113,7 @@
                 <label for="id_barber">Friseur</label>
                 <select name="barber" class="form-control" id="id_barber">
                   <option value="" selected>Friseur auswählen</option>
-                  {% for barber in barbers  %}
+                  {% for barber in barber_list  %}
                     <option value="{{ barber.id }}">{{ barber.name }}</option>
                   {% endfor %}
                 </select>

@@ -1,3 +1,4 @@
+{% load static %}
 <div class="carousel-testimony owl-carousel ftco-animate">
     {% for review in review_data %}
     <div class="item">
@@ -8,6 +9,9 @@
         <div class="d-flex">
           {% if review.image %}
           <div class="user-img" style="background-image: url({{ review.image.url }})">
+          </div>
+          {% else %}
+          <div class="user-img" style="background-image: url({% static 'images/Kharsa-Style-logo.png' %});">
           </div>
           {% endif %}
           <div class="pos ml-3">
