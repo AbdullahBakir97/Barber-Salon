@@ -661,7 +661,7 @@ class VisitorReviewListView(ListView):
 
 
 
-
+@login_required
 def management_view(request):
     appointment_list = Appointment.objects.all()
     barber_list = Barber.objects.all()
