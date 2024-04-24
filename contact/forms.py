@@ -346,7 +346,7 @@ class AppointmentForm(forms.ModelForm):
 
         # Check if an appointment with the same name, date, time, and barber already exists
         if Appointment.objects.filter(name=name, date=date, time=time, barber=barber).exists():
-            raise forms.ValidationError("Es gibt bereits einen Termin für Sie zu diesem Datum und dieser Uhrzeit mit dem ausgewählten Friseur.")
+            raise forms.ValidationError("Es gibt bereits einen Termin zu diesem Datum und dieser Uhrzeit mit dem ausgewählten Friseur.")
 
         # Check if there is already an appointment with the same date and time
         if Appointment.objects.filter(date=date, time=time, barber=barber).exists():

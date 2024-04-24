@@ -487,8 +487,9 @@
     </div>
     <!-- Barber Appointments -->
     {% for barber in barber_list %}
+    <h3>{{ barber.name }}'s Termine</h3>
     <div class="appointment-list-container mt-3">
-    <h3>{{ barber.name }}'s Termine</h3> <!-- Barber's Appointments -->
+     <!-- Barber's Appointments -->
     <table id=barber_appointment_m class="table">
         <thead class="thead-dark">
             <tr>
