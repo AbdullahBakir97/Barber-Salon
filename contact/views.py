@@ -663,7 +663,7 @@ class VisitorReviewListView(ListView):
 
 @login_required
 def management_view(request):
-    appointment_list = Appointment.objects.all()
+    appointment_list = Appointment.objects.all().order_by('-id')
     barber_list = Barber.objects.all()
     review_list = Review.objects.all()
     gallery_item_list = GalleryItem.objects.all()

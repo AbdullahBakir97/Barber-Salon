@@ -336,6 +336,7 @@ class AppointmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
+        self.fields['message'].initial = _('Bitte geben Sie alle zusätzlichen Informationen oder besondere Wünsche an.')
         
     def clean(self):
         cleaned_data = super().clean()
@@ -343,10 +344,11 @@ class AppointmentForm(forms.ModelForm):
         date = cleaned_data.get('date')
         time = cleaned_data.get('time')
         barber = cleaned_data.get('barber')
+        email = cleaned_data.get('email')
 
         # Check if an appointment with the same name, date, time, and barber already exists
-        if Appointment.objects.filter(name=name, date=date, time=time, barber=barber).exists():
-            raise forms.ValidationError("Es gibt bereits einen Termin zu diesem Datum und dieser Uhrzeit mit dem ausgewählten Friseur.")
+        if Appointment.objects.filter(name=name, date=date, time=time, barber=barber, email=email).exists():
+            raise forms.ValidationError("Es gibt bereits einen Termin für Sie zu diesem Datum und dieser Uhrzeit mit dem ausgewählten Friseur.")
 
         # Check if there is already an appointment with the same date and time
         if Appointment.objects.filter(date=date, time=time, barber=barber).exists():
@@ -371,6 +373,9 @@ class AppointmentForm(forms.ModelForm):
         date = cleaned_data.get('date')       
         if time is None or date is None:
             return time
+        current_datetime = timezone.now()
+        if date == current_datetime.date() and time < current_datetime.time():
+            raise ValidationError(_('Die Uhrzeit kann nicht in der Vergangenheit liegen.'))         
         owner = Owner.objects.first()  # Get the owner instance
         if owner:
             work_days = owner.work_days
