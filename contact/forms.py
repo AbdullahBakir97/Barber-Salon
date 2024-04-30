@@ -83,7 +83,7 @@ class OwnerForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if Owner.objects.filter(email=email).exists():
-            raise ValidationError(_('An owner with this email already exists.'))
+            raise ValidationError(_('Ein Besitzer mit dieser E-Mail existiert bereits.'))
         return email
 
     def clean(self):
@@ -93,7 +93,7 @@ class OwnerForm(forms.ModelForm):
 
         if opening_time and closing_time:
             if opening_time >= closing_time:
-                raise forms.ValidationError(_('The closing time must be after the opening time.'))
+                raise forms.ValidationError(_('Die Schließzeit muss nach der Öffnungszeit liegen.'))
 
         return cleaned_data
 
