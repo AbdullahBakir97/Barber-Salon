@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_yasg',
     'crispy_forms',
+    'crispy_bootstrap4',
     "phonenumber_field",
     'faker',
     

@@ -98,7 +98,6 @@ urlpatterns = [
     path('api/contact/', ContactAPIView.as_view(), name='contact-api'),
     
     path('api/barbers/', BarberListAPIView.as_view({'get': 'list'}), name='barber-list-api'),
-    path('api/barbers/<int:pk>/edit', BarberListAPIView.as_view({'get': 'retrieve'}), name='custom-retrieve'),
     path('api/barbers/create/', BarberCreateAPIView.as_view(), name='barber-create-api'),
     path('api/barbers/<int:pk>/', BarberRetrieveUpdateDestroyAPIView.as_view(), name='barber-detail-api'),
     

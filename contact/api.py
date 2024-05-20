@@ -1,7 +1,13 @@
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter , OrderingFilter
+from django.db.models import Q
+from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.response import Response
+from django.template.loader import render_to_string 
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import (
     Owner, Barber, Review, GalleryItem, Appointment, Message, Service, Category
 )
@@ -9,19 +15,12 @@ from .serializers import (
     OwnerSerializer, BarberSerializer, ReviewSerializer, GalleryItemSerializer,
     AppointmentSerializer, MessageSerializer, ServiceSerializer, CategorySerializer
 )
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .mypagination import MyPagination
 from .myfilter import (
     OwnerFilter, BarberFilter, ReviewFilter, CategoryFilter,
     ServiceFilter, GalleryItemFilter, AppointmentFilter, MessageFilter
 )
 from django.http import Http404
-from django.db.models import Q
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.template.loader import render_to_string 
 
 
 class ContactAPIView(APIView):
@@ -251,7 +250,7 @@ class VisitorReviewListAPIView(ListAPIView):
 
 
 class ManagementAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     pagination_class = MyPagination
 
     def get_queryset(self):
