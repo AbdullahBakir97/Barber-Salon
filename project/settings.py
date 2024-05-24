@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False               
 
-allowed_hosts_string = os.environ.get('ALLOWED_HOSTS')
+allowed_hosts_string = os.environ   .get('ALLOWED_HOSTS')
 
 # Convert the string to a list by splitting it on commas
 # Remove any leading/trailing whitespace from each item
