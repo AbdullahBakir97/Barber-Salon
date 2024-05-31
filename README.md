@@ -138,4 +138,8 @@ Gain valuable insights into salon performance.
 - **Time-Saving:** Streamlined processes save time, allowing you to focus on delivering exceptional salon experiences.
 - **Flexibility:** Customize the system to meet the unique needs and requirements of your salon, ensuring maximum adaptability and effectiveness...
 
+## License
+
+This project is licensed under the - [MIT License](LICENSE).
+
 ## Please ⭐ the repo to support our project . 
