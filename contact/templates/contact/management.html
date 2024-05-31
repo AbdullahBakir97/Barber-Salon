@@ -487,46 +487,87 @@
     </div>
     <!-- Barber Appointments -->
     {% for barber in barber_list %}
-    <h3>{{ barber.name }}'s Termine</h3>
-    <div class="appointment-list-container mt-3">
-     <!-- Barber's Appointments -->
-    <table id=barber_appointment_m class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>Datum</th>
-                <th>Zeit</th>
-                <th>Dienstleistung</th>
-                <th>Telefon</th>
-                <th>Aktion</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for appointment in appointment_list %}
-                {% if appointment.barber == barber %}
+        <h3>{{ barber.name }}'s Termine</h3>
+        
+        <h4>Bevorstehende Termine</h4>
+        <div class="appointment-list-container mt-3">
+            <table id=barber_appointment_m class="table">
+                <thead class="thead-dark">
                     <tr>
-                        <td>{{ appointment.name }}</td>
-                        <td>{{ appointment.date }}</td>
-                        <td>{{ appointment.time }}</td>
-                        <td>{{ appointment.service_type }}</td>
-                        <td>{{ appointment.phone }}</td>
-                        <td>
-                            {% if user.is_authenticated %}
-                            <a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-add fa fa-edit rounded-pill "></a>
-                        </td>
-                        <td>
-                            <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a>
-                            {% elif not user.is_authenticated %}
-                            <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle"> Einloggen </span></a>
-                            {% endif %}
-                        </td>
+                        <th>Name</th>
+                        <th>Datum</th>
+                        <th>Zeit</th>
+                        <th>Dienstleistung</th>
+                        <th>Telefon</th>
+                        <th>Aktion</th>
+                        <th></th>
                     </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-    </div>
+                </thead>
+                <tbody>
+                    {% for appointment in upcoming_appointments %}
+                        {% if appointment.barber == barber %}
+                            <tr>
+                                <td>{{ appointment.name }}</td>
+                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.time }}</td>
+                                <td>{{ appointment.service_type }}</td>
+                                <td>{{ appointment.phone }}</td>
+                                <td>
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-add fa fa-edit rounded-pill "></a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a>
+                                    {% else %}
+                                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle">Einloggen</span></a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Erledigte Termine</h4>
+        <div class="appointment-list-container mt-3">
+            <table id=barber_appointment_m class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Datum</th>
+                        <th>Zeit</th>
+                        <th>Dienstleistung</th>
+                        <th>Telefon</th>
+                        <th>Aktion</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in done_appointments %}
+                        {% if appointment.barber == barber %}
+                            <tr>
+                                <td>{{ appointment.name }}</td>
+                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.time }}</td>
+                                <td>{{ appointment.service_type }}</td>
+                                <td>{{ appointment.phone }}</td>
+                                <td>
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'contact:appointment_update' pk=appointment.pk %}" class="btn btn-add fa fa-edit rounded-pill "></a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'contact:appointment_delete' pk=appointment.pk %}" class="btn btn-cancel fa fa-trash rounded-pill"></a>
+                                    {% else %}
+                                        <a class="btn btn-add rounded-pill" href="{% url 'accounts:account_login' %}"><span class="icon icon-account_circle">Einloggen</span></a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endfor %}
 
 

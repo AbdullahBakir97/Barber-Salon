@@ -283,6 +283,8 @@ class ReviewCreateForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.ModelForm):
+    default_message = _('Bitte geben Sie alle zusätzlichen Informationen oder besondere Wünsche an.')
+
     class Meta:
         model = Appointment
         fields = ['name', 'barber', 'email', 'date', 'time', 'service_type', 'phone', 'message']
@@ -336,7 +338,13 @@ class AppointmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
-        self.fields['message'].initial = _('Bitte geben Sie alle zusätzlichen Informationen oder besondere Wünsche an.')
+        self.fields['message'].initial = self.default_message
+
+    def clean_message(self):
+        message = self.cleaned_data.get('message')
+        if message == self.default_message:
+            return ''  # or None
+        return message
         
     def clean(self):
         cleaned_data = super().clean()

@@ -83,7 +83,7 @@ def send_appointment_email(name, barber, email, date, time, service_type, phone,
         formatted_time = time.strftime('%I:%M %p')
         send_mail(
             f'Bestätigung: Neue Terminanfrage von {name}',
-            f'Name: {name}\nE-Mail: {email}\nTelefonnummer: {phone}\nNachricht: {message}\nDatum: {date}\nUhrzeit: {formatted_time}\nDienstleistungsart: {service_type}\nFriseur: {barber}',
+            f'Name: {name}\nE-Mail: {email}\nTelefonnummer: {phone}\nNachricht: {message if message else "Keine zusätzliche Nachricht"}\nDatum: {date}\nUhrzeit: {formatted_time}\nDienstleistungsart: {service_type}\nFriseur: {barber}',
             email,
             [settings.EMAIL_HOST_USER, email],
             fail_silently=False,

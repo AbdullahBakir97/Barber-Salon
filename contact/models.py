@@ -152,7 +152,7 @@ class Appointment(models.Model):
     service_type = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='appointment_service')
     phone = models.CharField(_('Telefon'),max_length=15)
     email = models.EmailField(_('Email'),default='no-reply@example.com')
-    message = models.TextField(_('Nachricht'),max_length=200, null=True)
+    message = models.TextField(_('Nachricht'),max_length=200, null=True, blank=True)
     slug = models.SlugField(_('Slug'), blank=True, null=True)
     
     def save(self, *args, **kwargs):
