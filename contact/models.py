@@ -90,8 +90,7 @@ class Review(models.Model):
     def __str__(self):
         if self.barber:
             return f"{self.customer_name} - {self.barber.name}"
-        else:
-            return f"{self.customer_name} - No associated barber"
+        return f"{self.customer_name} - No associated barber"
         
     def barber_review_count(self):
         return Review.objects.filter(barber=self.barber).count()
@@ -163,8 +162,7 @@ class Appointment(models.Model):
     def __str__(self):
         if self.barber:
             return f"{self.name} - {self.barber.name}"
-        else:
-            return f"{self.name} - No associated barber"
+        return f"{self.name} - No associated barber"
         
     @classmethod
     def total_count(cls):

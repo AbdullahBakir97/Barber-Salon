@@ -237,8 +237,7 @@ class VisitorAppointmentListAPIView(ListAPIView):
 
         if email:
             return Appointment.objects.filter(Q(email=email))
-        else:
-            return Appointment.objects.filter()
+        return Appointment.objects.filter()
 
 
 class VisitorReviewListAPIView(ListAPIView):

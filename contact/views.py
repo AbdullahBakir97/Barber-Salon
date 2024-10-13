@@ -642,8 +642,8 @@ def submit_review(request):
             return JsonResponse({'success': True, 'reviews_html': reviews_html})
         except IntegrityError:
             return JsonResponse({'success': False, 'message': 'An error occurred while saving the review.'})
-    else:
-        return JsonResponse({'success': False, 'message': 'Form data is not valid.'})
+
+    return JsonResponse({'success': False, 'message': 'Form data is not valid.'})
         
 
 class VisitorAppointmentListView(ListView):
@@ -654,8 +654,7 @@ class VisitorAppointmentListView(ListView):
         email = self.request.POST.get('email', 'name')
         if email:
             return Appointment.objects.filter(email=email, name=self.request.POST.get('name', ''))
-        else:
-            return Appointment.objects.none()
+        return Appointment.objects.none()
 
 class VisitorReviewListView(ListView):
     model = Review
@@ -665,8 +664,7 @@ class VisitorReviewListView(ListView):
         email = self.request.POST.get('email', 'name')
         if email:
             return Review.objects.filter(email=email, name=self.request.POST.get('name', ''))
-        else:
-            return Review.objects.none()
+        return Review.objects.none()
 
 
 
