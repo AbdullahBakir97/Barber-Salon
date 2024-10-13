@@ -47,13 +47,13 @@ class ModelListAPIView(generics.ListAPIView):
         return self.queryset
 
 class ModelCreateAPIView(generics.CreateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset
     
 class ModelRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         return self.queryset
