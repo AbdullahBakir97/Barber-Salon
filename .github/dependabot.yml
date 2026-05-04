@@ -1,0 +1,22 @@
+# Dependabot keeps dependencies fresh — opens PRs grouped by ecosystem.
+# Limits each kind to 5 open PRs at a time so review queues stay sane.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "pip"]
+    commit-message:
+      prefix: "deps(pip)"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "github-actions"]
+    commit-message:
+      prefix: "deps(github-actions)"
