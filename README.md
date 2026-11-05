@@ -6,8 +6,24 @@
 
 Welcome to the Salon Management System – your ultimate solution for efficiently managing every aspect of your salon business, powered by AJAX & HTMX for seamless, dynamic interactions.
 
-## Demo
-See it in action: [Live Demo](https://kharsa-style.de/)
+## Live site
+
+This codebase runs the production website of KHARSA STYLE, a real barber salon: [kharsa-style.de](https://kharsa-style.de/).
+
+## Demo data
+
+`demo/demo.sqlite3` holds fictional demo data: one salon, three barbers, eight services, reviews, appointments and contact messages, all with `example.com` addresses. It contains no user accounts.
+
+To use it, copy it and point `DATABASE_URL` at the copy, alongside the other environment variables that `project/settings.py` reads:
+
+```bash
+cp demo/demo.sqlite3 db.sqlite3
+export DATABASE_URL=sqlite:///db.sqlite3
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+To rebuild the demo data on an empty, migrated database, run `python demo/seed_demo.py`.
 
 
 <p align="center">
